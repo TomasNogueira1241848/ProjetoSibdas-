@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedInfo Solutions — Área Restrita</title>
+    <link rel="icon" href="../assets/img/Logo empresa.png" type="image/png">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../assets/bootstrap/bootstrap.min.css">
     <!-- Font Awesome -->
@@ -28,6 +30,62 @@
                         <hr class="divisor mx-auto mt-3">
                     </div>
 
+                    <!-- Formulário -->
+                    <form id="formLogin" novalidate>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </span>
+                                <input type="email" class="form-control" id="email" name="email"
+                                       placeholder="email@medinfo.pt" required>
+                                <div class="invalid-feedback">Introduza um email válido.</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fa-solid fa-lock"></i>
+                                </span>
+                                <input type="password" class="form-control" id="password" name="password"
+                                       placeholder="••••••••" required>
+                                <div class="invalid-feedback">Introduza a password.</div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa-solid fa-right-to-bracket me-2"></i> Entrar
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Erro -->
+                    <div id="erroLogin" class="alert alert-danger d-none p-2 text-center small">
+                        <i class="fa-solid fa-circle-exclamation me-1"></i>
+                        Email ou password incorretos.
+                    </div>
+
+                    <!-- Link para voltar ao site -->
+                    <div class="text-center mt-3">
+                        <a href="../public/index.html" class="text-muted small text-decoration-none">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Voltar ao site
+                        </a>
+                    </div>
+
+                    </div>
+
+                     <!-- Rodapé simples -->
+                    <p class="text-center text-muted small mt-3">
+                        &copy; 2025 MedInfo Solutions
+                    </p>
+
+            </div>
+        </div>
+    </div>
     <script src="../assets/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/1241848.js"></script>
 </body>
