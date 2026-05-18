@@ -1,0 +1,66 @@
+/* --- Variáveis de cor --- */
+:root {
+    --cor-primaria: #0a2540;        
+    --cor-primaria-escura: #10355a;  
+    --cor-fundo: #f8f9fa;
+    --cor-texto: #333333;
+}
+
+/* --- Geral (Tipo e cor de letra) --- */
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--cor-texto);
+}
+
+/* --- Navbar --- */
+#navbar-principal {
+    padding: 20px 0;
+    background-color: var(--cor-primaria);
+}
+
+/* Logo imagem */
+#navbar-principal .navbar-brand img {
+    height: 70px;
+    width: auto;
+    /* Transofrma o logo em branco */
+    filter: brightness(0) invert(1);
+    transition: transform 0.3s ease;
+}
+/* Aumenta ligeiramente o logo quando o rato passa por cima */
+#navbar-principal .navbar-brand img:hover {
+    transform: scale(1.05);
+}
+
+/* Texto ao lado do logo (nome da empresa)*/
+.brand-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+    letter-spacing: 0.3px;
+}
+/*Estilo do subtítulo abaixo do nome da empresa*/
+.brand-subtitle {
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: #a8c8e8;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+/*Estilo dos links do menu da navbar*/
+#navbar-principal .nav-link {
+    font-size: 1.05rem;
+    font-weight: 500;
+    padding: 6px 14px;
+    color: rgba(255,255,255,0.85) !important;
+}
+/*Muda a cor dos links quando o utilizador passa o rato*/
+#navbar-principal .nav-link:hover {
+    color: #ffffff !important;
+}
+/*Estilo do botão da Área Restrita*/
+#navbar-principal .btn-outline-light {
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 6px 16px;
+}
