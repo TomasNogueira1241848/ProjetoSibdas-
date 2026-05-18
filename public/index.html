@@ -220,6 +220,167 @@
         </div>
     </section>
 
+    <!-- CLIENTES -->
+    <section id="clientes" class="py-5 bg-light">
+        <div class="container py-4">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2 class="fw-bold">Os Nossos Clientes</h2>
+                    <hr class="divisor">
+                    <p class="text-muted">Trabalhamos com algumas das principais instituições de saúde nacionais.</p>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card text-center p-3">
+                        <i class="fa-solid fa-hospital fa-2x mb-2 text-muted"></i>
+                        <p class="mb-0 small fw-bold">Hospital de Santo António</p>
+                        <p class="mb-0 small text-muted">Porto</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card text-center p-3">
+                        <i class="fa-solid fa-hospital fa-2x mb-2 text-muted"></i>
+                        <p class="mb-0 small fw-bold">Centro Hospitalar de Gaia</p>
+                        <p class="mb-0 small text-muted">Vila Nova de Gaia</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card text-center p-3">
+                        <i class="fa-solid fa-hospital fa-2x mb-2 text-muted"></i>
+                        <p class="mb-0 small fw-bold">Hospital da Luz</p>
+                        <p class="mb-0 small text-muted">Lisboa</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card text-center p-3">
+                        <i class="fa-solid fa-hospital fa-2x mb-2 text-muted"></i>
+                        <p class="mb-0 small fw-bold">ULS de Matosinhos</p>
+                        <p class="mb-0 small text-muted">Matosinhos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contactos" class="py-5">
+        <div class="container py-4">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2 class="fw-bold">Contactos</h2>
+                    <hr class="divisor">
+                    <p class="text-muted">Entre em contacto connosco para mais informações ou para agendar uma demonstração.</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <form id="formContacto" novalidate>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="nome" class="form-label">Nome <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="nome" name="nome" required>
+                                <div class="invalid-feedback">Por favor introduza o seu nome.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="invalid-feedback">Por favor introduza um email válido.</div>
+                            </div>
+                            <div class="col-12">
+                                <label for="instituicao" class="form-label">Instituição</label>
+                                <input type="text" class="form-control" id="instituicao" name="instituicao">
+                            </div>
+                            <div class="col-12">
+                                <label for="assunto" class="form-label">Assunto <span class="text-danger">*</span></label>
+                                <select class="form-select" id="assunto" name="assunto" required>
+                                    <option value="">Selecione um assunto</option>
+                                    <option value="info">Pedido de informação</option>
+                                    <option value="demo">Agendar demonstração</option>
+                                    <option value="suporte">Suporte técnico</option>
+                                    <option value="outro">Outro</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor selecione um assunto.</div>
+                            </div>
+                            <div class="col-12">
+                                <label for="mensagem" class="form-label">Mensagem <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="mensagem" name="mensagem" rows="4" required></textarea>
+                                <div class="invalid-feedback">Por favor escreva a sua mensagem.</div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="fa-solid fa-paper-plane me-1"></i> Enviar mensagem
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                <div id="mensagemSucesso" class="alert alert-success d-none">
+                                    <i class="fa-solid fa-check me-1"></i> Mensagem enviada com sucesso. Entraremos em contacto brevemente.
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-5">
+                    <div class="card p-4 h-100">
+                        <h5 class="fw-bold mb-4">
+                            <i class="fa-solid fa-address-card me-2" style="color: var(--cor-primaria);"></i>
+                            Informações de Contacto
+                        </h5>
+
+                        <div class="d-flex gap-3 mb-3">
+                            <div class="pt-1">
+                                <i class="fa-solid fa-location-dot fa-lg" style="color: var(--cor-primaria);"></i>
+                            </div>
+                        <div>
+                        <div class="fw-bold small text-muted mb-1">MORADA</div>
+                        Rua Dr. António Bernardino de Almeida, 431<br>
+                        4200-072 Porto
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <div class="pt-1">
+                        <i class="fa-solid fa-phone fa-lg" style="color: var(--cor-primaria);"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold small text-muted mb-1">TELEFONE</div>
+                        +351 222 123 456
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mb-3">
+                    <div class="pt-1">
+                        <i class="fa-solid fa-envelope fa-lg" style="color: var(--cor-primaria);"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold small text-muted mb-1">EMAIL</div>
+                        geral@medinfosolutions.pt
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mb-4">
+                    <div class="pt-1">
+                        <i class="fa-solid fa-globe fa-lg" style="color: var(--cor-primaria);"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold small text-muted mb-1">WEBSITE</div>
+                        www.medinfosolutions.pt
+                    </div>
+                </div>
+                <hr>
+                <div class="d-flex gap-3">
+                    <div class="pt-1">
+                        <i class="fa-solid fa-clock fa-lg" style="color: var(--cor-primaria);"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold small text-muted mb-1">HORÁRIO</div>
+                        2ª a 6ª Feira: 9h — 18h<br>
+                        <span class="text-muted small">Sábado, Domingo e Feriados: Encerrado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     <!-- FOOTER -->
     <footer class="py-4" id="footer">
         <div class="container">
