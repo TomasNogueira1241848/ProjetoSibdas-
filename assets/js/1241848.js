@@ -15,3 +15,18 @@ if (formContacto) {
             }, 4000);
     });
 }
+
+const formLogin = document.getElementById('formLogin');
+
+if (formLogin) {
+    formLogin.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (!formLogin.checkValidity()) {
+            formLogin.classList.add('was-validated');
+            return;
+        }
+
+        window.location.href = '';
+    });
+}
