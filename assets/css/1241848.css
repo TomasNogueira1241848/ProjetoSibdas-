@@ -20,7 +20,7 @@ body {
 
 /* Logo imagem */
 #navbar-principal .navbar-brand img {
-    height: 70px;
+    height: 50px;
     width: auto;
     /* Transofrma o logo em branco */
     filter: brightness(0) invert(1);
@@ -33,7 +33,7 @@ body {
 
 /* Texto ao lado do logo (nome da empresa)*/
 .brand-title {
-    font-size: 1.05rem;
+    font-size: 1.20em;
     font-weight: 700;
     color: #ffffff;
     line-height: 1.2;
@@ -41,7 +41,7 @@ body {
 }
 /*Estilo do subtítulo abaixo do nome da empresa*/
 .brand-subtitle {
-    font-size: 0.72rem;
+    font-size: 0.85rem;
     font-weight: 400;
     color: #a8c8e8;
     letter-spacing: 1.5px;
@@ -63,4 +63,88 @@ body {
     font-size: 1rem;
     font-weight: 500;
     padding: 6px 16px;
+}
+
+/* --- Hero --- */
+/* Remoção de espaços*/
+#hero {
+    padding-top: 0;
+    margin-top: 0;
+}
+/*Definição da imagem de fundo e outras propriedades*/
+.hero-imagem {
+    background-image: url('../img/Imagem\ 1.png');
+    background-size: 85%; /* ← era "cover", diminui este valor para "afastar" */
+    background-position: center 20%;
+    height: 560px;
+    margin-top: 80px;
+}
+/*Camada escura sobre a imgem de fundo*/
+.hero-overlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 37, 64, 0.70);
+    display: flex;
+    align-items: center;
+}
+/*Estilos de título e subtítulo*/
+.hero-titulo {
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+.hero-subtitulo {
+    font-size: 1.15rem;
+    line-height: 1.6;
+}
+
+/* --- Divisor de secção (linha abaixo do título) --- */
+.divisor {
+    width: 60px;
+    border: 2px solid var(--cor-primaria);
+    opacity: 1;
+    margin-bottom: 20px;
+}
+
+/* --- Cards (estilos de quadrados) --- */
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    transition: box-shadow 0.2s;
+}
+/*Adiciona sombra ao passar o rato pelos cards*/
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Estilos de botões --- */
+.btn-primary {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+}
+.btn-primary:hover {
+    background-color: var(--cor-primaria-escura);
+    border-color: var(--cor-primaria-escura);
+}
+
+/* --- Evita que a navbar tape o conteúdo na navegação por âncoras --- */
+section {
+    scroll-margin-top: 70px;
+}
+
+/* --- Footer --- */
+#footer {
+    background-color: var(--cor-primaria-escura);
+    color: #adb5bd;
+    font-size: 0.9rem;
+}
+
+/*Define a cor dos links do footer*/
+#footer a {
+    color: #adb5bd;
+}
+
+/*Muda a cor dos links do footer*/
+#footer a:hover {
+    color: #ffffff;
 }
