@@ -148,3 +148,42 @@ section {
 #footer a:hover {
     color: #ffffff;
 }
+
+
+/* == LOGIN == */
+
+/* Fundo da página de login */
+#pagina-login {
+    background-color: var(--cor-fundo);
+    background-image: linear-gradient(135deg, #0a2540 0%, #1a4a7a 100%);
+}
+
+/* Logo no card de login */
+#login-logo {
+    height: 64px;
+    width: auto;
+    filter: brightness(0);
+    opacity: 0.8;
+}
+
+/* Card de login centralizado */
+#pagina-login .card {
+    border: none;
+    border-radius: 10px;
+}
+
+/* Ícones dentro dos campos */
+#pagina-login .input-group-text {
+    background-color: #f0f4f8;
+    border-right: none;
+    color: var(--cor-primaria);
+}
+
+#pagina-login .form-control {
+    border-left: none;
+}
+
+#pagina-login .form-control:focus {
+    box-shadow: none;
+    border-color: #ced4da;
+}
