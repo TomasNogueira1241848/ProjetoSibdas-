@@ -6,9 +6,19 @@
     --cor-texto: #333333;
 }
 
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+#dashboard {
+    min-width: 0;
+}
+
 /* --- Geral (Tipo e cor de letra) --- */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     color: var(--cor-texto);
 }
 
@@ -22,16 +32,14 @@ body {
 #navbar-principal .navbar-brand img {
     height: 50px;
     width: auto;
-    /* Transofrma o logo em branco */
     filter: brightness(0) invert(1);
     transition: transform 0.3s ease;
 }
-/* Aumenta ligeiramente o logo quando o rato passa por cima */
+
 #navbar-principal .navbar-brand img:hover {
     transform: scale(1.05);
 }
 
-/* Texto ao lado do logo (nome da empresa)*/
 .brand-title {
     font-size: 1.20em;
     font-weight: 700;
@@ -39,7 +47,7 @@ body {
     line-height: 1.2;
     letter-spacing: 0.3px;
 }
-/*Estilo do subtítulo abaixo do nome da empresa*/
+
 .brand-subtitle {
     font-size: 0.85rem;
     font-weight: 400;
@@ -47,18 +55,18 @@ body {
     letter-spacing: 1.5px;
     text-transform: uppercase;
 }
-/*Estilo dos links do menu da navbar*/
+
 #navbar-principal .nav-link {
     font-size: 1.05rem;
     font-weight: 500;
     padding: 6px 14px;
     color: rgba(255,255,255,0.85) !important;
 }
-/*Muda a cor dos links quando o utilizador passa o rato*/
+
 #navbar-principal .nav-link:hover {
     color: #ffffff !important;
 }
-/*Estilo do botão da Área Restrita*/
+
 #navbar-principal .btn-outline-light {
     font-size: 1rem;
     font-weight: 500;
@@ -66,20 +74,20 @@ body {
 }
 
 /* --- Hero --- */
-/* Remoção de espaços*/
 #hero {
     padding-top: 0;
     margin-top: 0;
 }
-/*Definição da imagem de fundo e outras propriedades*/
+
 .hero-imagem {
     background-image: url('../img/Imagem\ 1.png');
-    background-size: 85%; /* ← era "cover", diminui este valor para "afastar" */
-    background-position: center 20%;
+    background-size: 100% auto;
+    background-position: center top;
+    background-repeat: no-repeat;
     height: 560px;
     margin-top: 80px;
+    background-color: var(--cor-primaria);
 }
-/*Camada escura sobre a imgem de fundo*/
 .hero-overlay {
     width: 100%;
     height: 100%;
@@ -87,18 +95,19 @@ body {
     display: flex;
     align-items: center;
 }
-/*Estilos de título e subtítulo*/
+
 .hero-titulo {
     font-size: 2.8rem;
     font-weight: 700;
     line-height: 1.2;
 }
+
 .hero-subtitulo {
     font-size: 1.15rem;
     line-height: 1.6;
 }
 
-/* --- Divisor de secção (linha abaixo do título) --- */
+/* --- Divisor --- */
 .divisor {
     width: 60px;
     border: 2px solid var(--cor-primaria);
@@ -106,28 +115,28 @@ body {
     margin-bottom: 20px;
 }
 
-/* --- Cards (estilos de quadrados) --- */
+/* --- Cards --- */
 .card {
     border: 1px solid #e0e0e0;
     border-radius: 6px;
     transition: box-shadow 0.2s;
 }
-/*Adiciona sombra ao passar o rato pelos cards*/
+
 .card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* --- Estilos de botões --- */
+/* --- Botões --- */
 .btn-primary {
     background-color: var(--cor-primaria);
     border-color: var(--cor-primaria);
 }
+
 .btn-primary:hover {
     background-color: var(--cor-primaria-escura);
     border-color: var(--cor-primaria-escura);
 }
 
-/* --- Evita que a navbar tape o conteúdo na navegação por âncoras --- */
 section {
     scroll-margin-top: 70px;
 }
@@ -139,26 +148,20 @@ section {
     font-size: 0.9rem;
 }
 
-/*Define a cor dos links do footer*/
 #footer a {
     color: #adb5bd;
 }
 
-/*Muda a cor dos links do footer*/
 #footer a:hover {
     color: #ffffff;
 }
 
-
-/* == LOGIN == */
-
-/* Fundo da página de login */
+/* --- Login --- */
 #pagina-login {
     background-color: var(--cor-fundo);
     background-image: linear-gradient(135deg, #0a2540 0%, #1a4a7a 100%);
 }
 
-/* Logo no card de login */
 #login-logo {
     height: 64px;
     width: auto;
@@ -166,13 +169,11 @@ section {
     opacity: 0.8;
 }
 
-/* Card de login centralizado */
 #pagina-login .card {
     border: none;
     border-radius: 10px;
 }
 
-/* Ícones dentro dos campos */
 #pagina-login .input-group-text {
     background-color: #f0f4f8;
     border-right: none;
@@ -186,4 +187,218 @@ section {
 #pagina-login .form-control:focus {
     box-shadow: none;
     border-color: #ced4da;
+}
+
+/* --- Área privada --- */
+.pagina-area-reservada {
+    background-color: #f4f6f9;
+}
+
+.header-area-reservada {
+    background-color: var(--cor-primaria);
+    padding: 0;
+}
+
+.header-logo {
+    height: 45px;
+    width: auto;
+    filter: brightness(0) invert(1);
+}
+
+/* --- Dashboard/ Área privada --- */
+.sidebar {
+    background-color: #ffffff;
+    border-right: 1px solid #e5e9f0;
+}
+
+.sidebar .nav-link {
+    color: #4f5b67;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background-color: rgba(10, 37, 64, 0.08);
+    color: var(--cor-primaria);
+}
+
+.card-dashboard {
+    border-left: 4px solid var(--cor-primaria);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.card-dashboard:hover,
+.chart-card:hover {
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.border-success-dashboard {
+    border-left-color: #198754;
+}
+
+.border-warning-dashboard {
+    border-left-color: #ffc107;
+}
+
+.border-secondary-dashboard {
+    border-left-color: #6c757d;
+}
+
+.border-danger-dashboard {
+    border-left-color: #dc3545;
+}
+
+.border-info-dashboard {
+    border-left-color: #0dcaf0;
+}
+
+.border-orange-dashboard {
+    border-left-color: #fd7e14;
+}
+
+.border-purple-dashboard {
+    border-left-color: #6610f2;
+}
+
+.dashboard-icon {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background-color: rgba(10, 37, 64, 0.08);
+    color: var(--cor-primaria);
+    font-size: 1.35rem;
+}
+
+.dashboard-icon-success {
+    background-color: rgba(25, 135, 84, 0.12);
+    color: #198754;
+}
+
+.dashboard-icon-warning {
+    background-color: rgba(255, 193, 7, 0.18);
+    color: #b58100;
+}
+
+.dashboard-icon-secondary {
+    background-color: rgba(108, 117, 125, 0.14);
+    color: #6c757d;
+}
+
+.dashboard-icon-danger {
+    background-color: rgba(220, 53, 69, 0.12);
+    color: #dc3545;
+}
+
+.dashboard-icon-info {
+    background-color: rgba(13, 202, 240, 0.14);
+    color: #087990;
+}
+
+.dashboard-icon-orange {
+    background-color: rgba(253, 126, 20, 0.14);
+    color: #fd7e14;
+}
+
+.dashboard-icon-purple {
+    background-color: rgba(102, 16, 242, 0.12);
+    color: #6610f2;
+}
+
+.chart-card {
+    min-height: 360px;
+}
+
+.chart-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 270px;
+    overflow: hidden;
+}
+
+.chart-wrapper canvas {
+    display: block;
+    width: 100% !important;
+    max-width: 100%;
+    max-height: 270px;
+}
+
+.progress {
+    height: 10px;
+    border-radius: 999px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    border-radius: 999px;
+}
+
+.dashboard-alertas .list-group-item {
+    border-color: #eef1f5;
+}
+
+.alerta-icone {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.alerta-critico {
+    background-color: rgba(220, 53, 69, 0.12);
+    color: #dc3545;
+}
+
+.alerta-aviso {
+    background-color: rgba(255, 193, 7, 0.18);
+    color: #b58100;
+}
+
+.alerta-info {
+    background-color: rgba(13, 202, 240, 0.14);
+    color: #087990;
+}
+
+.table-dashboard thead th {
+    background-color: var(--cor-primaria);
+    color: #ffffff;
+    font-size: 0.82rem;
+    white-space: nowrap;
+}
+
+.table-dashboard td,
+.table-dashboard th {
+    vertical-align: middle;
+    font-size: 0.9rem;
+}
+
+.pesquisa-dashboard {
+    max-width: 220px;
+}
+
+.badge-ativo {
+    background-color: rgba(25, 135, 84, 0.12);
+    color: #198754;
+    border: 1px solid rgba(25, 135, 84, 0.25);
+}
+
+.badge-manutencao {
+    background-color: rgba(255, 193, 7, 0.18);
+    color: #8a6500;
+    border: 1px solid rgba(255, 193, 7, 0.35);
+}
+
+.badge-inativo {
+    background-color: rgba(108, 117, 125, 0.12);
+    color: #6c757d;
+    border: 1px solid rgba(108, 117, 125, 0.25);
 }
