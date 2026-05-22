@@ -54,6 +54,8 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarFormularioEquipamento();
 
     inicializarGraficosDashboard();
+    
+    inicializarEliminarEquipamento();
 });
 
 /* Ativa os tooltips do Bootstrap */
@@ -301,5 +303,25 @@ function criarGraficoLocalizacao() {
                 }
             }
         }
+    });
+}
+
+/* Confirmação da eliminação de equipamento */
+function inicializarEliminarEquipamento() {
+    const formEliminar = document.getElementById('formEliminarEquipamento');
+    const mensagem = document.getElementById('mensagemEliminarEquipamento');
+
+    if (!formEliminar) return;
+
+    formEliminar.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (mensagem) {
+            mensagem.classList.remove('d-none');
+        }
+
+        setTimeout(function () {
+            window.location.href = 'equipamentos.html';
+        }, 1200);
     });
 }

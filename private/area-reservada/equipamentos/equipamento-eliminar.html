@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedInfo Solutions — Detalhes do Equipamento</title>
+    <title>MedInfo Solutions — Eliminar Equipamento</title>
     <link rel="icon" href="../../../assets/img/Logo empresa.png" type="image/png">
 
     <!-- Bootstrap CSS -->
@@ -97,40 +97,46 @@
                 <!-- TÍTULO -->
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                     <div>
-                        <h4 class="fw-bold mb-1">Detalhes do equipamento</h4>
-                        <p class="text-muted small mb-0">Consulta da ficha técnica do equipamento selecionado.</p>
-                    </div>
-
-                    <div class="d-flex gap-2">
-                        <a href="equipamento-editar.html" class="btn btn-primary btn-sm">
-                            <i class="fa-solid fa-pen me-1"></i> Editar
-                        </a>
-
-                        <a href="equipamentos.html" class="btn btn-outline-secondary btn-sm">
-                            <i class="fa-solid fa-arrow-left me-1"></i> Voltar
-                        </a>
+                        <h4 class="fw-bold mb-1">Eliminar equipamento</h4>
+                        <p class="text-muted small mb-0">Confirmação da eliminação do equipamento selecionado.</p>
                     </div>
                 </div>
 
-                <div class="row g-3">
-
-                    <!-- DADOS PRINCIPAIS -->
+                <div class="row justify-content-center">
                     <div class="col-lg-8">
-                        <div class="card p-4 h-100">
-                            <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
-                                <div>
-                                    <h5 class="fw-bold mb-1">Monitor Multiparamétrico</h5>
-                                    <p class="text-muted small mb-0">Código interno: EQ-0042</p>
+
+                        <div class="card p-4 border-danger">
+                            <div class="d-flex gap-3 align-items-start mb-3">
+                                <div class="dashboard-icon dashboard-icon-danger">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
                                 </div>
 
                                 <div>
-                                    <span class="badge badge-ativo">Ativo</span>
+                                    <h5 class="fw-bold mb-1">Tem a certeza que pretende eliminar este equipamento?</h5>
+                                    <p class="text-muted mb-0">
+                                        Esta ação é apenas simulada nesta fase frontend. Na fase de backend, o registo será removido da base de dados.
+                                    </p>
                                 </div>
                             </div>
 
                             <hr>
 
-                            <div class="row g-3">
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <p class="text-muted small mb-1">Código</p>
+                                    <p class="fw-bold mb-0">EQ-0042</p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p class="text-muted small mb-1">Estado</p>
+                                    <p class="mb-0"><span class="badge badge-ativo">Ativo</span></p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p class="text-muted small mb-1">Designação</p>
+                                    <p class="mb-0">Monitor Multiparamétrico</p>
+                                </div>
+
                                 <div class="col-md-6">
                                     <p class="text-muted small mb-1">Categoria</p>
                                     <p class="mb-0">Monitorização</p>
@@ -142,72 +148,29 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <p class="text-muted small mb-1">N.º Série</p>
-                                    <p class="mb-0">SN-90821</p>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Fornecedor</p>
-                                    <p class="mb-0">Philips Healthcare Portugal</p>
-                                </div>
-
-                                <div class="col-md-6">
                                     <p class="text-muted small mb-1">Localização</p>
                                     <p class="mb-0">UCI</p>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Data de aquisição</p>
-                                    <p class="mb-0">2023-06-10</p>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Fim da garantia</p>
-                                    <p class="mb-0">2026-06-10</p>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Periodicidade de manutenção</p>
-                                    <p class="mb-0">12 meses</p>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Criticidade</p>
-                                    <p class="mb-0">Alta</p>
-                                </div>
-
-                                <div class="col-12">
-                                    <p class="text-muted small mb-1">Observações</p>
-                                    <p class="mb-0">Equipamento em funcionamento normal, sem alertas críticos registados.</p>
-                                </div>
                             </div>
+
+                            <div id="mensagemEliminarEquipamento" class="alert alert-success d-none">
+                                <i class="fa-solid fa-check me-1"></i> Equipamento eliminado com sucesso.
+                            </div>
+
+                            <form id="formEliminarEquipamento">
+                                <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
+                                    <a href="equipamentos.html" class="btn btn-outline-secondary">
+                                        Cancelar
+                                    </a>
+
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fa-solid fa-trash me-1"></i> Confirmar eliminação
+                                    </button>
+                                </div>
+                            </form>
                         </div>
+
                     </div>
-
-                    <!-- INFORMAÇÃO RÁPIDA -->
-                    <div class="col-lg-4">
-                        <div class="card p-4 h-100">
-                            <h6 class="fw-bold mb-3">
-                                <i class="fa-solid fa-circle-info me-2 text-primary"></i> Informação rápida
-                            </h6>
-
-                            <div class="alert alert-success small">
-                                <i class="fa-solid fa-check me-1"></i>
-                                Equipamento ativo e disponível para utilização clínica.
-                            </div>
-
-                            <div class="alert alert-warning small">
-                                <i class="fa-solid fa-triangle-exclamation me-1"></i>
-                                Garantia termina em 2026-06-10.
-                            </div>
-
-                            <div class="alert alert-light border small mb-0">
-                                <i class="fa-solid fa-screwdriver-wrench me-1"></i>
-                                Próxima manutenção preventiva ainda não agendada.
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
             </main>
