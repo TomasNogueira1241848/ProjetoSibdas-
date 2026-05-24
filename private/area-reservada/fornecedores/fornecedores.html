@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedInfo Solutions — Equipamentos</title>
+    <title>MedInfo Solutions — Fornecedores</title>
     <link rel="icon" href="../../../assets/img/Logo empresa.png" type="image/png">
 
     <!-- Bootstrap CSS -->
@@ -69,11 +69,11 @@
                         <i class="fa-solid fa-gauge me-2"></i> Dashboard
                     </a>
 
-                    <a href="equipamentos.html" class="nav-link active">
+                    <a href="../equipamentos/equipamentos.html" class="nav-link">
                         <i class="fa-solid fa-stethoscope me-2"></i> Equipamentos
                     </a>
 
-                    <a href="../fornecedores/fornecedores.html" class="nav-link">
+                    <a href="fornecedores.html" class="nav-link active">
                         <i class="fa-solid fa-truck me-2"></i> Fornecedores
                     </a>
 
@@ -97,12 +97,12 @@
                 <!-- TÍTULO -->
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                     <div>
-                        <h4 class="fw-bold mb-1">Equipamentos</h4>
-                        <p class="text-muted small mb-0">Listagem e gestão dos equipamentos médicos registados no inventário.</p>
+                        <h4 class="fw-bold mb-1">Fornecedores</h4>
+                        <p class="text-muted small mb-0">Listagem e gestão dos fornecedores associados aos equipamentos médicos.</p>
                     </div>
 
-                    <a href="equipamento-novo.html" class="btn btn-primary btn-sm">
-                        <i class="fa-solid fa-plus me-1"></i> Novo equipamento
+                    <a href="fornecedor-novo.html" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-plus me-1"></i> Novo fornecedor
                     </a>
                 </div>
 
@@ -112,28 +112,28 @@
                         <div class="col-6 col-md-3">
                             <div class="card card-dashboard p-3 h-100">
                                 <p class="text-muted small mb-1">Total</p>
-                                <h4 class="fw-bold mb-0">142</h4>
+                                <h4 class="fw-bold mb-0">17</h4>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3">
                             <div class="card card-dashboard border-success-dashboard p-3 h-100">
                                 <p class="text-muted small mb-1">Ativos</p>
-                                <h4 class="fw-bold mb-0">118</h4>
+                                <h4 class="fw-bold mb-0">14</h4>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3">
                             <div class="card card-dashboard border-warning-dashboard p-3 h-100">
-                                <p class="text-muted small mb-1">Em manutenção</p>
-                                <h4 class="fw-bold mb-0">14</h4>
+                                <p class="text-muted small mb-1">Com contrato</p>
+                                <h4 class="fw-bold mb-0">5</h4>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3">
                             <div class="card card-dashboard border-secondary-dashboard p-3 h-100">
                                 <p class="text-muted small mb-1">Inativos</p>
-                                <h4 class="fw-bold mb-0">10</h4>
+                                <h4 class="fw-bold mb-0">3</h4>
                             </div>
                         </div>
                     </div>
@@ -143,43 +143,36 @@
                 <section class="mb-4">
                     <div class="card p-3">
                         <div class="row g-3">
-                            <div class="col-lg-4">
-                                <label for="pesquisaEquipamentos" class="form-label">Pesquisar</label>
-                                <input type="search" class="form-control" id="pesquisaEquipamentos" placeholder="Código, nome, marca ou modelo">
+                            <div class="col-lg-5">
+                                <label for="pesquisaFornecedores" class="form-label">Pesquisar</label>
+                                <input type="search" class="form-control" id="pesquisaFornecedores" placeholder="Nome, NIF, email ou telefone">
                             </div>
 
                             <div class="col-md-4 col-lg-3">
-                                <label for="filtroCategoriaEquipamentos" class="form-label">Categoria</label>
-                                <select class="form-select" id="filtroCategoriaEquipamentos">
-                                    <option value="">Todas</option>
-                                    <option value="Monitorização">Monitorização</option>
-                                    <option value="Suporte de Vida">Suporte de Vida</option>
-                                    <option value="Terapia">Terapia</option>
-                                    <option value="Diagnóstico">Diagnóstico</option>
-                                    <option value="Laboratório">Laboratório</option>
+                                <label for="filtroTipoFornecedor" class="form-label">Tipo</label>
+                                <select class="form-select" id="filtroTipoFornecedor">
+                                    <option value="">Todos</option>
+                                    <option value="Fabricante">Fabricante</option>
+                                    <option value="Distribuidor">Distribuidor</option>
+                                    <option value="Assistência Técnica">Assistência Técnica</option>
                                 </select>
                             </div>
 
                             <div class="col-md-4 col-lg-2">
-                                <label for="filtroEstadoEquipamentos" class="form-label">Estado</label>
-                                <select class="form-select" id="filtroEstadoEquipamentos">
+                                <label for="filtroEstadoFornecedor" class="form-label">Estado</label>
+                                <select class="form-select" id="filtroEstadoFornecedor">
                                     <option value="">Todos</option>
                                     <option value="Ativo">Ativo</option>
-                                    <option value="Em Manutenção">Em Manutenção</option>
                                     <option value="Inativo">Inativo</option>
-                                    <option value="Em Calibração">Em Calibração</option>
                                 </select>
                             </div>
 
-                            <div class="col-md-4 col-lg-3">
-                                <label for="filtroLocalizacaoEquipamentos" class="form-label">Localização</label>
-                                <select class="form-select" id="filtroLocalizacaoEquipamentos">
-                                    <option value="">Todas</option>
-                                    <option value="UCI">UCI</option>
-                                    <option value="Urgência">Urgência</option>
-                                    <option value="Bloco Operatório">Bloco Operatório</option>
-                                    <option value="Medicina Interna">Medicina Interna</option>
-                                    <option value="Consulta Externa">Consulta Externa</option>
+                            <div class="col-md-4 col-lg-2">
+                                <label for="filtroContratoFornecedor" class="form-label">Contrato</label>
+                                <select class="form-select" id="filtroContratoFornecedor">
+                                    <option value="">Todos</option>
+                                    <option value="Sim">Sim</option>
+                                    <option value="Não">Não</option>
                                 </select>
                             </div>
                         </div>
@@ -190,89 +183,85 @@
                 <section class="mb-4">
                     <div class="card p-3">
                         <div class="table-responsive">
-                            <table class="table table-dashboard table-hover align-middle mb-0" id="tabelaEquipamentos">
+                            <table class="table table-dashboard table-hover align-middle mb-0" id="tabelaFornecedores">
                                 <thead>
                                     <tr>
-                                        <th>Código</th>
-                                        <th>Designação</th>
-                                        <th>Categoria</th>
-                                        <th>Marca/Modelo</th>
-                                        <th>N.º Série</th>
-                                        <th>Localização</th>
+                                        <th>Nome</th>
+                                        <th>NIF</th>
+                                        <th>Tipo</th>
+                                        <th>Email</th>
+                                        <th>Telefone</th>
+                                        <th>Contrato</th>
                                         <th>Estado</th>
-                                        <th>Garantia</th>
                                         <th class="text-center">Ações</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     <tr>
-                                        <td>EQ-0042</td>
-                                        <td>Monitor Multiparamétrico</td>
-                                        <td>Monitorização</td>
-                                        <td>Philips IntelliVue</td>
-                                        <td>SN-90821</td>
-                                        <td>UCI</td>
+                                        <td>Philips Healthcare Portugal</td>
+                                        <td>501234567</td>
+                                        <td>Fabricante</td>
+                                        <td>suporte@philips.pt</td>
+                                        <td>+351 211 234 567</td>
+                                        <td>Sim</td>
                                         <td><span class="badge badge-ativo">Ativo</span></td>
-                                        <td>2026-06-10</td>
                                         <td class="text-center">
-                                            <a href="equipamento-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                            <a href="fornecedor-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <a href="equipamento-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                            <a href="fornecedor-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
 
-                                            <a href="equipamento-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                            <a href="fornecedor-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
                                                 <i class="fa-solid fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td>EQ-0078</td>
-                                        <td>Ventilador Pulmonar</td>
-                                        <td>Suporte de Vida</td>
-                                        <td>Dräger Evita</td>
-                                        <td>SN-77451</td>
-                                        <td>Urgência</td>
+                                        <td>Dräger Portugal</td>
+                                        <td>508765432</td>
+                                        <td>Fabricante</td>
+                                        <td>assistencia@draeger.pt</td>
+                                        <td>+351 214 987 321</td>
+                                        <td>Sim</td>
                                         <td><span class="badge badge-ativo">Ativo</span></td>
-                                        <td>2026-06-18</td>
                                         <td class="text-center">
-                                            <a href="equipamento-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                            <a href="fornecedor-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <a href="equipamento-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                            <a href="fornecedor-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
 
-                                            <a href="equipamento-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                            <a href="fornecedor-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
                                                 <i class="fa-solid fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td>EQ-0103</td>
-                                        <td>Bomba de Infusão</td>
-                                        <td>Terapia</td>
-                                        <td>B. Braun Infusomat</td>
-                                        <td>SN-33109</td>
-                                        <td>Medicina Interna</td>
-                                        <td><span class="badge badge-manutencao">Em Manutenção</span></td>
-                                        <td>2026-06-25</td>
+                                        <td>MedRepair Norte</td>
+                                        <td>514321098</td>
+                                        <td>Assistência Técnica</td>
+                                        <td>geral@medrepair.pt</td>
+                                        <td>+351 222 654 987</td>
+                                        <td>Não</td>
+                                        <td><span class="badge badge-inativo">Inativo</span></td>
                                         <td class="text-center">
-                                            <a href="equipamento-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                            <a href="fornecedor-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <a href="equipamento-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                            <a href="fornecedor-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
 
-                                            <a href="equipamento-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                            <a href="fornecedor-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
                                                 <i class="fa-solid fa-trash"></i>
                                             </a>
                                         </td>
