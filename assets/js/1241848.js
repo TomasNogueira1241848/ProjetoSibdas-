@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     inicializarPesquisaTabela('pesquisaTabela', 'tabelaGarantiasConteudo');
     inicializarPesquisaTabela('pesquisaEquipamentos', 'tabelaEquipamentos');
+    inicializarPesquisaTabela('pesquisaFornecedores', 'tabelaFornecedores');
 
     inicializarFiltrosEquipamentos();
     inicializarFormularioEquipamento();
