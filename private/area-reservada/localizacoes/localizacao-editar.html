@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedInfo Solutions — Editar Localização</title>
+    <link rel="icon" href="../../../assets/img/Logo empresa.png" type="image/png">
+
+    <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
+    <link rel="stylesheet" href="../../../assets/css/1241848.css">
+</head>
+
+<body class="pagina-area-reservada">
+
+    <header class="container-fluid header-area-reservada text-white">
+        <div class="row align-items-center">
+            <div class="col-8 col-md-6 d-flex align-items-center p-3 gap-3">
+                <img src="../../../assets/img/Logo empresa.png" alt="MedInfo Solutions" class="header-logo">
+
+                <div>
+                    <h5 class="mb-0 fw-bold">MedInfo Solutions</h5>
+                    <small class="text-white-50">Gestão de Inventário Hospitalar</small>
+                </div>
+            </div>
+
+            <div class="col-4 col-md-6 text-end p-3">
+                <div class="dropdown d-inline-block">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-regular fa-user"></i>
+                        <span class="d-none d-sm-inline ms-2">Administrador</span>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-key me-2"></i> Alterar password</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="../../login/login.html"><i class="fa-solid fa-right-from-bracket me-2"></i> Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <aside class="col-12 col-md-3 col-lg-2 sidebar p-3">
+                <p class="text-uppercase text-muted small fw-bold mb-3 mt-2 d-none d-md-block">Menu</p>
+
+                <nav class="nav nav-pills flex-row flex-md-column flex-nowrap overflow-auto gap-2 w-100">
+                    <a href="../index.html" class="nav-link"><i class="fa-solid fa-gauge me-2"></i> Dashboard</a>
+                    <a href="../equipamentos/equipamentos.html" class="nav-link"><i class="fa-solid fa-stethoscope me-2"></i> Equipamentos</a>
+                    <a href="../fornecedores/fornecedores.html" class="nav-link"><i class="fa-solid fa-truck me-2"></i> Fornecedores</a>
+                    <a href="localizacoes.html" class="nav-link active"><i class="fa-solid fa-location-dot me-2"></i> Localizações</a>
+                    <a href="#" class="nav-link"><i class="fa-solid fa-file-medical me-2"></i> Documentação</a>
+                    <a href="#" class="nav-link"><i class="fa-solid fa-shield me-2"></i> Garantias e Contratos</a>
+                </nav>
+            </aside>
+
+            <main class="col-12 col-md-9 col-lg-10 p-3 p-md-4 overflow-hidden" id="dashboard">
+
+                <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+                    <div>
+                        <h4 class="fw-bold mb-1">Editar localização</h4>
+                        <p class="text-muted small mb-0">Atualização dos dados da localização selecionada.</p>
+                    </div>
+                </div>
+
+                <section class="mb-4">
+                    <div class="card p-4">
+                        <form id="formLocalizacao" novalidate>
+                            <div class="row g-3">
+
+                                <div class="col-md-4">
+                                    <label for="codigoLocalizacao" class="form-label">Código <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="codigoLocalizacao" name="codigoLocalizacao" value="LOC-001" required>
+                                    <div class="invalid-feedback">Introduza o código da localização.</div>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <label for="nomeLocalizacao" class="form-label">Nome <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="nomeLocalizacao" name="nomeLocalizacao" value="Unidade de Cuidados Intensivos" required>
+                                    <div class="invalid-feedback">Introduza o nome da localização.</div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="tipoLocalizacao" class="form-label">Tipo <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="tipoLocalizacao" name="tipoLocalizacao" required>
+                                        <option value="">Selecionar tipo</option>
+                                        <option value="Serviço">Serviço</option>
+                                        <option value="Unidade" selected>Unidade</option>
+                                        <option value="Sala">Sala</option>
+                                        <option value="Armazém">Armazém</option>
+                                    </select>
+                                    <div class="invalid-feedback">Selecione o tipo de localização.</div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="pisoLocalizacao" class="form-label">Piso <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="pisoLocalizacao" name="pisoLocalizacao" required>
+                                        <option value="">Selecionar piso</option>
+                                        <option value="Piso -1">Piso -1</option>
+                                        <option value="Piso 0">Piso 0</option>
+                                        <option value="Piso 1">Piso 1</option>
+                                        <option value="Piso 2" selected>Piso 2</option>
+                                        <option value="Piso 3">Piso 3</option>
+                                    </select>
+                                    <div class="invalid-feedback">Selecione o piso.</div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="estadoLocalizacao" class="form-label">Estado <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="estadoLocalizacao" name="estadoLocalizacao" required>
+                                        <option value="">Selecionar estado</option>
+                                        <option value="Ativa" selected>Ativa</option>
+                                        <option value="Em Manutenção">Em Manutenção</option>
+                                        <option value="Inativa">Inativa</option>
+                                    </select>
+                                    <div class="invalid-feedback">Selecione o estado da localização.</div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="responsavelLocalizacao" class="form-label">Responsável <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="responsavelLocalizacao" name="responsavelLocalizacao" value="Enf. Ana Martins" required>
+                                    <div class="invalid-feedback">Introduza o responsável pela localização.</div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="telefoneLocalizacao" class="form-label">Contacto interno</label>
+                                    <input type="text" class="form-control" id="telefoneLocalizacao" name="telefoneLocalizacao" value="Ext. 2045">
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="descricaoLocalizacao" class="form-label">Descrição</label>
+                                    <textarea class="form-control" id="descricaoLocalizacao" name="descricaoLocalizacao" rows="3">Unidade hospitalar destinada a doentes críticos, com equipamentos de monitorização, ventilação e suporte de vida.</textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <div id="mensagemLocalizacao" class="alert alert-success d-none mb-0">
+                                        <i class="fa-solid fa-check me-1"></i> Alterações guardadas com sucesso.
+                                    </div>
+                                </div>
+
+                                <div class="col-12 d-flex flex-column flex-sm-row justify-content-end gap-2">
+                                    <a href="localizacoes.html" class="btn btn-outline-secondary">Cancelar</a>
+
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa-solid fa-floppy-disk me-1"></i> Guardar alterações
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../../../assets/js/1241848.js"></script>
+</body>
+</html>
