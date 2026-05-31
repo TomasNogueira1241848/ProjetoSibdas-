@@ -6,25 +6,39 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarTooltips();
     inicializarToastPublic();
 
+    /* Dashboard */
     inicializarTabela('tabelaGarantiasConteudo', 'pesquisaTabela');
 
+    /* Equipamentos */
     inicializarTabela('tabelaEquipamentos', 'pesquisaEquipamentos', [
         { filtroId: 'filtroCategoriaEquipamentos', coluna: 2 },
         { filtroId: 'filtroLocalizacaoEquipamentos', coluna: 5 },
         { filtroId: 'filtroEstadoEquipamentos', coluna: 6 }
     ]);
 
+    /* Fornecedores */
     inicializarTabela('tabelaFornecedores', 'pesquisaFornecedores', [
         { filtroId: 'filtroTipoFornecedor', coluna: 2 },
         { filtroId: 'filtroContratoFornecedor', coluna: 5 },
         { filtroId: 'filtroEstadoFornecedor', coluna: 6 }
     ]);
 
+    /* Localizações */
+    inicializarTabela('tabelaLocalizacoes', 'pesquisaLocalizacoes', [
+        { filtroId: 'filtroTipoLocalizacao', coluna: 2 },
+        { filtroId: 'filtroPisoLocalizacao', coluna: 3 },
+        { filtroId: 'filtroEstadoLocalizacao', coluna: 6 }
+    ]);
+
+    /* Formulários de criar/editar */
     inicializarFormularioSimulado('formEquipamento', 'mensagemEquipamento', 'equipamentos.html');
     inicializarFormularioSimulado('formFornecedor', 'mensagemFornecedor', 'fornecedores.html');
+    inicializarFormularioSimulado('formLocalizacao', 'mensagemLocalizacao', 'localizacoes.html');
 
+    /* Formulários de eliminar */
     inicializarFormularioSimulado('formEliminarEquipamento', 'mensagemEliminarEquipamento', 'equipamentos.html', false);
     inicializarFormularioSimulado('formEliminarFornecedor', 'mensagemEliminarFornecedor', 'fornecedores.html', false);
+    inicializarFormularioSimulado('formEliminarLocalizacao', 'mensagemEliminarLocalizacao', 'localizacoes.html', false);
 
     inicializarGraficosDashboard();
 });

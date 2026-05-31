@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedInfo Solutions — Detalhes da Localização</title>
+    <title>MedInfo Solutions — Eliminar Localização</title>
     <link rel="icon" href="../../../assets/img/Logo empresa.png" type="image/png">
 
     <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
@@ -63,10 +63,9 @@
                     <a href="#" class="nav-link">
                         <i class="fa-solid fa-file-medical me-2"></i> Documentação
                     </a>
-                    <a href="#" class="nav-link"><i class="fa-solid fa-shield me-2">
-                        
-                    </i> Garantias e Contratos
-                </a>
+                    <a href="#" class="nav-link">
+                        <i class="fa-solid fa-shield me-2"></i> Garantias e Contratos
+                    </a>
                 </nav>
             </aside>
 
@@ -74,38 +73,46 @@
 
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                     <div>
-                        <h4 class="fw-bold mb-1">Detalhes da localização</h4>
-                        <p class="text-muted small mb-0">Consulta da ficha da localização selecionada.</p>
-                    </div>
-
-                    <div class="d-flex gap-2">
-                        <a href="localizacao-editar.html" class="btn btn-primary btn-sm">
-                            <i class="fa-solid fa-pen me-1"></i> Editar
-                        </a>
-                        <a href="localizacoes.html" class="btn btn-outline-secondary btn-sm">
-                            <i class="fa-solid fa-arrow-left me-1"></i> Voltar
-                        </a>
+                        <h4 class="fw-bold mb-1">Eliminar localização</h4>
+                        <p class="text-muted small mb-0">Confirmação da eliminação da localização selecionada.</p>
                     </div>
                 </div>
 
-                <div class="row g-3">
-
+                <div class="row justify-content-center">
                     <div class="col-lg-8">
-                        <div class="card p-4 h-100">
-                            <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
-                                <div>
-                                    <h5 class="fw-bold mb-1">Unidade de Cuidados Intensivos</h5>
-                                    <p class="text-muted small mb-0">Código: LOC-001</p>
+
+                        <div class="card p-4 border-danger">
+                            <div class="d-flex gap-3 align-items-start mb-3">
+                                <div class="dashboard-icon dashboard-icon-danger">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
                                 </div>
 
                                 <div>
-                                    <span class="badge badge-ativo">Ativa</span>
+                                    <h5 class="fw-bold mb-1">Tem a certeza que pretende eliminar esta localização?</h5>
+                                    <p class="text-muted mb-0">
+                                        Esta ação é apenas simulada nesta fase frontend. Na fase de backend, o registo será removido da base de dados.
+                                    </p>
                                 </div>
                             </div>
 
                             <hr>
 
-                            <div class="row g-3">
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <p class="text-muted small mb-1">Código</p>
+                                    <p class="fw-bold mb-0">LOC-001</p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p class="text-muted small mb-1">Estado</p>
+                                    <p class="mb-0"><span class="badge badge-ativo">Ativa</span></p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p class="text-muted small mb-1">Nome</p>
+                                    <p class="mb-0">Unidade de Cuidados Intensivos</p>
+                                </div>
+
                                 <div class="col-md-6">
                                     <p class="text-muted small mb-1">Tipo</p>
                                     <p class="mb-0">Unidade</p>
@@ -117,59 +124,27 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Responsável</p>
-                                    <p class="mb-0">Enf. Ana Martins</p>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Contacto interno</p>
-                                    <p class="mb-0">Ext. 2045</p>
-                                </div>
-
-                                <div class="col-md-6">
                                     <p class="text-muted small mb-1">Equipamentos associados</p>
-                                    <p class="mb-0">26 equipamentos</p>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Estado</p>
-                                    <p class="mb-0">Ativa</p>
-                                </div>
-
-                                <div class="col-12">
-                                    <p class="text-muted small mb-1">Descrição</p>
-                                    <p class="mb-0">
-                                        Unidade hospitalar destinada a doentes críticos, com equipamentos de monitorização,
-                                        ventilação e suporte de vida.
-                                    </p>
+                                    <p class="mb-0">26</p>
                                 </div>
                             </div>
+
+                            <div id="mensagemEliminarLocalizacao" class="alert alert-success d-none">
+                                <i class="fa-solid fa-check me-1"></i> Localização eliminada com sucesso.
+                            </div>
+
+                            <form id="formEliminarLocalizacao">
+                                <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
+                                    <a href="localizacoes.html" class="btn btn-outline-secondary">Cancelar</a>
+
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fa-solid fa-trash me-1"></i> Confirmar eliminação
+                                    </button>
+                                </div>
+                            </form>
                         </div>
+
                     </div>
-
-                    <div class="col-lg-4">
-                        <div class="card p-4 h-100">
-                            <h6 class="fw-bold mb-3">
-                                <i class="fa-solid fa-circle-info me-2 text-primary"></i> Informação rápida
-                            </h6>
-
-                            <div class="alert alert-success small">
-                                <i class="fa-solid fa-check me-1"></i>
-                                Localização ativa e disponível.
-                            </div>
-
-                            <div class="alert alert-warning small">
-                                <i class="fa-solid fa-triangle-exclamation me-1"></i>
-                                Contém equipamentos críticos.
-                            </div>
-
-                            <div class="alert alert-light border small mb-0">
-                                <i class="fa-solid fa-stethoscope me-1"></i>
-                                26 equipamentos registados nesta localização.
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
             </main>
