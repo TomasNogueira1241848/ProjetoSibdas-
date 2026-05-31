@@ -1,7 +1,41 @@
-/* Validação do formulário de contacto da área pública */
-const formContacto = document.getElementById('formContacto');
+/* Inicializa os componentes interativos existentes em cada página */
+document.addEventListener('DOMContentLoaded', function () {
+    inicializarFormularioContacto();
+    inicializarLogin();
 
-if (formContacto) {
+    inicializarTooltips();
+    inicializarToastPublic();
+
+    inicializarTabela('tabelaGarantiasConteudo', 'pesquisaTabela');
+
+    inicializarTabela('tabelaEquipamentos', 'pesquisaEquipamentos', [
+        { filtroId: 'filtroCategoriaEquipamentos', coluna: 2 },
+        { filtroId: 'filtroLocalizacaoEquipamentos', coluna: 5 },
+        { filtroId: 'filtroEstadoEquipamentos', coluna: 6 }
+    ]);
+
+    inicializarTabela('tabelaFornecedores', 'pesquisaFornecedores', [
+        { filtroId: 'filtroTipoFornecedor', coluna: 2 },
+        { filtroId: 'filtroContratoFornecedor', coluna: 5 },
+        { filtroId: 'filtroEstadoFornecedor', coluna: 6 }
+    ]);
+
+    inicializarFormularioSimulado('formEquipamento', 'mensagemEquipamento', 'equipamentos.html');
+    inicializarFormularioSimulado('formFornecedor', 'mensagemFornecedor', 'fornecedores.html');
+
+    inicializarFormularioSimulado('formEliminarEquipamento', 'mensagemEliminarEquipamento', 'equipamentos.html', false);
+    inicializarFormularioSimulado('formEliminarFornecedor', 'mensagemEliminarFornecedor', 'fornecedores.html', false);
+
+    inicializarGraficosDashboard();
+});
+
+
+/* Validação do formulário de contacto da área pública */
+function inicializarFormularioContacto() {
+    const formContacto = document.getElementById('formContacto');
+
+    if (!formContacto) return;
+
     formContacto.addEventListener('submit', function (e) {
         e.preventDefault();
 
@@ -26,10 +60,13 @@ if (formContacto) {
     });
 }
 
-/* Login simulado para a área reservada */
-const formLogin = document.getElementById('formLogin');
 
-if (formLogin) {
+/* Login simulado para a área reservada */
+function inicializarLogin() {
+    const formLogin = document.getElementById('formLogin');
+
+    if (!formLogin) return;
+
     formLogin.addEventListener('submit', function (e) {
         e.preventDefault();
 
@@ -42,22 +79,6 @@ if (formLogin) {
     });
 }
 
-/* Inicializa os componentes interativos existentes em cada página */
-document.addEventListener('DOMContentLoaded', function () {
-    inicializarTooltips();
-    inicializarToastPublic();
-
-    inicializarPesquisaTabela('pesquisaTabela', 'tabelaGarantiasConteudo');
-    inicializarPesquisaTabela('pesquisaEquipamentos', 'tabelaEquipamentos');
-    inicializarPesquisaTabela('pesquisaFornecedores', 'tabelaFornecedores');
-
-    inicializarFiltrosEquipamentos();
-    inicializarFormularioEquipamento();
-
-    inicializarGraficosDashboard();
-    
-    inicializarEliminarEquipamento();
-});
 
 /* Ativa os tooltips do Bootstrap */
 function inicializarTooltips() {
@@ -69,6 +90,7 @@ function inicializarTooltips() {
         new bootstrap.Tooltip(tooltipTriggerEl);
     });
 }
+
 
 /* Mostra o toast da página pública */
 function inicializarToastPublic() {
@@ -82,82 +104,93 @@ function inicializarToastPublic() {
     }
 }
 
-/* Pesquisa reutilizável em tabelas */
-function inicializarPesquisaTabela(idPesquisa, idTabela) {
-    const pesquisa = document.getElementById(idPesquisa);
+
+/* Pesquisa e filtros reutilizáveis em tabelas */
+function inicializarTabela(idTabela, idPesquisa, filtros) {
     const tabela = document.getElementById(idTabela);
 
-    if (!pesquisa || !tabela) return;
+    if (!tabela) return;
 
-    pesquisa.addEventListener('input', function () {
-        const termo = pesquisa.value.trim().toLowerCase();
-        const linhas = tabela.querySelectorAll('tbody tr');
+    const pesquisa = document.getElementById(idPesquisa);
+    const corpoTabela = tabela.querySelector('tbody') || tabela;
+
+    const filtrosAtivos = (filtros || [])
+        .map(function (filtro) {
+            return {
+                elemento: document.getElementById(filtro.filtroId),
+                coluna: filtro.coluna
+            };
+        })
+        .filter(function (filtro) {
+            return filtro.elemento !== null;
+        });
+
+    function aplicarPesquisaEFiltros() {
+        const termo = pesquisa ? pesquisa.value.trim().toLowerCase() : '';
+        const linhas = corpoTabela.querySelectorAll('tr');
 
         linhas.forEach(function (linha) {
             const textoLinha = linha.textContent.toLowerCase();
-            linha.classList.toggle('d-none', termo !== '' && !textoLinha.includes(termo));
-        });
-    });
-}
 
-/* Filtros da página de equipamentos */
-function inicializarFiltrosEquipamentos() {
-    const tabela = document.getElementById('tabelaEquipamentos');
-    const filtroCategoria = document.getElementById('filtroCategoriaEquipamentos');
-    const filtroEstado = document.getElementById('filtroEstadoEquipamentos');
-    const filtroLocalizacao = document.getElementById('filtroLocalizacaoEquipamentos');
+            const pesquisaOk = termo === '' || textoLinha.includes(termo);
 
-    if (!tabela || !filtroCategoria || !filtroEstado || !filtroLocalizacao) return;
+            const filtrosOk = filtrosAtivos.every(function (filtro) {
+                const valorFiltro = filtro.elemento.value;
 
-    function aplicarFiltros() {
-        const categoria = filtroCategoria.value;
-        const estado = filtroEstado.value;
-        const localizacao = filtroLocalizacao.value;
+                if (valorFiltro === '') return true;
 
-        tabela.querySelectorAll('tbody tr').forEach(function (linha) {
-            const categoriaLinha = linha.children[2].textContent.trim();
-            const localizacaoLinha = linha.children[5].textContent.trim();
-            const estadoLinha = linha.children[6].textContent.trim();
+                const celula = linha.children[filtro.coluna];
 
-            const categoriaOk = categoria === '' || categoriaLinha === categoria;
-            const estadoOk = estado === '' || estadoLinha === estado;
-            const localizacaoOk = localizacao === '' || localizacaoLinha === localizacao;
+                if (!celula) return true;
 
-            linha.classList.toggle('d-none', !(categoriaOk && estadoOk && localizacaoOk));
+                const valorLinha = celula.textContent.trim();
+
+                return valorLinha === valorFiltro;
+            });
+
+            linha.classList.toggle('d-none', !(pesquisaOk && filtrosOk));
         });
     }
 
-    filtroCategoria.addEventListener('change', aplicarFiltros);
-    filtroEstado.addEventListener('change', aplicarFiltros);
-    filtroLocalizacao.addEventListener('change', aplicarFiltros);
+    if (pesquisa) {
+        pesquisa.addEventListener('input', aplicarPesquisaEFiltros);
+    }
+
+    filtrosAtivos.forEach(function (filtro) {
+        filtro.elemento.addEventListener('change', aplicarPesquisaEFiltros);
+    });
 }
 
-/* Validação do formulário de novo/editar equipamento */
-function inicializarFormularioEquipamento() {
-    const formEquipamento = document.getElementById('formEquipamento');
-    const mensagemEquipamento = document.getElementById('mensagemEquipamento');
 
-    if (!formEquipamento) return;
+/* Validação reutilizável para formulários simulados */
+function inicializarFormularioSimulado(idFormulario, idMensagem, paginaDestino, validarFormulario) {
+    const formulario = document.getElementById(idFormulario);
+    const mensagem = document.getElementById(idMensagem);
 
-    formEquipamento.addEventListener('submit', function (e) {
+    if (!formulario) return;
+
+    const deveValidar = validarFormulario !== false;
+
+    formulario.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        if (!formEquipamento.checkValidity()) {
-            formEquipamento.classList.add('was-validated');
+        if (deveValidar && !formulario.checkValidity()) {
+            formulario.classList.add('was-validated');
             return;
         }
 
-        formEquipamento.classList.remove('was-validated');
+        formulario.classList.remove('was-validated');
 
-        if (mensagemEquipamento) {
-            mensagemEquipamento.classList.remove('d-none');
+        if (mensagem) {
+            mensagem.classList.remove('d-none');
         }
 
         setTimeout(function () {
-            window.location.href = 'equipamentos.html';
+            window.location.href = paginaDestino;
         }, 1200);
     });
 }
+
 
 /* Inicializa os gráficos estatísticos da dashboard */
 function inicializarGraficosDashboard() {
@@ -170,6 +203,7 @@ function inicializarGraficosDashboard() {
     criarGraficoCategoria();
     criarGraficoLocalizacao();
 }
+
 
 /* Gráfico circular com a distribuição dos equipamentos por estado */
 function criarGraficoEstado() {
@@ -207,6 +241,7 @@ function criarGraficoEstado() {
         }
     });
 }
+
 
 /* Gráfico de barras com os equipamentos por categoria */
 function criarGraficoCategoria() {
@@ -257,6 +292,7 @@ function criarGraficoCategoria() {
     });
 }
 
+
 /* Gráfico horizontal com os equipamentos por localização */
 function criarGraficoLocalizacao() {
     const graficoLocalizacao = document.getElementById('graficoLocalizacao');
@@ -304,25 +340,5 @@ function criarGraficoLocalizacao() {
                 }
             }
         }
-    });
-}
-
-/* Confirmação da eliminação de equipamento */
-function inicializarEliminarEquipamento() {
-    const formEliminar = document.getElementById('formEliminarEquipamento');
-    const mensagem = document.getElementById('mensagemEliminarEquipamento');
-
-    if (!formEliminar) return;
-
-    formEliminar.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        if (mensagem) {
-            mensagem.classList.remove('d-none');
-        }
-
-        setTimeout(function () {
-            window.location.href = 'equipamentos.html';
-        }, 1200);
     });
 }
