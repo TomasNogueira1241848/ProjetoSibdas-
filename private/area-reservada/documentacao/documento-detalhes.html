@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedInfo Solutions — Detalhes do Fornecedor</title>
+    <title>MedInfo Solutions — Detalhes do Documento</title>
     <link rel="icon" href="../../../assets/img/Logo empresa.png" type="image/png">
 
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
-    <!-- CSS -->
     <link rel="stylesheet" href="../../../assets/css/1241848.css">
 </head>
 
 <body class="pagina-area-reservada">
 
-    <!-- HEADER -->
     <header class="container-fluid header-area-reservada text-white">
         <div class="row align-items-center">
             <div class="col-8 col-md-6 d-flex align-items-center p-3 gap-3">
@@ -58,7 +54,6 @@
     <div class="container-fluid">
         <div class="row">
 
-            <!-- SIDEBAR / MENU -->
             <aside class="col-12 col-md-3 col-lg-2 sidebar p-3">
                 <p class="text-uppercase text-muted small fw-bold mb-3 mt-2 d-none d-md-block">Menu</p>
 
@@ -71,15 +66,15 @@
                         <i class="fa-solid fa-stethoscope me-2"></i> Equipamentos
                     </a>
 
-                    <a href="fornecedores.html" class="nav-link active">
+                    <a href="../fornecedores/fornecedores.html" class="nav-link">
                         <i class="fa-solid fa-truck me-2"></i> Fornecedores
                     </a>
 
                     <a href="../localizacoes/localizacoes.html" class="nav-link">
-                        <i class="fa-solid fa-stethoscope me-2"></i> Equipamentos
+                        <i class="fa-solid fa-location-dot me-2"></i> Localizações
                     </a>
 
-                    <a href="../documentacao/documentacao.html" class="nav-link">
+                    <a href="documentacao.html" class="nav-link active">
                         <i class="fa-solid fa-file-medical me-2"></i> Documentação
                     </a>
 
@@ -89,22 +84,20 @@
                 </nav>
             </aside>
 
-            <!-- CONTEÚDO PRINCIPAL -->
             <main class="col-12 col-md-9 col-lg-10 p-3 p-md-4 overflow-hidden" id="dashboard">
 
-                <!-- TÍTULO -->
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                     <div>
-                        <h4 class="fw-bold mb-1">Detalhes do fornecedor</h4>
-                        <p class="text-muted small mb-0">Consulta da ficha do fornecedor selecionado.</p>
+                        <h4 class="fw-bold mb-1">Detalhes do documento</h4>
+                        <p class="text-muted small mb-0">Consulta da informação associada ao documento selecionado.</p>
                     </div>
 
                     <div class="d-flex gap-2">
-                        <a href="fornecedor-editar.html" class="btn btn-primary btn-sm">
+                        <a href="documento-editar.html" class="btn btn-primary btn-sm">
                             <i class="fa-solid fa-pen me-1"></i> Editar
                         </a>
 
-                        <a href="fornecedores.html" class="btn btn-outline-secondary btn-sm">
+                        <a href="documentacao.html" class="btn btn-outline-secondary btn-sm">
                             <i class="fa-solid fa-arrow-left me-1"></i> Voltar
                         </a>
                     </div>
@@ -112,17 +105,16 @@
 
                 <div class="row g-3">
 
-                    <!-- DADOS PRINCIPAIS -->
                     <div class="col-lg-8">
                         <div class="card p-4 h-100">
                             <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
                                 <div>
-                                    <h5 class="fw-bold mb-1">Philips Healthcare Portugal</h5>
-                                    <p class="text-muted small mb-0">NIF: 501234567</p>
+                                    <h5 class="fw-bold mb-1">Manual do Monitor Multiparamétrico</h5>
+                                    <p class="text-muted small mb-0">Código: DOC-001</p>
                                 </div>
 
                                 <div>
-                                    <span class="badge badge-ativo">Ativo</span>
+                                    <span class="badge badge-ativo">Válido</span>
                                 </div>
                             </div>
 
@@ -131,50 +123,53 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <p class="text-muted small mb-1">Tipo</p>
-                                    <p class="mb-0">Fabricante</p>
+                                    <p class="mb-0">Manual</p>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Contrato ativo</p>
-                                    <p class="mb-0">Sim</p>
+                                    <p class="text-muted small mb-1">Área</p>
+                                    <p class="mb-0">Equipamento</p>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Email</p>
-                                    <p class="mb-0">suporte@philips.pt</p>
+                                    <p class="text-muted small mb-1">Associado a</p>
+                                    <p class="mb-0">EQ-0042 — Monitor Multiparamétrico</p>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Telefone</p>
-                                    <p class="mb-0">+351 211 234 567</p>
+                                    <p class="text-muted small mb-1">Responsável</p>
+                                    <p class="mb-0">Téc. João Ferreira</p>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Área de atuação</p>
-                                    <p class="mb-0">Monitorização e equipamentos de diagnóstico</p>
+                                    <p class="text-muted small mb-1">Data do documento</p>
+                                    <p class="mb-0">2025-03-12</p>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <p class="text-muted small mb-1">Equipamentos associados</p>
-                                    <p class="mb-0">18 equipamentos</p>
+                                    <p class="text-muted small mb-1">Validade</p>
+                                    <p class="mb-0">2027-03-12</p>
                                 </div>
 
                                 <div class="col-12">
-                                    <p class="text-muted small mb-1">Morada</p>
-                                    <p class="mb-0">Av. da República, 90, 1050-190 Lisboa</p>
+                                    <p class="text-muted small mb-1">Ficheiro</p>
+                                    <p class="mb-0">
+                                        <i class="fa-solid fa-file-pdf me-1 text-danger"></i>
+                                        manual-monitor-multiparametrico.pdf
+                                    </p>
                                 </div>
 
                                 <div class="col-12">
                                     <p class="text-muted small mb-1">Observações</p>
                                     <p class="mb-0">
-                                        Fornecedor principal de equipamentos de monitorização. Possui contrato de assistência técnica ativo.
+                                        Manual técnico associado ao monitor multiparamétrico utilizado na UCI.
+                                        Documento necessário para consulta técnica e procedimentos de manutenção.
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- INFORMAÇÃO RÁPIDA -->
                     <div class="col-lg-4">
                         <div class="card p-4 h-100">
                             <h6 class="fw-bold mb-3">
@@ -183,17 +178,17 @@
 
                             <div class="alert alert-success small">
                                 <i class="fa-solid fa-check me-1"></i>
-                                Fornecedor ativo no sistema.
+                                Documento válido e disponível.
                             </div>
 
-                            <div class="alert alert-warning small">
-                                <i class="fa-solid fa-file-contract me-1"></i>
-                                Contrato de manutenção associado a equipamentos críticos.
+                            <div class="alert alert-light border small">
+                                <i class="fa-solid fa-stethoscope me-1"></i>
+                                Associado ao equipamento EQ-0042.
                             </div>
 
                             <div class="alert alert-light border small mb-0">
-                                <i class="fa-solid fa-stethoscope me-1"></i>
-                                Associado a monitores multiparamétricos e equipamentos de diagnóstico.
+                                <i class="fa-solid fa-file-pdf me-1"></i>
+                                manual-monitor-multiparametrico.pdf
                             </div>
                         </div>
                     </div>
@@ -204,9 +199,7 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
-    <!-- JS -->
     <script src="../../../assets/js/1241848.js"></script>
 </body>
 </html>

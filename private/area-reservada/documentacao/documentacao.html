@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedInfo Solutions — Localizações</title>
+    <title>MedInfo Solutions — Documentação</title>
     <link rel="icon" href="../../../assets/img/Logo empresa.png" type="image/png">
 
     <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
@@ -32,19 +32,9 @@
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" href="#">
-                                <i class="fa-solid fa-key me-2"></i> Alterar password
-                            </a>
-                        </li>
-
+                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-key me-2"></i> Alterar password</a></li>
                         <li><hr class="dropdown-divider"></li>
-
-                        <li>
-                            <a class="dropdown-item" href="../../login/login.html">
-                                <i class="fa-solid fa-right-from-bracket me-2"></i> Sair
-                            </a>
-                        </li>
+                        <li><a class="dropdown-item" href="../../login/login.html"><i class="fa-solid fa-right-from-bracket me-2"></i> Sair</a></li>
                     </ul>
                 </div>
             </div>
@@ -70,11 +60,11 @@
                         <i class="fa-solid fa-truck me-2"></i> Fornecedores
                     </a>
 
-                    <a href="localizacoes.html" class="nav-link active">
+                    <a href="../localizacoes/localizacoes.html" class="nav-link">
                         <i class="fa-solid fa-location-dot me-2"></i> Localizações
                     </a>
 
-                    <a href="../documentacao/documentacao.html" class="nav-link">
+                    <a href="documentacao.html" class="nav-link active">
                         <i class="fa-solid fa-file-medical me-2"></i> Documentação
                     </a>
 
@@ -88,12 +78,12 @@
 
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                     <div>
-                        <h4 class="fw-bold mb-1">Localizações</h4>
-                        <p class="text-muted small mb-0">Gestão dos serviços, salas e unidades onde os equipamentos estão instalados.</p>
+                        <h4 class="fw-bold mb-1">Documentação</h4>
+                        <p class="text-muted small mb-0">Gestão de manuais, certificados, relatórios técnicos e documentos associados aos equipamentos.</p>
                     </div>
 
-                    <a href="localizacao-nova.html" class="btn btn-primary btn-sm">
-                        <i class="fa-solid fa-plus me-1"></i> Nova localização
+                    <a href="documento-novo.html" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-plus me-1"></i> Novo documento
                     </a>
                 </div>
 
@@ -102,28 +92,28 @@
                         <div class="col-6 col-md-3">
                             <div class="card card-dashboard p-3 h-100">
                                 <p class="text-muted small mb-1">Total</p>
-                                <h4 class="fw-bold mb-0">12</h4>
+                                <h4 class="fw-bold mb-0">34</h4>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3">
                             <div class="card card-dashboard border-success-dashboard p-3 h-100">
-                                <p class="text-muted small mb-1">Ativas</p>
-                                <h4 class="fw-bold mb-0">10</h4>
+                                <p class="text-muted small mb-1">Válidos</p>
+                                <h4 class="fw-bold mb-0">27</h4>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3">
                             <div class="card card-dashboard border-warning-dashboard p-3 h-100">
-                                <p class="text-muted small mb-1">Em manutenção</p>
-                                <h4 class="fw-bold mb-0">1</h4>
+                                <p class="text-muted small mb-1">Por rever</p>
+                                <h4 class="fw-bold mb-0">5</h4>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3">
                             <div class="card card-dashboard border-secondary-dashboard p-3 h-100">
-                                <p class="text-muted small mb-1">Inativas</p>
-                                <h4 class="fw-bold mb-0">1</h4>
+                                <p class="text-muted small mb-1">Expirados</p>
+                                <h4 class="fw-bold mb-0">2</h4>
                             </div>
                         </div>
                     </div>
@@ -133,39 +123,38 @@
                     <div class="card p-3">
                         <div class="row g-3">
                             <div class="col-lg-5">
-                                <label for="pesquisaLocalizacoes" class="form-label">Pesquisar</label>
-                                <input type="search" class="form-control" id="pesquisaLocalizacoes" placeholder="Código, nome, responsável ou tipo">
+                                <label for="pesquisaDocumentacao" class="form-label">Pesquisar</label>
+                                <input type="search" class="form-control" id="pesquisaDocumentacao" placeholder="Código, título, equipamento ou responsável">
                             </div>
 
                             <div class="col-md-4 col-lg-3">
-                                <label for="filtroTipoLocalizacao" class="form-label">Tipo</label>
-                                <select class="form-select" id="filtroTipoLocalizacao">
+                                <label for="filtroTipoDocumento" class="form-label">Tipo</label>
+                                <select class="form-select" id="filtroTipoDocumento">
                                     <option value="">Todos</option>
-                                    <option value="Serviço">Serviço</option>
-                                    <option value="Unidade">Unidade</option>
-                                    <option value="Sala">Sala</option>
-                                    <option value="Armazém">Armazém</option>
+                                    <option value="Manual">Manual</option>
+                                    <option value="Certificado">Certificado</option>
+                                    <option value="Relatório">Relatório</option>
+                                    <option value="Contrato">Contrato</option>
                                 </select>
                             </div>
 
                             <div class="col-md-4 col-lg-2">
-                                <label for="filtroPisoLocalizacao" class="form-label">Piso</label>
-                                <select class="form-select" id="filtroPisoLocalizacao">
-                                    <option value="">Todos</option>
-                                    <option value="Piso 0">Piso 0</option>
-                                    <option value="Piso 1">Piso 1</option>
-                                    <option value="Piso 2">Piso 2</option>
-                                    <option value="Piso 3">Piso 3</option>
+                                <label for="filtroAreaDocumento" class="form-label">Área</label>
+                                <select class="form-select" id="filtroAreaDocumento">
+                                    <option value="">Todas</option>
+                                    <option value="Equipamento">Equipamento</option>
+                                    <option value="Fornecedor">Fornecedor</option>
+                                    <option value="Manutenção">Manutenção</option>
                                 </select>
                             </div>
 
                             <div class="col-md-4 col-lg-2">
-                                <label for="filtroEstadoLocalizacao" class="form-label">Estado</label>
-                                <select class="form-select" id="filtroEstadoLocalizacao">
+                                <label for="filtroEstadoDocumento" class="form-label">Estado</label>
+                                <select class="form-select" id="filtroEstadoDocumento">
                                     <option value="">Todos</option>
-                                    <option value="Ativa">Ativa</option>
-                                    <option value="Em Manutenção">Em Manutenção</option>
-                                    <option value="Inativa">Inativa</option>
+                                    <option value="Válido">Válido</option>
+                                    <option value="Por rever">Por rever</option>
+                                    <option value="Expirado">Expirado</option>
                                 </select>
                             </div>
                         </div>
@@ -175,15 +164,15 @@
                 <section class="mb-4">
                     <div class="card p-3">
                         <div class="table-responsive">
-                            <table class="table table-dashboard table-hover align-middle mb-0" id="tabelaLocalizacoes">
+                            <table class="table table-dashboard table-hover align-middle mb-0" id="tabelaDocumentacao">
                                 <thead>
                                     <tr>
                                         <th>Código</th>
-                                        <th>Nome</th>
+                                        <th>Título</th>
                                         <th>Tipo</th>
-                                        <th>Piso</th>
-                                        <th>Responsável</th>
-                                        <th>Equipamentos</th>
+                                        <th>Associado a</th>
+                                        <th>Área</th>
+                                        <th>Data</th>
                                         <th>Estado</th>
                                         <th class="text-center">Ações</th>
                                     </tr>
@@ -191,92 +180,92 @@
 
                                 <tbody>
                                     <tr>
-                                        <td>LOC-001</td>
-                                        <td>Unidade de Cuidados Intensivos</td>
-                                        <td>Unidade</td>
-                                        <td>Piso 2</td>
-                                        <td>Enf. Ana Martins</td>
-                                        <td>26</td>
-                                        <td><span class="badge badge-ativo">Ativa</span></td>
+                                        <td>DOC-001</td>
+                                        <td>Manual do Monitor Multiparamétrico</td>
+                                        <td>Manual</td>
+                                        <td>EQ-0042</td>
+                                        <td>Equipamento</td>
+                                        <td>2025-03-12</td>
+                                        <td><span class="badge badge-ativo">Válido</span></td>
                                         <td class="text-center">
-                                            <a href="localizacao-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                            <a href="documento-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <a href="localizacao-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                            <a href="documento-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
 
-                                            <a href="localizacao-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                            <a href="documento-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
                                                 <i class="fa-solid fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td>LOC-002</td>
-                                        <td>Serviço de Urgência</td>
-                                        <td>Serviço</td>
-                                        <td>Piso 0</td>
-                                        <td>Dr. Miguel Silva</td>
-                                        <td>24</td>
-                                        <td><span class="badge badge-ativo">Ativa</span></td>
+                                        <td>DOC-002</td>
+                                        <td>Certificado de Calibração</td>
+                                        <td>Certificado</td>
+                                        <td>EQ-0018</td>
+                                        <td>Equipamento</td>
+                                        <td>2025-01-20</td>
+                                        <td><span class="badge badge-manutencao">Por rever</span></td>
                                         <td class="text-center">
-                                            <a href="localizacao-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                            <a href="documento-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <a href="localizacao-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                            <a href="documento-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
 
-                                            <a href="localizacao-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                            <a href="documento-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
                                                 <i class="fa-solid fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td>LOC-003</td>
-                                        <td>Sala de Esterilização</td>
-                                        <td>Sala</td>
-                                        <td>Piso 1</td>
-                                        <td>Téc. Rui Costa</td>
-                                        <td>8</td>
-                                        <td><span class="badge badge-manutencao">Em Manutenção</span></td>
+                                        <td>DOC-003</td>
+                                        <td>Relatório de Manutenção Preventiva</td>
+                                        <td>Relatório</td>
+                                        <td>Ventilador V60</td>
+                                        <td>Manutenção</td>
+                                        <td>2024-11-08</td>
+                                        <td><span class="badge badge-ativo">Válido</span></td>
                                         <td class="text-center">
-                                            <a href="localizacao-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                            <a href="documento-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <a href="localizacao-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                            <a href="documento-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
 
-                                            <a href="localizacao-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                            <a href="documento-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
                                                 <i class="fa-solid fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td>LOC-004</td>
-                                        <td>Armazém Técnico</td>
-                                        <td>Armazém</td>
-                                        <td>Piso -1</td>
-                                        <td>João Ferreira</td>
-                                        <td>15</td>
-                                        <td><span class="badge badge-inativo">Inativa</span></td>
+                                        <td>DOC-004</td>
+                                        <td>Contrato de Assistência Técnica</td>
+                                        <td>Contrato</td>
+                                        <td>Philips Healthcare Portugal</td>
+                                        <td>Fornecedor</td>
+                                        <td>2023-06-01</td>
+                                        <td><span class="badge badge-inativo">Expirado</span></td>
                                         <td class="text-center">
-                                            <a href="localizacao-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                            <a href="documento-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <a href="localizacao-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                            <a href="documento-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
                                                 <i class="fa-solid fa-pen"></i>
                                             </a>
 
-                                            <a href="localizacao-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                            <a href="documento-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
                                                 <i class="fa-solid fa-trash"></i>
                                             </a>
                                         </td>
