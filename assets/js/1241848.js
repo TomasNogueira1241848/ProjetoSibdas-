@@ -6,42 +6,126 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarTooltips();
     inicializarToastPublic();
 
-    /* Dashboard */
-    inicializarTabela('tabelaGarantiasConteudo', 'pesquisaTabela');
-
-    /* Equipamentos */
-    inicializarTabela('tabelaEquipamentos', 'pesquisaEquipamentos', [
-        { filtroId: 'filtroCategoriaEquipamentos', coluna: 2 },
-        { filtroId: 'filtroLocalizacaoEquipamentos', coluna: 5 },
-        { filtroId: 'filtroEstadoEquipamentos', coluna: 6 }
-    ]);
-
-    /* Fornecedores */
-    inicializarTabela('tabelaFornecedores', 'pesquisaFornecedores', [
-        { filtroId: 'filtroTipoFornecedor', coluna: 2 },
-        { filtroId: 'filtroContratoFornecedor', coluna: 5 },
-        { filtroId: 'filtroEstadoFornecedor', coluna: 6 }
-    ]);
-
-    /* Localizações */
-    inicializarTabela('tabelaLocalizacoes', 'pesquisaLocalizacoes', [
-        { filtroId: 'filtroTipoLocalizacao', coluna: 2 },
-        { filtroId: 'filtroPisoLocalizacao', coluna: 3 },
-        { filtroId: 'filtroEstadoLocalizacao', coluna: 6 }
-    ]);
-
-    /* Formulários de criar/editar */
-    inicializarFormularioSimulado('formEquipamento', 'mensagemEquipamento', 'equipamentos.html');
-    inicializarFormularioSimulado('formFornecedor', 'mensagemFornecedor', 'fornecedores.html');
-    inicializarFormularioSimulado('formLocalizacao', 'mensagemLocalizacao', 'localizacoes.html');
-
-    /* Formulários de eliminar */
-    inicializarFormularioSimulado('formEliminarEquipamento', 'mensagemEliminarEquipamento', 'equipamentos.html', false);
-    inicializarFormularioSimulado('formEliminarFornecedor', 'mensagemEliminarFornecedor', 'fornecedores.html', false);
-    inicializarFormularioSimulado('formEliminarLocalizacao', 'mensagemEliminarLocalizacao', 'localizacoes.html', false);
+    inicializarTabelas();
+    inicializarFormulariosSimulados();
 
     inicializarGraficosDashboard();
 });
+
+
+/* Configuração reutilizável das tabelas */
+function inicializarTabelas() {
+    const tabelas = [
+        {
+            idTabela: 'tabelaGarantiasConteudo',
+            idPesquisa: 'pesquisaTabela'
+        },
+        {
+            idTabela: 'tabelaEquipamentos',
+            idPesquisa: 'pesquisaEquipamentos',
+            filtros: [
+                { filtroId: 'filtroCategoriaEquipamentos', coluna: 2 },
+                { filtroId: 'filtroLocalizacaoEquipamentos', coluna: 5 },
+                { filtroId: 'filtroEstadoEquipamentos', coluna: 6 }
+            ]
+        },
+        {
+            idTabela: 'tabelaFornecedores',
+            idPesquisa: 'pesquisaFornecedores',
+            filtros: [
+                { filtroId: 'filtroTipoFornecedor', coluna: 2 },
+                { filtroId: 'filtroContratoFornecedor', coluna: 5 },
+                { filtroId: 'filtroEstadoFornecedor', coluna: 6 }
+            ]
+        },
+        {
+            idTabela: 'tabelaLocalizacoes',
+            idPesquisa: 'pesquisaLocalizacoes',
+            filtros: [
+                { filtroId: 'filtroTipoLocalizacao', coluna: 2 },
+                { filtroId: 'filtroPisoLocalizacao', coluna: 3 },
+                { filtroId: 'filtroEstadoLocalizacao', coluna: 6 }
+            ]
+        },
+        {
+            idTabela: 'tabelaDocumentacao',
+            idPesquisa: 'pesquisaDocumentacao',
+            filtros: [
+                { filtroId: 'filtroTipoDocumento', coluna: 2 },
+                { filtroId: 'filtroAreaDocumento', coluna: 4 },
+                { filtroId: 'filtroEstadoDocumento', coluna: 6 }
+            ]
+        }
+    ];
+
+    tabelas.forEach(function (tabela) {
+        inicializarTabela(tabela.idTabela, tabela.idPesquisa, tabela.filtros);
+    });
+}
+
+
+/* Configuração reutilizável dos formulários */
+function inicializarFormulariosSimulados() {
+    const formularios = [
+        {
+            idFormulario: 'formEquipamento',
+            idMensagem: 'mensagemEquipamento',
+            paginaDestino: 'equipamentos.html',
+            validar: true
+        },
+        {
+            idFormulario: 'formFornecedor',
+            idMensagem: 'mensagemFornecedor',
+            paginaDestino: 'fornecedores.html',
+            validar: true
+        },
+        {
+            idFormulario: 'formLocalizacao',
+            idMensagem: 'mensagemLocalizacao',
+            paginaDestino: 'localizacoes.html',
+            validar: true
+        },
+        {
+            idFormulario: 'formDocumento',
+            idMensagem: 'mensagemDocumento',
+            paginaDestino: 'documentacao.html',
+            validar: true
+        },
+        {
+            idFormulario: 'formEliminarEquipamento',
+            idMensagem: 'mensagemEliminarEquipamento',
+            paginaDestino: 'equipamentos.html',
+            validar: false
+        },
+        {
+            idFormulario: 'formEliminarFornecedor',
+            idMensagem: 'mensagemEliminarFornecedor',
+            paginaDestino: 'fornecedores.html',
+            validar: false
+        },
+        {
+            idFormulario: 'formEliminarLocalizacao',
+            idMensagem: 'mensagemEliminarLocalizacao',
+            paginaDestino: 'localizacoes.html',
+            validar: false
+        },
+        {
+            idFormulario: 'formEliminarDocumento',
+            idMensagem: 'mensagemEliminarDocumento',
+            paginaDestino: 'documentacao.html',
+            validar: false
+        }
+    ];
+
+    formularios.forEach(function (formulario) {
+        inicializarFormularioSimulado(
+            formulario.idFormulario,
+            formulario.idMensagem,
+            formulario.paginaDestino,
+            formulario.validar
+        );
+    });
+}
 
 
 /* Validação do formulário de contacto da área pública */
@@ -183,12 +267,10 @@ function inicializarFormularioSimulado(idFormulario, idMensagem, paginaDestino, 
 
     if (!formulario) return;
 
-    const deveValidar = validarFormulario !== false;
-
     formulario.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        if (deveValidar && !formulario.checkValidity()) {
+        if (validarFormulario && !formulario.checkValidity()) {
             formulario.classList.add('was-validated');
             return;
         }
