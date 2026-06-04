@@ -55,6 +55,24 @@ function inicializarTabelas() {
                 { filtroId: 'filtroAreaDocumento', coluna: 4 },
                 { filtroId: 'filtroEstadoDocumento', coluna: 6 }
             ]
+        },
+        {
+            idTabela: 'tabelaContratos',
+            idPesquisa: 'pesquisaContratos',
+            filtros: [
+                { filtroId: 'filtroTipoContrato', coluna: 2 },
+                { filtroId: 'filtroFornecedorContrato', coluna: 4 },
+                { filtroId: 'filtroEstadoContrato', coluna: 7 }
+            ]
+        },
+        {
+            idTabela: 'tabelaConteudos',
+            idPesquisa: 'pesquisaConteudos',
+            filtros: [
+                { filtroId: 'filtroSecaoConteudo', coluna: 1 },
+                { filtroId: 'filtroTipoConteudo', coluna: 3 },
+                { filtroId: 'filtroEstadoConteudo', coluna: 5 }
+            ]
         }
     ];
 
@@ -92,6 +110,18 @@ function inicializarFormulariosSimulados() {
             validar: true
         },
         {
+            idFormulario: 'formContrato',
+            idMensagem: 'mensagemContrato',
+            paginaDestino: 'contratos.html',
+            validar: true
+        },
+        {
+            idFormulario: 'formConteudo',
+            idMensagem: 'mensagemConteudo',
+            paginaDestino: 'conteudos.html',
+            validar: true
+        },
+        {
             idFormulario: 'formEliminarEquipamento',
             idMensagem: 'mensagemEliminarEquipamento',
             paginaDestino: 'equipamentos.html',
@@ -113,6 +143,18 @@ function inicializarFormulariosSimulados() {
             idFormulario: 'formEliminarDocumento',
             idMensagem: 'mensagemEliminarDocumento',
             paginaDestino: 'documentacao.html',
+            validar: false
+        },
+        {
+            idFormulario: 'formEliminarContrato',
+            idMensagem: 'mensagemEliminarContrato',
+            paginaDestino: 'contratos.html',
+            validar: false
+        },
+        {
+            idFormulario: 'formEliminarConteudo',
+            idMensagem: 'mensagemEliminarConteudo',
+            paginaDestino: 'conteudos.html',
             validar: false
         }
     ];
