@@ -6,13 +6,17 @@
     <title>MedInfo Solutions — Garantias e Contratos</title>
     <link rel="icon" href="../../../assets/img/Logo empresa.png" type="image/png">
 
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
+    <!-- CSS -->
     <link rel="stylesheet" href="../../../assets/css/1241848.css">
 </head>
 
 <body class="pagina-area-reservada">
 
+    <!-- HEADER -->
     <header class="container-fluid header-area-reservada text-white">
         <div class="row align-items-center">
             <div class="col-8 col-md-6 d-flex align-items-center p-3 gap-3">
@@ -32,9 +36,21 @@
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-key me-2"></i> Alterar password</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="../../login/login.html"><i class="fa-solid fa-right-from-bracket me-2"></i> Sair</a></li>
+                        <li>
+                            <a class="dropdown-item" href="#">
+                                <i class="fa-solid fa-key me-2"></i> Alterar password
+                            </a>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="../../login/login.html">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i> Sair
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -44,64 +60,92 @@
     <div class="container-fluid">
         <div class="row">
 
+            <!-- SIDEBAR / MENU -->
             <aside class="col-12 col-md-3 col-lg-2 sidebar p-3">
                 <p class="text-uppercase text-muted small fw-bold mb-3 mt-2 d-none d-md-block">Menu</p>
 
                 <nav class="nav nav-pills flex-row flex-md-column flex-nowrap overflow-auto gap-2 w-100">
-                    <a href="../index.html" class="nav-link"><i class="fa-solid fa-gauge me-2"></i> Dashboard</a>
-                    <a href="../equipamentos/equipamentos.html" class="nav-link"><i class="fa-solid fa-stethoscope me-2"></i> Equipamentos</a>
-                    <a href="../fornecedores/fornecedores.html" class="nav-link"><i class="fa-solid fa-truck me-2"></i> Fornecedores</a>
-                    <a href="../localizacoes/localizacoes.html" class="nav-link"><i class="fa-solid fa-location-dot me-2"></i> Localizações</a>
-                    <a href="../documentacao/documentacao.html" class="nav-link"><i class="fa-solid fa-file-medical me-2"></i> Documentação</a>
-                    <a href="contratos.html" class="nav-link active"><i class="fa-solid fa-shield me-2"></i> Garantias e Contratos</a>
+                    <a href="../index.html" class="nav-link">
+                        <i class="fa-solid fa-gauge me-2"></i> Dashboard
+                    </a>
+
+                    <a href="../equipamentos/equipamentos.html" class="nav-link">
+                        <i class="fa-solid fa-stethoscope me-2"></i> Equipamentos
+                    </a>
+
+                    <a href="../fornecedores/fornecedores.html" class="nav-link">
+                        <i class="fa-solid fa-truck me-2"></i> Fornecedores
+                    </a>
+
+                    <a href="../localizacoes/localizacoes.html" class="nav-link">
+                        <i class="fa-solid fa-location-dot me-2"></i> Localizações
+                    </a>
+
+                    <a href="../documentacao/documentacao.html" class="nav-link">
+                        <i class="fa-solid fa-file-medical me-2"></i> Documentação
+                    </a>
+
+                    <a href="contratos.html" class="nav-link active">
+                        <i class="fa-solid fa-shield me-2"></i> Garantias e Contratos
+                    </a>
                 </nav>
             </aside>
 
+            <!-- CONTEÚDO PRINCIPAL -->
             <main class="col-12 col-md-9 col-lg-10 p-3 p-md-4 overflow-hidden" id="dashboard">
 
+                <!-- TÍTULO E AÇÕES -->
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                     <div>
                         <h4 class="fw-bold mb-1">Garantias e Contratos</h4>
-                        <p class="text-muted small mb-0">Gestão de garantias, contratos de manutenção e acordos associados aos equipamentos médicos.</p>
+                        <p class="text-muted small mb-0">Gestão separada das garantias dos equipamentos e dos contratos associados.</p>
                     </div>
 
-                    <a href="contrato-novo.html" class="btn btn-primary btn-sm">
-                        <i class="fa-solid fa-plus me-1"></i> Novo contrato
-                    </a>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="garantia-nova.html" class="btn btn-outline-primary btn-sm">
+                            <i class="fa-solid fa-shield me-1"></i> Nova garantia
+                        </a>
+
+                        <a href="contrato-novo.html" class="btn btn-primary btn-sm">
+                            <i class="fa-solid fa-file-contract me-1"></i> Novo contrato
+                        </a>
+                    </div>
                 </div>
 
+                <!-- INDICADORES -->
                 <section class="mb-4">
                     <div class="row g-3">
                         <div class="col-6 col-md-3">
                             <div class="card card-dashboard p-3 h-100">
                                 <p class="text-muted small mb-1">Total</p>
-                                <h4 class="fw-bold mb-0">21</h4>
+                                <h4 class="fw-bold mb-0">4</h4>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3">
                             <div class="card card-dashboard border-success-dashboard p-3 h-100">
-                                <p class="text-muted small mb-1">Ativos</p>
-                                <h4 class="fw-bold mb-0">16</h4>
+                                <p class="text-muted small mb-1">Garantias</p>
+                                <h4 class="fw-bold mb-0">2</h4>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <div class="card card-dashboard border-info-dashboard p-3 h-100">
+                                <p class="text-muted small mb-1">Contratos</p>
+                                <h4 class="fw-bold mb-0">2</h4>
                             </div>
                         </div>
 
                         <div class="col-6 col-md-3">
                             <div class="card card-dashboard border-warning-dashboard p-3 h-100">
                                 <p class="text-muted small mb-1">A expirar</p>
-                                <h4 class="fw-bold mb-0">3</h4>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-md-3">
-                            <div class="card card-dashboard border-secondary-dashboard p-3 h-100">
-                                <p class="text-muted small mb-1">Expirados</p>
-                                <h4 class="fw-bold mb-0">2</h4>
+                                <h4 class="fw-bold mb-0">1</h4>
                             </div>
                         </div>
                     </div>
                 </section>
 
+                <!-- FILTROS -->
                 <section class="mb-4">
                     <div class="card p-3">
                         <div class="row g-3">
@@ -115,7 +159,6 @@
                                 <select class="form-select" id="filtroTipoContrato">
                                     <option value="">Todos</option>
                                     <option value="Garantia">Garantia</option>
-                                    <option value="Contrato">Contrato</option>
                                     <option value="Manutenção">Manutenção</option>
                                     <option value="Seguro">Seguro</option>
                                 </select>
@@ -144,7 +187,91 @@
                     </div>
                 </section>
 
+                <!-- TABELA DE GARANTIAS -->
                 <section class="mb-4">
+                    <div class="mb-3">
+                        <h5 class="fw-bold mb-1">Garantias</h5>
+                        <p class="text-muted small mb-0">Garantias associadas diretamente a equipamentos médicos.</p>
+                    </div>
+
+                    <div class="card p-3">
+                        <div class="table-responsive">
+                            <table class="table table-dashboard table-hover align-middle mb-0" id="tabelaGarantias">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Designação</th>
+                                        <th>Tipo</th>
+                                        <th>Equipamento</th>
+                                        <th>Fornecedor</th>
+                                        <th>Início</th>
+                                        <th>Fim</th>
+                                        <th>Estado</th>
+                                        <th class="text-center">Ações</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>GAR-001</td>
+                                        <td>Garantia Monitor Multiparamétrico</td>
+                                        <td>Garantia</td>
+                                        <td>EQ-0042</td>
+                                        <td>Philips Healthcare Portugal</td>
+                                        <td>10/06/2023</td>
+                                        <td>10/06/2026</td>
+                                        <td><span class="badge badge-ativo">Ativo</span></td>
+                                        <td class="text-center">
+                                            <a href="garantia-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+
+                                            <a href="garantia-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
+
+                                            <a href="garantia-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>GAR-002</td>
+                                        <td>Garantia Ventilador Evita V600</td>
+                                        <td>Garantia</td>
+                                        <td>EQ-0017</td>
+                                        <td>Dräger Portugal</td>
+                                        <td>15/01/2024</td>
+                                        <td>15/01/2026</td>
+                                        <td><span class="badge badge-manutencao">A expirar</span></td>
+                                        <td class="text-center">
+                                            <a href="garantia-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+
+                                            <a href="garantia-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
+
+                                            <a href="garantia-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TABELA DE CONTRATOS -->
+                <section class="mb-4">
+                    <div class="mb-3">
+                        <h5 class="fw-bold mb-1">Contratos</h5>
+                        <p class="text-muted small mb-0">Contratos de manutenção, assistência técnica e seguros.</p>
+                    </div>
+
                     <div class="card p-3">
                         <div class="table-responsive">
                             <table class="table table-dashboard table-hover align-middle mb-0" id="tabelaContratos">
@@ -164,18 +291,50 @@
 
                                 <tbody>
                                     <tr>
-                                        <td>GAR-001</td>
-                                        <td>Garantia Monitor Multiparamétrico</td>
-                                        <td>Garantia</td>
-                                        <td>EQ-0042</td>
-                                        <td>Philips Healthcare Portugal</td>
-                                        <td>2023-06-10</td>
-                                        <td>2026-06-10</td>
+                                        <td>CON-001</td>
+                                        <td>Contrato de Manutenção UCI</td>
+                                        <td>Manutenção</td>
+                                        <td>Equipamentos UCI</td>
+                                        <td>Dräger Portugal</td>
+                                        <td>01/01/2024</td>
+                                        <td>31/12/2025</td>
                                         <td><span class="badge badge-ativo">Ativo</span></td>
                                         <td class="text-center">
-                                            <a href="contrato-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes"><i class="fa-solid fa-eye"></i></a>
-                                            <a href="contrato-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar"><i class="fa-solid fa-pen"></i></a>
-                                            <a href="contrato-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar"><i class="fa-solid fa-trash"></i></a>
+                                            <a href="contrato-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+
+                                            <a href="contrato-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
+
+                                            <a href="contrato-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>CON-002</td>
+                                        <td>Seguro Equipamentos Laboratório</td>
+                                        <td>Seguro</td>
+                                        <td>Laboratório</td>
+                                        <td>MedRepair Norte</td>
+                                        <td>01/09/2022</td>
+                                        <td>01/09/2024</td>
+                                        <td><span class="badge badge-inativo">Expirado</span></td>
+                                        <td class="text-center">
+                                            <a href="contrato-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+
+                                            <a href="contrato-editar.html" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
+
+                                            <a href="contrato-eliminar.html" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -188,7 +347,9 @@
         </div>
     </div>
 
+    <!-- Bootstrap JS -->
     <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript -->
     <script src="../../../assets/js/1241848.js"></script>
 </body>
 </html>
