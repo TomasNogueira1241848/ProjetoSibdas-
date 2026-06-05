@@ -57,7 +57,7 @@ function inicializarTabelas() {
             ]
         },
         {
-            idTabela: 'tabelaContratos',
+            idTabela: 'tabelaGarantias',
             idPesquisa: 'pesquisaContratos',
             filtros: [
                 { filtroId: 'filtroTipoContrato', coluna: 2 },
@@ -66,12 +66,12 @@ function inicializarTabelas() {
             ]
         },
         {
-            idTabela: 'tabelaConteudos',
-            idPesquisa: 'pesquisaConteudos',
+            idTabela: 'tabelaContratos',
+            idPesquisa: 'pesquisaContratos',
             filtros: [
-                { filtroId: 'filtroSecaoConteudo', coluna: 1 },
-                { filtroId: 'filtroTipoConteudo', coluna: 3 },
-                { filtroId: 'filtroEstadoConteudo', coluna: 5 }
+                { filtroId: 'filtroTipoContrato', coluna: 2 },
+                { filtroId: 'filtroFornecedorContrato', coluna: 4 },
+                { filtroId: 'filtroEstadoContrato', coluna: 7 }
             ]
         }
     ];
@@ -116,9 +116,9 @@ function inicializarFormulariosSimulados() {
             validar: true
         },
         {
-            idFormulario: 'formConteudo',
-            idMensagem: 'mensagemConteudo',
-            paginaDestino: 'conteudos.html',
+            idFormulario: 'formGarantia',
+            idMensagem: 'mensagemGarantia',
+            paginaDestino: 'contratos.html',
             validar: true
         },
         {
@@ -152,9 +152,9 @@ function inicializarFormulariosSimulados() {
             validar: false
         },
         {
-            idFormulario: 'formEliminarConteudo',
-            idMensagem: 'mensagemEliminarConteudo',
-            paginaDestino: 'conteudos.html',
+            idFormulario: 'formEliminarGarantia',
+            idMensagem: 'mensagemEliminarGarantia',
+            paginaDestino: 'contratos.html',
             validar: false
         }
     ];
