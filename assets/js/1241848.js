@@ -1,5 +1,7 @@
 /* Inicializa os componentes interativos existentes em cada página */
 document.addEventListener('DOMContentLoaded', function () {
+    aplicarConteudosPublicos();
+
     inicializarFormularioContacto();
     inicializarLogin();
 
@@ -8,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     inicializarTabelas();
     inicializarFormulariosSimulados();
+    inicializarGestaoConteudosPublicos();
 
     inicializarGraficosDashboard();
 });
@@ -327,6 +330,270 @@ function inicializarFormularioSimulado(idFormulario, idMensagem, paginaDestino, 
             window.location.href = paginaDestino;
         }, 1200);
     });
+}
+
+
+/* Conteúdos originais da página pública */
+const conteudosPublicosOriginais = {
+    heroTitulo: 'Soluções digitais para a gestão hospitalar',
+    heroSubtitulo: 'Desenvolvemos sistemas de informação especializados para instituições de saúde, com foco na rastreabilidade, segurança e eficiência operacional.',
+
+    sobreTitulo: 'Sobre Nós',
+    sobreTexto1: 'A MedInfo Solutions é uma empresa portuguesa especializada no desenvolvimento de software para a área da saúde. Fundada em 2015 e sediada no Porto, temos como missão modernizar a gestão tecnológica das instituições de saúde nacionais.',
+    sobreTexto2: 'A nossa equipa é composta por engenheiros biomédicos, engenheiros informáticos e especialistas em sistemas de informação hospitalares, o que nos permite desenvolver soluções tecnicamente sólidas e clinicamente adequadas.',
+    sobreTexto3: 'Trabalhamos com hospitais públicos e privados, clínicas e centros de saúde em todo o território nacional, com especial foco em sistemas de gestão de inventário e manutenção de equipamentos médicos.',
+
+    servicosTitulo: 'Serviços',
+    servicosTexto: 'Desenvolvemos soluções adaptadas às necessidades específicas de cada instituição.',
+
+    clientesTitulo: 'Os Nossos Clientes',
+    clientesTexto: 'Trabalhamos com algumas das principais instituições de saúde nacionais.',
+
+    contactosTitulo: 'Contactos',
+    contactosTexto: 'Entre em contacto connosco para mais informações ou para agendar uma demonstração.',
+    morada: 'Rua Dr. António Bernardino de Almeida, 431\n4200-072 Porto',
+    telefone: '+351 222 123 456',
+    email: 'geral@medinfosolutions.pt',
+    website: 'www.medinfosolutions.pt',
+    horario: '2ª a 6ª Feira: 9h — 18h\nSábado, Domingo e Feriados: Encerrado',
+
+    rodapeTexto: 'MedInfo Solutions © 2025 — Todos os direitos reservados'
+};
+
+
+/* Obtém os conteúdos públicos guardados */
+function obterConteudosPublicos() {
+    const conteudosGuardados = localStorage.getItem('conteudosPublicos');
+
+    if (!conteudosGuardados) {
+        return conteudosPublicosOriginais;
+    }
+
+    try {
+        return {
+            ...conteudosPublicosOriginais,
+            ...JSON.parse(conteudosGuardados)
+        };
+    } catch (erro) {
+        return conteudosPublicosOriginais;
+    }
+}
+
+
+/* Guarda os conteúdos públicos */
+function guardarConteudosPublicos(conteudos) {
+    localStorage.setItem('conteudosPublicos', JSON.stringify(conteudos));
+}
+
+
+/* Aplica os conteúdos guardados na página pública */
+function aplicarConteudosPublicos() {
+    const conteudos = obterConteudosPublicos();
+
+    const heroTitulo = document.querySelector('.hero-titulo');
+    const heroSubtitulo = document.querySelector('.hero-subtitulo');
+
+    if (heroTitulo) heroTitulo.textContent = conteudos.heroTitulo;
+    if (heroSubtitulo) heroSubtitulo.textContent = conteudos.heroSubtitulo;
+
+    const sobreTitulo = document.querySelector('#sobre-nos h2');
+    const sobreParagrafos = document.querySelectorAll('#sobre-nos .col-lg-6 p');
+
+    if (sobreTitulo) sobreTitulo.textContent = conteudos.sobreTitulo;
+    if (sobreParagrafos[0]) sobreParagrafos[0].textContent = conteudos.sobreTexto1;
+    if (sobreParagrafos[1]) sobreParagrafos[1].textContent = conteudos.sobreTexto2;
+    if (sobreParagrafos[2]) sobreParagrafos[2].textContent = conteudos.sobreTexto3;
+
+    const servicosTitulo = document.querySelector('#servicos h2');
+    const servicosTexto = document.querySelector('#servicos .row.mb-4 p');
+
+    if (servicosTitulo) servicosTitulo.textContent = conteudos.servicosTitulo;
+    if (servicosTexto) servicosTexto.textContent = conteudos.servicosTexto;
+
+    const clientesTitulo = document.querySelector('#clientes h2');
+    const clientesTexto = document.querySelector('#clientes .row.mb-4 p');
+
+    if (clientesTitulo) clientesTitulo.textContent = conteudos.clientesTitulo;
+    if (clientesTexto) clientesTexto.textContent = conteudos.clientesTexto;
+
+    const contactosTitulo = document.querySelector('#contactos h2');
+    const contactosTexto = document.querySelector('#contactos .row.mb-4 p');
+
+    if (contactosTitulo) contactosTitulo.textContent = conteudos.contactosTitulo;
+    if (contactosTexto) contactosTexto.textContent = conteudos.contactosTexto;
+
+    aplicarDadosContacto(conteudos);
+
+    const rodape = document.querySelector('#footer .col-md-6');
+
+    if (rodape) {
+        rodape.innerHTML = `<i class="fa-solid fa-heart-pulse me-1"></i> <strong>${conteudos.rodapeTexto}</strong>`;
+    }
+}
+
+
+/* Aplica os dados de contacto na página pública */
+function aplicarDadosContacto(conteudos) {
+    const cartaoContactos = document.querySelector('#contactos .card.p-4.h-100');
+
+    if (!cartaoContactos) return;
+
+    const blocosContacto = cartaoContactos.querySelectorAll('.d-flex.gap-3');
+
+    atualizarBlocoContacto(blocosContacto[0], conteudos.morada);
+    atualizarBlocoContacto(blocosContacto[1], conteudos.telefone);
+    atualizarBlocoContacto(blocosContacto[2], conteudos.email);
+    atualizarBlocoContacto(blocosContacto[3], conteudos.website);
+    atualizarBlocoContacto(blocosContacto[4], conteudos.horario);
+}
+
+
+/* Atualiza um bloco de contacto mantendo o título original */
+function atualizarBlocoContacto(bloco, texto) {
+    if (!bloco) return;
+
+    const conteudo = bloco.querySelector('div:last-child');
+    const titulo = conteudo ? conteudo.querySelector('.fw-bold') : null;
+
+    if (!conteudo || !titulo) return;
+
+    conteudo.innerHTML = '';
+    conteudo.appendChild(titulo);
+    conteudo.appendChild(document.createElement('br'));
+
+    texto.split('\n').forEach(function (linha, indice) {
+        conteudo.appendChild(document.createTextNode(linha));
+
+        if (indice < texto.split('\n').length - 1) {
+            conteudo.appendChild(document.createElement('br'));
+        }
+    });
+}
+
+
+/* Inicializa a gestão de conteúdos públicos */
+function inicializarGestaoConteudosPublicos() {
+    const formulario = document.getElementById('formConteudosPublicos');
+
+    if (!formulario) return;
+
+    preencherFormularioConteudosPublicos();
+
+    const botaoRepor = document.getElementById('btnReporConteudosPublicos');
+
+    if (botaoRepor) {
+        botaoRepor.addEventListener('click', function () {
+            localStorage.removeItem('conteudosPublicos');
+            preencherFormularioConteudosPublicos();
+            mostrarMensagemConteudosPublicos('Conteúdos originais repostos com sucesso.');
+        });
+    }
+
+    formulario.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (!formulario.checkValidity()) {
+            formulario.classList.add('was-validated');
+            return;
+        }
+
+        formulario.classList.remove('was-validated');
+
+        const conteudos = {
+            heroTitulo: obterValorCampo('conteudoHeroTitulo'),
+            heroSubtitulo: obterValorCampo('conteudoHeroSubtitulo'),
+
+            sobreTitulo: obterValorCampo('conteudoSobreTitulo'),
+            sobreTexto1: obterValorCampo('conteudoSobreTexto1'),
+            sobreTexto2: obterValorCampo('conteudoSobreTexto2'),
+            sobreTexto3: obterValorCampo('conteudoSobreTexto3'),
+
+            servicosTitulo: obterValorCampo('conteudoServicosTitulo'),
+            servicosTexto: obterValorCampo('conteudoServicosTexto'),
+
+            clientesTitulo: obterValorCampo('conteudoClientesTitulo'),
+            clientesTexto: obterValorCampo('conteudoClientesTexto'),
+
+            contactosTitulo: obterValorCampo('conteudoContactosTitulo'),
+            contactosTexto: obterValorCampo('conteudoContactosTexto'),
+            morada: obterValorCampo('conteudoMorada'),
+            telefone: obterValorCampo('conteudoTelefone'),
+            email: obterValorCampo('conteudoEmail'),
+            website: obterValorCampo('conteudoWebsite'),
+            horario: obterValorCampo('conteudoHorario'),
+
+            rodapeTexto: obterValorCampo('conteudoRodapeTexto')
+        };
+
+        guardarConteudosPublicos(conteudos);
+        aplicarConteudosPublicos();
+        mostrarMensagemConteudosPublicos('Conteúdos atualizados com sucesso.');
+    });
+}
+
+
+/* Preenche o formulário com os conteúdos guardados */
+function preencherFormularioConteudosPublicos() {
+    const conteudos = obterConteudosPublicos();
+
+    preencherCampo('conteudoHeroTitulo', conteudos.heroTitulo);
+    preencherCampo('conteudoHeroSubtitulo', conteudos.heroSubtitulo);
+
+    preencherCampo('conteudoSobreTitulo', conteudos.sobreTitulo);
+    preencherCampo('conteudoSobreTexto1', conteudos.sobreTexto1);
+    preencherCampo('conteudoSobreTexto2', conteudos.sobreTexto2);
+    preencherCampo('conteudoSobreTexto3', conteudos.sobreTexto3);
+
+    preencherCampo('conteudoServicosTitulo', conteudos.servicosTitulo);
+    preencherCampo('conteudoServicosTexto', conteudos.servicosTexto);
+
+    preencherCampo('conteudoClientesTitulo', conteudos.clientesTitulo);
+    preencherCampo('conteudoClientesTexto', conteudos.clientesTexto);
+
+    preencherCampo('conteudoContactosTitulo', conteudos.contactosTitulo);
+    preencherCampo('conteudoContactosTexto', conteudos.contactosTexto);
+    preencherCampo('conteudoMorada', conteudos.morada);
+    preencherCampo('conteudoTelefone', conteudos.telefone);
+    preencherCampo('conteudoEmail', conteudos.email);
+    preencherCampo('conteudoWebsite', conteudos.website);
+    preencherCampo('conteudoHorario', conteudos.horario);
+
+    preencherCampo('conteudoRodapeTexto', conteudos.rodapeTexto);
+}
+
+
+/* Preenche um campo se existir */
+function preencherCampo(idCampo, valor) {
+    const campo = document.getElementById(idCampo);
+
+    if (campo) {
+        campo.value = valor;
+    }
+}
+
+
+/* Obtém o valor de um campo se existir */
+function obterValorCampo(idCampo) {
+    const campo = document.getElementById(idCampo);
+
+    if (!campo) return '';
+
+    return campo.value.trim();
+}
+
+
+/* Mostra mensagem da gestão de conteúdos */
+function mostrarMensagemConteudosPublicos(texto) {
+    const mensagem = document.getElementById('mensagemConteudosPublicos');
+
+    if (!mensagem) return;
+
+    mensagem.innerHTML = `<i class="fa-solid fa-check me-1"></i> ${texto}`;
+    mensagem.classList.remove('d-none');
+
+    setTimeout(function () {
+        mensagem.classList.add('d-none');
+    }, 4000);
 }
 
 
