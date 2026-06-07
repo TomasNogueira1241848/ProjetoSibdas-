@@ -29,7 +29,8 @@ function inicializarTabelas() {
             filtros: [
                 { filtroId: 'filtroCategoriaEquipamentos', coluna: 2 },
                 { filtroId: 'filtroLocalizacaoEquipamentos', coluna: 5 },
-                { filtroId: 'filtroEstadoEquipamentos', coluna: 6 }
+                { filtroId: 'filtroEstadoEquipamentos', coluna: 6 },
+                { filtroId: 'filtroManutencaoEquipamentos', coluna: 9 }
             ]
         },
         {

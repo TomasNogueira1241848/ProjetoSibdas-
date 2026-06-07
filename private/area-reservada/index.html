@@ -105,10 +105,10 @@
                         </div>
                     </div>
                     <div class="d-flex flex-wrap gap-2">
-                        <a href="#tabelaManutenções" class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Ver equipamentos com necessidade de manutenção">
+                        <a href="#tabelaManutencoesDashboard" class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Ver equipamentos com necessidade de manutenção">
                             <i class="fa-solid fa-calendar-check text-primary me-2"></i> Manutenções
                         </a>
-                        <a href="#tabelaGarantias" class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Ver equipamentos com garantia próxima do fim">
+                        <a href="#tabelaGarantiasDashboard" class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Ver equipamentos com garantia próxima do fim">
                             <i class="fa-solid fa-triangle-exclamation me-1"></i> Garantias
                         </a>
                         <a href="../area-reservada/equipamentos/equipamento-novo.html" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Adicione aqui um equipamento">
@@ -352,18 +352,22 @@
                 <!-- TABELAS -->
                 <section aria-labelledby="tituloTabelas" class="mb-4">
                     <h5 id="tituloTabelas" class="fw-bold mb-3">Monitorização operacional</h5>
-
+                
                     <div class="row g-3">
+                
+                        <!-- GARANTIAS A EXPIRAR -->
                         <div class="col-xl-6">
-                            <div class="card p-3 h-100" id="tabelaGarantias">
+                            <div class="card p-3 h-100" id="tabelaGarantiasDashboard">
                                 <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
                                     <h6 class="fw-bold mb-0">
                                         <i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>
-                                        Garantias a expirar
+                                        Garantia do equipamento
                                     </h6>
-                                    <input type="search" class="form-control form-control-sm pesquisa-dashboard" id="pesquisaTabela" placeholder="Pesquisar na tabela" aria-label="Pesquisar garantias">
+                
+                                    <input type="search" class="form-control form-control-sm pesquisa-dashboard" id="pesquisaTabela"
+                                        placeholder="Pesquisar na tabela" aria-label="Pesquisar garantias">
                                 </div>
-
+                
                                 <div class="table-responsive">
                                     <table class="table table-dashboard table-hover align-middle mb-0" id="tabelaGarantiasConteudo">
                                         <thead>
@@ -376,6 +380,7 @@
                                                 <th class="text-center">Ações</th>
                                             </tr>
                                         </thead>
+                
                                         <tbody>
                                             <tr>
                                                 <td>EQ-0042</td>
@@ -384,32 +389,15 @@
                                                 <td>2026-06-10</td>
                                                 <td><span class="badge badge-ativo">Ativo</span></td>
                                                 <td class="text-center">
-                                                    <a href="../area-reservada/equipamentos/equipamento-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Consultar ficha do equipamento">
-                                                        <i class="fa-solid fa-eye"></i>
+                                                    <a href="equipamentos/equipamento-detalhes.html"
+                                                        class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
+                                                        data-bs-title="Ver equipamento">
+                                                        <i class="fa-solid fa-stethoscope"></i>
                                                     </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>EQ-0078</td>
-                                                <td>Ventilador Pulmonar</td>
-                                                <td>Urgência</td>
-                                                <td>2026-06-18</td>
-                                                <td><span class="badge badge-ativo">Ativo</span></td>
-                                                <td class="text-center">
-                                                    <a href="../area-reservada/equipamentos/equipamento-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Consultar ficha do equipamento">
-                                                        <i class="fa-solid fa-eye"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>EQ-0103</td>
-                                                <td>Bomba de Infusão</td>
-                                                <td>Medicina Interna</td>
-                                                <td>2026-06-25</td>
-                                                <td><span class="badge badge-manutencao">Em Manutenção</span></td>
-                                                <td class="text-center">
-                                                    <a href="../area-reservada/equipamentos/equipamento-detalhes.html" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Consultar ficha do equipamento">
-                                                        <i class="fa-solid fa-eye"></i>
+                
+                                                    <a href="contratos/garantia-detalhes.html" class="btn btn-sm btn-outline-warning"
+                                                        data-bs-toggle="tooltip" data-bs-title="Ver garantia">
+                                                        <i class="fa-solid fa-shield"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -418,16 +406,23 @@
                                 </div>
                             </div>
                         </div>
-
+                
+                        <!-- PRÓXIMA MANUTENÇÃO PREVENTIVA -->
                         <div class="col-xl-6">
-                            <div class="card p-3 h-100">
-                                <h6 class="fw-bold mb-3">
-                                    <i class="fa-solid fa-calendar-check text-primary me-2"></i>
-                                    Próximas manutenções preventivas
-                                </h6>
-
+                            <div class="card p-3 h-100" id="tabelaManutencoesDashboard">
+                                <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
+                                    <h6 class="fw-bold mb-0">
+                                        <i class="fa-solid fa-calendar-check text-primary me-2"></i>
+                                        Próxima manutenção preventiva
+                                    </h6>
+                        
+                                    <a href="equipamentos/equipamentos.html#manutencoes" class="btn btn-outline-primary btn-sm">
+                                        <i class="fa-solid fa-list me-1"></i> Ver nos equipamentos
+                                    </a>
+                                </div>
+                
                                 <div class="table-responsive">
-                                    <table class="table table-dashboard table-hover align-middle mb-0" id ="tabelaManutenções">
+                                    <table class="table table-dashboard table-hover align-middle mb-0" id="tabelaManutencoes">
                                         <thead>
                                             <tr>
                                                 <th>Código</th>
@@ -435,40 +430,42 @@
                                                 <th>Local</th>
                                                 <th>Data</th>
                                                 <th>Prioridade</th>
+                                                <th class="text-center">Ações</th>
                                             </tr>
                                         </thead>
+                
                                         <tbody>
                                             <tr>
-                                                <td>EQ-0021</td>
-                                                <td>Desfibrilhador</td>
-                                                <td>Bloco Operatório</td>
-                                                <td>2026-06-03</td>
-                                                <td><span class="badge text-bg-danger">Alta</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>EQ-0089</td>
-                                                <td>Eletrocardiógrafo</td>
-                                                <td>Consulta Externa</td>
-                                                <td>2026-06-07</td>
-                                                <td><span class="badge text-bg-warning">Média</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>EQ-0114</td>
-                                                <td>Autoclave</td>
-                                                <td>Esterilização</td>
-                                                <td>2026-06-14</td>
+                                                <td>EQ-0042</td>
+                                                <td>Monitor Multiparamétrico</td>
+                                                <td>UCI</td>
+                                                <td>2025-12-15</td>
                                                 <td><span class="badge text-bg-success">Normal</span></td>
+                                                <td class="text-center">
+                                                    <a href="equipamentos/equipamento-detalhes.html"
+                                                        class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
+                                                        data-bs-title="Ver equipamento">
+                                                        <i class="fa-solid fa-eye"></i>
+                                                    </a>
+                
+                                                    <a href="equipamentos/equipamentos.html#manutencoes"
+                                                        class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
+                                                        data-bs-title="Ver na tabela de equipamentos">
+                                                        <i class="fa-solid fa-calendar-check"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
+                
                     </div>
                 </section>
-            </main>
-        </div>
-    </div>
+                </main>
+                </div>
+                </div>
 
     <!-- Bootstrap JS -->
     <script src="../../assets/bootstrap/bootstrap.bundle.min.js"></script>
