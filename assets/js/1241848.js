@@ -108,24 +108,6 @@ function inicializarFormulariosSimulados() {
             validar: true
         },
         {
-            idFormulario: 'formDocumento',
-            idMensagem: 'mensagemDocumento',
-            paginaDestino: 'documentacao.html',
-            validar: true
-        },
-        {
-            idFormulario: 'formContrato',
-            idMensagem: 'mensagemContrato',
-            paginaDestino: 'contratos.html',
-            validar: true
-        },
-        {
-            idFormulario: 'formGarantia',
-            idMensagem: 'mensagemGarantia',
-            paginaDestino: 'contratos.html',
-            validar: true
-        },
-        {
             idFormulario: 'formEliminarEquipamento',
             idMensagem: 'mensagemEliminarEquipamento',
             paginaDestino: 'equipamentos.html',
@@ -141,24 +123,6 @@ function inicializarFormulariosSimulados() {
             idFormulario: 'formEliminarLocalizacao',
             idMensagem: 'mensagemEliminarLocalizacao',
             paginaDestino: 'localizacoes.html',
-            validar: false
-        },
-        {
-            idFormulario: 'formEliminarDocumento',
-            idMensagem: 'mensagemEliminarDocumento',
-            paginaDestino: 'documentacao.html',
-            validar: false
-        },
-        {
-            idFormulario: 'formEliminarContrato',
-            idMensagem: 'mensagemEliminarContrato',
-            paginaDestino: 'contratos.html',
-            validar: false
-        },
-        {
-            idFormulario: 'formEliminarGarantia',
-            idMensagem: 'mensagemEliminarGarantia',
-            paginaDestino: 'contratos.html',
             validar: false
         }
     ];
@@ -219,7 +183,7 @@ function inicializarLogin() {
             return;
         }
 
-        window.location.href = '../../private/area-reservada/index.html';
+        window.location.href = '../area-reservada/index.html';
     });
 }
 
@@ -318,6 +282,7 @@ function inicializarFormularioSimulado(idFormulario, idMensagem, paginaDestino, 
 
         if (validarFormulario && !formulario.checkValidity()) {
             formulario.classList.add('was-validated');
+            abrirAbaComCampoInvalido(formulario);
             return;
         }
 
@@ -331,6 +296,25 @@ function inicializarFormularioSimulado(idFormulario, idMensagem, paginaDestino, 
             window.location.href = paginaDestino;
         }, 1200);
     });
+}
+
+
+/* Abre automaticamente a aba onde existe o primeiro campo inválido */
+function abrirAbaComCampoInvalido(formulario) {
+    const campoInvalido = formulario.querySelector(':invalid');
+
+    if (!campoInvalido) return;
+
+    const aba = campoInvalido.closest('.tab-pane');
+
+    if (!aba) return;
+
+    const botaoAba = document.querySelector(`[data-bs-target="#${aba.id}"]`);
+
+    if (botaoAba && typeof bootstrap !== 'undefined') {
+        const tab = new bootstrap.Tab(botaoAba);
+        tab.show();
+    }
 }
 
 
