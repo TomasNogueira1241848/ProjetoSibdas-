@@ -97,214 +97,279 @@
 
             <!-- CONTEÚDO PRINCIPAL -->
             <main class="col-12 col-md-9 col-lg-10 p-3 p-md-4 overflow-hidden" id="dashboard">
-
+            
                 <!-- TÍTULO -->
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                     <div>
                         <h4 class="fw-bold mb-1">Detalhes do equipamento</h4>
-                        <p class="text-muted small mb-0">Consulta dos dados principais e relações do equipamento selecionado.</p>
+                        <p class="text-muted small mb-0">Consulta dos dados principais e associações do equipamento selecionado.</p>
                     </div>
-
+            
                     <div class="d-flex flex-wrap gap-2">
                         <a href="equipamento-editar.html" class="btn btn-primary btn-sm">
                             <i class="fa-solid fa-pen me-1"></i> Editar
                         </a>
-
+            
                         <a href="equipamentos.html" class="btn btn-outline-secondary btn-sm">
                             <i class="fa-solid fa-arrow-left me-1"></i> Voltar
                         </a>
                     </div>
                 </div>
-
-                <!-- DADOS DO EQUIPAMENTO -->
+            
+                <!-- ABAS DE DETALHES -->
                 <section class="mb-4">
                     <div class="card p-4">
+            
                         <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
                             <div>
                                 <h5 class="fw-bold mb-1">Monitor Multiparamétrico</h5>
                                 <p class="text-muted small mb-0">Código: EQ-0042</p>
                             </div>
-
+            
                             <div>
                                 <span class="badge badge-ativo">Ativo</span>
                             </div>
                         </div>
-
+            
                         <hr>
-
-                        <div class="row g-3">
-                            <div class="col-md-6 col-xl-4">
-                                <p class="text-muted small mb-1">Designação</p>
-                                <p class="mb-0">Monitor Multiparamétrico</p>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <p class="text-muted small mb-1">Categoria</p>
-                                <p class="mb-0">Monitorização</p>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <p class="text-muted small mb-1">Marca / Modelo</p>
-                                <p class="mb-0">Philips IntelliVue</p>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <p class="text-muted small mb-1">N.º de série</p>
-                                <p class="mb-0">SN-90821</p>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <p class="text-muted small mb-1">Localização</p>
-                                <p class="mb-0">UCI</p>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <p class="text-muted small mb-1">Garantia até</p>
-                                <p class="mb-0">2026-06-10</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- MANUTENÇÃO PREVENTIVA -->
-                <section class="mb-4">
-                    <div class="card p-4">
-                        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
-                            <div>
-                                <h5 class="fw-bold mb-1">Manutenção preventiva</h5>
-                                <p class="text-muted small mb-0">Informação da manutenção associada ao equipamento.</p>
-                            </div>
-
-                            <div>
-                                <span class="badge badge-ativo">Em dia</span>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="row g-3">
-                            <div class="col-md-6 col-xl-4">
-                                <p class="text-muted small mb-1">Última manutenção</p>
-                                <p class="mb-0">2024-12-15</p>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <p class="text-muted small mb-1">Próxima manutenção</p>
-                                <p class="mb-0">2025-12-15</p>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <p class="text-muted small mb-1">Periodicidade</p>
-                                <p class="mb-0">Anual</p>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <p class="text-muted small mb-1">Tipo</p>
-                                <p class="mb-0">Manutenção preventiva</p>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <p class="text-muted small mb-1">Responsável</p>
-                                <p class="mb-0">Serviço de Engenharia Clínica</p>
-                            </div>
-
-                            <div class="col-md-6 col-xl-4">
-                                <p class="text-muted small mb-1">Prioridade</p>
-                                <p class="mb-0">Normal</p>
-                            </div>
-
-                            <div class="col-12">
-                                <p class="text-muted small mb-1">Observações</p>
-                                <p class="mb-0">
-                                    Equipamento com manutenção preventiva programada e sem intervenção pendente.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- REGISTOS RELACIONADOS -->
-                <section class="mb-4">
-                    <h6 class="fw-bold mb-3">Registos relacionados</h6>
-
-                    <div class="row g-3">
-
-                        <div class="col-md-6 col-xl-3">
-                            <div class="card p-3 h-100">
-                                <div class="d-flex align-items-start gap-3">
-                                    <div class="dashboard-icon">
-                                        <i class="fa-solid fa-location-dot"></i>
+            
+                        <ul class="nav nav-tabs mb-4" id="abasDetalhesEquipamento" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="detalhes-dados-tab" data-bs-toggle="tab"
+                                    data-bs-target="#detalhes-dados" type="button" role="tab">
+                                    <i class="fa-solid fa-stethoscope me-1"></i> Dados
+                                </button>
+                            </li>
+            
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="detalhes-localizacao-tab" data-bs-toggle="tab"
+                                    data-bs-target="#detalhes-localizacao" type="button" role="tab">
+                                    <i class="fa-solid fa-location-dot me-1"></i> Localização
+                                </button>
+                            </li>
+            
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="detalhes-fornecedor-tab" data-bs-toggle="tab"
+                                    data-bs-target="#detalhes-fornecedor" type="button" role="tab">
+                                    <i class="fa-solid fa-truck me-1"></i> Fornecedor
+                                </button>
+                            </li>
+            
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="detalhes-documentacao-tab" data-bs-toggle="tab"
+                                    data-bs-target="#detalhes-documentacao" type="button" role="tab">
+                                    <i class="fa-solid fa-file-medical me-1"></i> Documentação
+                                </button>
+                            </li>
+            
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="detalhes-garantia-tab" data-bs-toggle="tab"
+                                    data-bs-target="#detalhes-garantia" type="button" role="tab">
+                                    <i class="fa-solid fa-shield me-1"></i> Garantia e contrato
+                                </button>
+                            </li>
+            
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="detalhes-manutencao-tab" data-bs-toggle="tab"
+                                    data-bs-target="#detalhes-manutencao" type="button" role="tab">
+                                    <i class="fa-solid fa-screwdriver-wrench me-1"></i> Manutenção
+                                </button>
+                            </li>
+                        </ul>
+            
+                        <div class="tab-content">
+            
+                            <!-- DADOS -->
+                            <div class="tab-pane fade show active" id="detalhes-dados" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Designação</p>
+                                        <p class="mb-0">Monitor Multiparamétrico</p>
                                     </div>
-
-                                    <div class="w-100">
-                                        <h6 class="fw-bold mb-1">Localização</h6>
-                                        <p class="small text-muted mb-2">LOC-001 — Unidade de Cuidados Intensivos</p>
-
-                                        <a href="../localizacoes/localizacao-detalhes.html" class="small fw-semibold text-decoration-none">
-                                            Ver localização
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Categoria</p>
+                                        <p class="mb-0">Monitorização</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Marca / Modelo</p>
+                                        <p class="mb-0">Philips IntelliVue</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">N.º de série</p>
+                                        <p class="mb-0">SN-90821</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Estado</p>
+                                        <p class="mb-0"><span class="badge badge-ativo">Ativo</span></p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Data de aquisição</p>
+                                        <p class="mb-0">10/06/2023</p>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- LOCALIZAÇÃO -->
+                            <div class="tab-pane fade" id="detalhes-localizacao" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Código</p>
+                                        <p class="mb-0">LOC-001</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Localização</p>
+                                        <p class="mb-0">Unidade de Cuidados Intensivos</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Piso / Sala</p>
+                                        <p class="mb-0">Piso 2 — UCI-02</p>
+                                    </div>
+            
+                                    <div class="col-12">
+                                        <a href="../localizacoes/localizacao-detalhes.html" class="btn btn-outline-primary btn-sm">
+                                            <i class="fa-solid fa-location-dot me-1"></i> Ver localização
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="col-md-6 col-xl-3">
-                            <div class="card p-3 h-100">
-                                <div class="d-flex align-items-start gap-3">
-                                    <div class="dashboard-icon dashboard-icon-info">
-                                        <i class="fa-solid fa-truck"></i>
+            
+                            <!-- FORNECEDOR -->
+                            <div class="tab-pane fade" id="detalhes-fornecedor" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Fornecedor</p>
+                                        <p class="mb-0">Philips Healthcare Portugal</p>
                                     </div>
-
-                                    <div class="w-100">
-                                        <h6 class="fw-bold mb-1">Fornecedor</h6>
-                                        <p class="small text-muted mb-2">Philips Healthcare Portugal</p>
-
-                                        <a href="../fornecedores/fornecedor-detalhes.html" class="small fw-semibold text-decoration-none">
-                                            Ver fornecedor
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Tipo</p>
+                                        <p class="mb-0">Fabricante</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Contacto</p>
+                                        <p class="mb-0">support.pt@philips.com</p>
+                                    </div>
+            
+                                    <div class="col-12">
+                                        <a href="../fornecedores/fornecedor-detalhes.html" class="btn btn-outline-primary btn-sm">
+                                            <i class="fa-solid fa-truck me-1"></i> Ver fornecedor
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="col-md-6 col-xl-3">
-                            <div class="card p-3 h-100">
-                                <div class="d-flex align-items-start gap-3">
-                                    <div class="dashboard-icon dashboard-icon-warning">
-                                        <i class="fa-solid fa-shield"></i>
+            
+                            <!-- DOCUMENTAÇÃO -->
+                            <div class="tab-pane fade" id="detalhes-documentacao" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Código</p>
+                                        <p class="mb-0">DOC-001</p>
                                     </div>
-
-                                    <div class="w-100">
-                                        <h6 class="fw-bold mb-1">Garantia</h6>
-                                        <p class="small text-muted mb-2">GAR-001 — Garantia Monitor Multiparamétrico</p>
-
-                                        <a href="../contratos/garantia-detalhes.html" class="small fw-semibold text-decoration-none">
-                                            Ver garantia
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Documento</p>
+                                        <p class="mb-0">Manual do Monitor Multiparamétrico</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Validade</p>
+                                        <p class="mb-0">2027-03-12</p>
+                                    </div>
+            
+                                    <div class="col-12">
+                                        <a href="../documentacao/documento-detalhes.html" class="btn btn-outline-primary btn-sm">
+                                            <i class="fa-solid fa-file-medical me-1"></i> Ver documentação
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="col-md-6 col-xl-3">
-                            <div class="card p-3 h-100">
-                                <div class="d-flex align-items-start gap-3">
-                                    <div class="dashboard-icon dashboard-icon-success">
-                                        <i class="fa-solid fa-file-medical"></i>
+            
+                            <!-- GARANTIA E CONTRATO -->
+                            <div class="tab-pane fade" id="detalhes-garantia" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Garantia</p>
+                                        <p class="mb-0">GAR-001 — Garantia Monitor Multiparamétrico</p>
                                     </div>
-
-                                    <div class="w-100">
-                                        <h6 class="fw-bold mb-1">Documentação</h6>
-                                        <p class="small text-muted mb-2">DOC-001 — Manual do Monitor Multiparamétrico</p>
-
-                                        <a href="../documentacao/documento-detalhes.html" class="small fw-semibold text-decoration-none">
-                                            Ver documento
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Fornecedor</p>
+                                        <p class="mb-0">Philips Healthcare Portugal</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Fim da garantia</p>
+                                        <p class="mb-0">10/06/2026</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Contrato associado</p>
+                                        <p class="mb-0">CON-001 — Contrato de Manutenção UCI</p>
+                                    </div>
+            
+                                    <div class="col-12 d-flex flex-wrap gap-2">
+                                        <a href="../contratos/garantia-detalhes.html" class="btn btn-outline-primary btn-sm">
+                                            <i class="fa-solid fa-shield me-1"></i> Ver garantia
+                                        </a>
+            
+                                        <a href="../contratos/contrato-detalhes.html" class="btn btn-outline-secondary btn-sm">
+                                            <i class="fa-solid fa-file-contract me-1"></i> Ver contrato
                                         </a>
                                     </div>
                                 </div>
                             </div>
+            
+                            <!-- MANUTENÇÃO -->
+                            <div class="tab-pane fade" id="detalhes-manutencao" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Última manutenção</p>
+                                        <p class="mb-0">2024-12-15</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Próxima manutenção</p>
+                                        <p class="mb-0">2025-12-15</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Estado</p>
+                                        <p class="mb-0"><span class="badge badge-ativo">Em dia</span></p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Periodicidade</p>
+                                        <p class="mb-0">Anual</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Responsável</p>
+                                        <p class="mb-0">Serviço de Engenharia Clínica</p>
+                                    </div>
+            
+                                    <div class="col-md-6 col-xl-4">
+                                        <p class="text-muted small mb-1">Prioridade</p>
+                                        <p class="mb-0">Normal</p>
+                                    </div>
+            
+                                    <div class="col-12">
+                                        <p class="text-muted small mb-1">Observações</p>
+                                        <p class="mb-0">
+                                            Equipamento com manutenção preventiva programada e sem intervenção pendente.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+            
                         </div>
-
                     </div>
                 </section>
 
