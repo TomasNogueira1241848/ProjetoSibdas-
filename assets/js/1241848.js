@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarTabelas();
     inicializarFormulariosSimulados();
     inicializarGestaoConteudosPublicos();
+    inicializarInputsPDFs();
 
     inicializarGraficosDashboard();
 });
@@ -22,6 +23,9 @@ function inicializarTabelas() {
         {
             idTabela: 'tabelaGarantiasConteudo',
             idPesquisa: 'pesquisaTabela'
+        },
+        {
+            idTabela: 'tabelaManutencoes'
         },
         {
             idTabela: 'tabelaEquipamentos',
@@ -123,6 +127,24 @@ function inicializarFormulariosSimulados() {
             idFormulario: 'formEliminarLocalizacao',
             idMensagem: 'mensagemEliminarLocalizacao',
             paginaDestino: 'localizacoes.html',
+            validar: false
+        },
+        {
+            idFormulario: 'formEliminarDocumento',
+            idMensagem: 'mensagemEliminarDocumento',
+            paginaDestino: 'documentacao.html',
+            validar: false
+        },
+        {
+            idFormulario: 'formEliminarContrato',
+            idMensagem: 'mensagemEliminarContrato',
+            paginaDestino: 'contratos.html',
+            validar: false
+        },
+        {
+            idFormulario: 'formEliminarGarantia',
+            idMensagem: 'mensagemEliminarGarantia',
+            paginaDestino: 'contratos.html',
             validar: false
         }
     ];
@@ -315,6 +337,74 @@ function abrirAbaComCampoInvalido(formulario) {
         const tab = new bootstrap.Tab(botaoAba);
         tab.show();
     }
+}
+
+
+/* Mostra os PDFs escolhidos nos formulários */
+function inicializarInputsPDFs() {
+    const inputsPDF = document.querySelectorAll('.input-pdf-multiplo');
+
+    inputsPDF.forEach(function (input) {
+        input.addEventListener('change', function () {
+            atualizarListaPDFs(input);
+        });
+    });
+}
+
+
+/* Atualiza a lista visual de PDFs selecionados */
+function atualizarListaPDFs(input) {
+    const idLista = input.dataset.lista;
+    const lista = document.getElementById(idLista);
+
+    if (!lista) return;
+
+    lista.innerHTML = '';
+
+    if (!input.files || input.files.length === 0) {
+        lista.innerHTML = '<p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>';
+        return;
+    }
+
+    Array.from(input.files).forEach(function (ficheiro) {
+        const item = document.createElement('div');
+        item.className = 'pdf-item';
+
+        const blocoNome = document.createElement('div');
+        blocoNome.className = 'd-flex align-items-center gap-2';
+
+        const icone = document.createElement('i');
+        icone.className = 'fa-solid fa-file-pdf';
+
+        const nome = document.createElement('span');
+        nome.textContent = ficheiro.name;
+
+        const tamanho = document.createElement('span');
+        tamanho.className = 'text-muted small';
+        tamanho.textContent = formatarTamanhoFicheiro(ficheiro.size);
+
+        blocoNome.appendChild(icone);
+        blocoNome.appendChild(nome);
+
+        item.appendChild(blocoNome);
+        item.appendChild(tamanho);
+
+        lista.appendChild(item);
+    });
+}
+
+
+/* Formata o tamanho do ficheiro */
+function formatarTamanhoFicheiro(bytes) {
+    if (bytes < 1024) return `${bytes} B`;
+
+    const kb = bytes / 1024;
+
+    if (kb < 1024) return `${kb.toFixed(1)} KB`;
+
+    const mb = kb / 1024;
+
+    return `${mb.toFixed(1)} MB`;
 }
 
 

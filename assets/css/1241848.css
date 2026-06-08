@@ -402,3 +402,103 @@ section {
     color: #6c757d;
     border: 1px solid rgba(108, 117, 125, 0.25);
 }
+
+/* --- Abas dos equipamentos --- */
+.abas-equipamento {
+    gap: 10px;
+    border-bottom: 0;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+}
+
+.abas-equipamento .nav-item {
+    flex: 1 0 180px;
+}
+
+.abas-equipamento .nav-link {
+    width: 100%;
+    min-height: 74px;
+    border: 1px solid #e1e6ef;
+    border-radius: 12px;
+    background-color: #ffffff;
+    color: #4f5b67;
+    text-align: left;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.abas-equipamento .nav-link:hover {
+    border-color: var(--cor-primaria);
+    color: var(--cor-primaria);
+}
+
+.abas-equipamento .nav-link.active {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    color: #ffffff;
+}
+
+.aba-numero {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 50%;
+    background-color: #eef3f8;
+    color: var(--cor-primaria);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.abas-equipamento .nav-link.active .aba-numero {
+    background-color: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+}
+
+.abas-equipamento small {
+    display: block;
+    font-size: 0.76rem;
+    opacity: 0.75;
+    margin-top: 2px;
+}
+
+/* --- Blocos de PDF --- */
+.pdf-upload-card {
+    border: 1px dashed #c9d3df;
+    border-radius: 12px;
+    background-color: #f8fafc;
+    padding: 16px;
+}
+
+.pdf-lista {
+    display: grid;
+    gap: 8px;
+}
+
+.pdf-item {
+    border: 1px solid #e1e6ef;
+    border-radius: 10px;
+    background-color: #ffffff;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.pdf-item i {
+    color: #dc3545;
+}
+
+.pdf-item span {
+    font-size: 0.88rem;
+    word-break: break-word;
+}
+
+.pdf-item .btn {
+    white-space: nowrap;
+}

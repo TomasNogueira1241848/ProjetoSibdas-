@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +31,8 @@
 
             <div class="col-4 col-md-6 text-end p-3">
                 <div class="dropdown d-inline-block">
-                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         <i class="fa-regular fa-user"></i>
                         <span class="d-none d-sm-inline ms-2">Administrador</span>
                     </button>
@@ -76,7 +78,7 @@
                     <a href="../fornecedores/fornecedores.html" class="nav-link">
                         <i class="fa-solid fa-truck me-2"></i> Fornecedores
                     </a>
-                    
+
                     <a href="../localizacoes/localizacoes.html" class="nav-link">
                         <i class="fa-solid fa-location-dot me-2"></i> Localizações
                     </a>
@@ -88,7 +90,7 @@
                     <a href="../contratos/contratos.html" class="nav-link">
                         <i class="fa-solid fa-shield me-2"></i> Garantias e Contratos
                     </a>
-                    
+
                     <a href="../conteudos/conteudos.html" class="nav-link">
                         <i class="fa-solid fa-pen-to-square me-2"></i> Gestão de Conteúdos
                     </a>
@@ -110,150 +112,467 @@
                 <section class="mb-4">
                     <div class="card p-4">
                         <form id="formEquipamento" novalidate>
-                            <div class="row g-3">
+                            <form id="formEquipamento" novalidate>
 
-                                <div class="col-md-4">
-                                    <label for="codigoEquipamento" class="form-label">
-                                        Código <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="codigoEquipamento" name="codigoEquipamento" value="EQ-0042" required>
-                                    <div class="invalid-feedback">Introduza o código do equipamento.</div>
-                                </div>
+                                <!-- ABAS DO FORMULÁRIO -->
+                                <ul class="nav nav-pills abas-equipamento mb-4" id="abasEquipamento" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="aba-dados-tab" data-bs-toggle="tab"
+                                            data-bs-target="#aba-dados" type="button" role="tab">
+                                            <span class="aba-numero">1</span>
+                                            <span>
+                                                <strong>Dados principais</strong>
+                                                <small>Identificação do equipamento</small>
+                                            </span>
+                                        </button>
+                                    </li>
 
-                                <div class="col-md-8">
-                                    <label for="designacaoEquipamento" class="form-label">
-                                        Designação <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="designacaoEquipamento" name="designacaoEquipamento" value="Monitor Multiparamétrico" required>
-                                    <div class="invalid-feedback">Introduza a designação do equipamento.</div>
-                                </div>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="aba-localizacao-tab" data-bs-toggle="tab"
+                                            data-bs-target="#aba-localizacao" type="button" role="tab">
+                                            <span class="aba-numero">2</span>
+                                            <span>
+                                                <strong>Localização</strong>
+                                                <small>Serviço, piso e sala</small>
+                                            </span>
+                                        </button>
+                                    </li>
 
-                                <div class="col-md-6">
-                                    <label for="categoriaEquipamento" class="form-label">
-                                        Categoria <span class="text-danger">*</span>
-                                    </label>
-                                    <select class="form-select" id="categoriaEquipamento" name="categoriaEquipamento" required>
-                                        <option value="">Selecionar categoria</option>
-                                        <option value="Monitorização" selected>Monitorização</option>
-                                        <option value="Suporte de Vida">Suporte de Vida</option>
-                                        <option value="Terapia">Terapia</option>
-                                        <option value="Diagnóstico">Diagnóstico</option>
-                                        <option value="Laboratório">Laboratório</option>
-                                        <option value="Esterilização">Esterilização</option>
-                                    </select>
-                                    <div class="invalid-feedback">Selecione a categoria do equipamento.</div>
-                                </div>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="aba-documentacao-tab" data-bs-toggle="tab"
+                                            data-bs-target="#aba-documentacao" type="button" role="tab">
+                                            <span class="aba-numero">3</span>
+                                            <span>
+                                                <strong>Documentação</strong>
+                                                <small>Manuais e certificados PDF</small>
+                                            </span>
+                                        </button>
+                                    </li>
 
-                                <div class="col-md-6">
-                                    <label for="estadoEquipamento" class="form-label">
-                                        Estado <span class="text-danger">*</span>
-                                    </label>
-                                    <select class="form-select" id="estadoEquipamento" name="estadoEquipamento" required>
-                                        <option value="">Selecionar estado</option>
-                                        <option value="Ativo" selected>Ativo</option>
-                                        <option value="Em Manutenção">Em Manutenção</option>
-                                        <option value="Inativo">Inativo</option>
-                                        <option value="Em Calibração">Em Calibração</option>
-                                        <option value="Abatido">Abatido</option>
-                                    </select>
-                                    <div class="invalid-feedback">Selecione o estado do equipamento.</div>
-                                </div>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="aba-garantia-tab" data-bs-toggle="tab"
+                                            data-bs-target="#aba-garantia" type="button" role="tab">
+                                            <span class="aba-numero">4</span>
+                                            <span>
+                                                <strong>Garantia e contrato</strong>
+                                                <small>Associação e PDFs</small>
+                                            </span>
+                                        </button>
+                                    </li>
 
-                                <div class="col-md-6">
-                                    <label for="marcaModeloEquipamento" class="form-label">
-                                        Marca / Modelo <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="marcaModeloEquipamento" name="marcaModeloEquipamento" value="Philips IntelliVue" required>
-                                    <div class="invalid-feedback">Introduza a marca e o modelo.</div>
-                                </div>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="aba-manutencao-tab" data-bs-toggle="tab"
+                                            data-bs-target="#aba-manutencao" type="button" role="tab">
+                                            <span class="aba-numero">5</span>
+                                            <span>
+                                                <strong>Manutenção</strong>
+                                                <small>Preventiva e prioridade</small>
+                                            </span>
+                                        </button>
+                                    </li>
+                                </ul>
 
-                                <div class="col-md-6">
-                                    <label for="serieEquipamento" class="form-label">
-                                        N.º Série <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="serieEquipamento" name="serieEquipamento" value="SN-90821" required>
-                                    <div class="invalid-feedback">Introduza o número de série.</div>
-                                </div>
+                                <!-- CONTEÚDO DAS ABAS -->
+                                <div class="tab-content">
 
-                                <div class="col-md-6">
-                                    <label for="fornecedorEquipamento" class="form-label">Fornecedor</label>
-                                    <input type="text" class="form-control" id="fornecedorEquipamento" name="fornecedorEquipamento" value="Philips Healthcare Portugal">
-                                </div>
+                                    <!-- DADOS PRINCIPAIS -->
+                                    <div class="tab-pane fade show active" id="aba-dados" role="tabpanel">
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <label for="codigoEquipamento" class="form-label">Código <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="codigoEquipamento"
+                                                    value="EQ-0042" required>
+                                                <div class="invalid-feedback">Introduza o código.</div>
+                                            </div>
 
-                                <div class="col-md-6">
-                                    <label for="localizacaoEquipamento" class="form-label">
-                                        Localização <span class="text-danger">*</span>
-                                    </label>
-                                    <select class="form-select" id="localizacaoEquipamento" name="localizacaoEquipamento" required>
-                                        <option value="">Selecionar localização</option>
-                                        <option value="UCI" selected>UCI</option>
-                                        <option value="Urgência">Urgência</option>
-                                        <option value="Bloco Operatório">Bloco Operatório</option>
-                                        <option value="Medicina Interna">Medicina Interna</option>
-                                        <option value="Consulta Externa">Consulta Externa</option>
-                                        <option value="Laboratório">Laboratório</option>
-                                        <option value="Esterilização">Esterilização</option>
-                                    </select>
-                                    <div class="invalid-feedback">Selecione a localização do equipamento.</div>
-                                </div>
+                                            <div class="col-md-8">
+                                                <label for="designacaoEquipamento" class="form-label">Designação <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="designacaoEquipamento"
+                                                    value="Monitor Multiparamétrico" required>
+                                                <div class="invalid-feedback">Introduza a designação.</div>
+                                            </div>
 
-                                <div class="col-md-6">
-                                    <label for="dataAquisicaoEquipamento" class="form-label">Data de aquisição</label>
-                                    <input type="date" class="form-control" id="dataAquisicaoEquipamento" name="dataAquisicaoEquipamento" value="2023-06-10">
-                                </div>
+                                            <div class="col-md-4">
+                                                <label for="categoriaEquipamento" class="form-label">Categoria <span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-select" id="categoriaEquipamento" required>
+                                                    <option value="">Selecionar</option>
+                                                    <option value="Monitorização" selected>Monitorização</option>
+                                                    <option value="Suporte de Vida">Suporte de Vida</option>
+                                                    <option value="Terapia">Terapia</option>
+                                                    <option value="Diagnóstico">Diagnóstico</option>
+                                                    <option value="Laboratório">Laboratório</option>
+                                                </select>
+                                                <div class="invalid-feedback">Selecione a categoria.</div>
+                                            </div>
 
-                                <div class="col-md-6">
-                                    <label for="garantiaEquipamento" class="form-label">
-                                        Fim da garantia <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="date" class="form-control" id="garantiaEquipamento" name="garantiaEquipamento" value="2026-06-10" required>
-                                    <div class="invalid-feedback">Introduza a data de fim da garantia.</div>
-                                </div>
+                                            <div class="col-md-4">
+                                                <label for="marcaModeloEquipamento" class="form-label">Marca / Modelo
+                                                    <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="marcaModeloEquipamento"
+                                                    value="Philips IntelliVue" required>
+                                                <div class="invalid-feedback">Introduza a marca ou modelo.</div>
+                                            </div>
 
-                                <div class="col-md-6">
-                                    <label for="periodicidadeEquipamento" class="form-label">Periodicidade de manutenção</label>
-                                    <select class="form-select" id="periodicidadeEquipamento" name="periodicidadeEquipamento">
-                                        <option value="">Selecionar periodicidade</option>
-                                        <option value="6 meses">6 meses</option>
-                                        <option value="12 meses" selected>12 meses</option>
-                                        <option value="24 meses">24 meses</option>
-                                        <option value="Não definida">Não definida</option>
-                                    </select>
-                                </div>
+                                            <div class="col-md-4">
+                                                <label for="numeroSerieEquipamento" class="form-label">N.º de série
+                                                    <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="numeroSerieEquipamento"
+                                                    value="SN-90821" required>
+                                                <div class="invalid-feedback">Introduza o número de série.</div>
+                                            </div>
 
-                                <div class="col-md-6">
-                                    <label for="criticidadeEquipamento" class="form-label">Criticidade</label>
-                                    <select class="form-select" id="criticidadeEquipamento" name="criticidadeEquipamento">
-                                        <option value="">Selecionar criticidade</option>
-                                        <option value="Alta" selected>Alta</option>
-                                        <option value="Média">Média</option>
-                                        <option value="Baixa">Baixa</option>
-                                    </select>
-                                </div>
+                                            <div class="col-md-4">
+                                                <label for="estadoEquipamento" class="form-label">Estado <span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-select" id="estadoEquipamento" required>
+                                                    <option value="">Selecionar</option>
+                                                    <option value="Ativo" selected>Ativo</option>
+                                                    <option value="Em Manutenção">Em Manutenção</option>
+                                                    <option value="Inativo">Inativo</option>
+                                                    <option value="Em Calibração">Em Calibração</option>
+                                                </select>
+                                                <div class="invalid-feedback">Selecione o estado.</div>
+                                            </div>
 
-                                <div class="col-12">
-                                    <label for="observacoesEquipamento" class="form-label">Observações</label>
-                                    <textarea class="form-control" id="observacoesEquipamento" name="observacoesEquipamento" rows="3">Equipamento em funcionamento normal, sem alertas críticos registados.</textarea>
-                                </div>
+                                            <div class="col-md-4">
+                                                <label for="fornecedorEquipamento" class="form-label">Fornecedor <span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-select" id="fornecedorEquipamento" required>
+                                                    <option value="">Selecionar</option>
+                                                    <option value="Philips Healthcare Portugal" selected>Philips
+                                                        Healthcare Portugal</option>
+                                                    <option value="Dräger Portugal">Dräger Portugal</option>
+                                                    <option value="MedRepair Norte">MedRepair Norte</option>
+                                                </select>
+                                                <div class="invalid-feedback">Selecione o fornecedor.</div>
+                                            </div>
 
-                                <div class="col-12">
-                                    <div id="mensagemEquipamento" class="alert alert-success d-none mb-0">
-                                        <i class="fa-solid fa-check me-1"></i> Alterações guardadas com sucesso.
+                                            <div class="col-md-4">
+                                                <label for="dataAquisicaoEquipamento" class="form-label">Data de
+                                                    aquisição</label>
+                                                <input type="date" class="form-control" id="dataAquisicaoEquipamento"
+                                                    value="2023-06-10">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- LOCALIZAÇÃO -->
+                                    <div class="tab-pane fade" id="aba-localizacao" role="tabpanel">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="localizacaoEquipamento" class="form-label">Localização <span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-select" id="localizacaoEquipamento" required>
+                                                    <option value="">Selecionar</option>
+                                                    <option value="UCI" selected>UCI</option>
+                                                    <option value="Urgência">Urgência</option>
+                                                    <option value="Bloco Operatório">Bloco Operatório</option>
+                                                    <option value="Medicina Interna">Medicina Interna</option>
+                                                    <option value="Consulta Externa">Consulta Externa</option>
+                                                    <option value="Laboratório">Laboratório</option>
+                                                </select>
+                                                <div class="invalid-feedback">Selecione a localização.</div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="servicoEquipamento" class="form-label">Serviço</label>
+                                                <input type="text" class="form-control" id="servicoEquipamento"
+                                                    value="Unidade de Cuidados Intensivos">
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="pisoEquipamento" class="form-label">Piso</label>
+                                                <input type="text" class="form-control" id="pisoEquipamento"
+                                                    value="Piso 2">
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="salaEquipamento" class="form-label">Sala</label>
+                                                <input type="text" class="form-control" id="salaEquipamento"
+                                                    value="UCI-02">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- DOCUMENTAÇÃO -->
+                                    <div class="tab-pane fade" id="aba-documentacao" role="tabpanel">
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <h6 class="fw-bold mb-2">PDFs já associados</h6>
+
+                                                <div class="pdf-lista mb-3">
+                                                    <div class="pdf-item">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <i class="fa-solid fa-file-pdf"></i>
+                                                            <span>manual-monitor-multiparametrico.pdf</span>
+                                                        </div>
+
+                                                        <a href="../documentacao/documento-detalhes.html"
+                                                            class="btn btn-sm btn-outline-primary">
+                                                            <i class="fa-solid fa-eye me-1"></i> Ver
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="codigoDocumentoEquipamento" class="form-label">Código do
+                                                    documento</label>
+                                                <input type="text" class="form-control" id="codigoDocumentoEquipamento"
+                                                    value="DOC-001">
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <label for="tituloDocumentoEquipamento" class="form-label">Título do
+                                                    documento</label>
+                                                <input type="text" class="form-control" id="tituloDocumentoEquipamento"
+                                                    value="Manual do Monitor Multiparamétrico">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="tipoDocumentoEquipamento" class="form-label">Tipo</label>
+                                                <select class="form-select" id="tipoDocumentoEquipamento">
+                                                    <option value="">Selecionar</option>
+                                                    <option value="Manual" selected>Manual</option>
+                                                    <option value="Certificado">Certificado</option>
+                                                    <option value="Ficha técnica">Ficha técnica</option>
+                                                    <option value="Relatório técnico">Relatório técnico</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="dataDocumentoEquipamento" class="form-label">Data do
+                                                    documento</label>
+                                                <input type="date" class="form-control" id="dataDocumentoEquipamento"
+                                                    value="2024-03-12">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="validadeDocumentoEquipamento"
+                                                    class="form-label">Validade</label>
+                                                <input type="date" class="form-control"
+                                                    id="validadeDocumentoEquipamento" value="2027-03-12">
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="pdf-upload-card">
+                                                    <label for="ficheirosDocumentoEquipamento"
+                                                        class="form-label fw-semibold">
+                                                        <i class="fa-solid fa-file-pdf me-1 text-danger"></i> Adicionar
+                                                        mais PDFs da documentação
+                                                    </label>
+
+                                                    <input type="file" class="form-control input-pdf-multiplo"
+                                                        id="ficheirosDocumentoEquipamento"
+                                                        name="ficheirosDocumentoEquipamento[]"
+                                                        accept="application/pdf,.pdf" multiple
+                                                        data-lista="listaFicheirosDocumentoEquipamento">
+
+                                                    <p class="text-muted small mt-2 mb-3">
+                                                        Pode selecionar mais do que um PDF.
+                                                    </p>
+
+                                                    <div class="pdf-lista" id="listaFicheirosDocumentoEquipamento">
+                                                        <p class="text-muted small mb-0">Nenhum ficheiro novo
+                                                            selecionado.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GARANTIA E CONTRATO -->
+                                    <div class="tab-pane fade" id="aba-garantia" role="tabpanel">
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <label for="codigoGarantiaEquipamento" class="form-label">Código da
+                                                    garantia</label>
+                                                <input type="text" class="form-control" id="codigoGarantiaEquipamento"
+                                                    value="GAR-001">
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <label for="designacaoGarantiaEquipamento" class="form-label">Designação
+                                                    da garantia</label>
+                                                <input type="text" class="form-control"
+                                                    id="designacaoGarantiaEquipamento"
+                                                    value="Garantia Monitor Multiparamétrico">
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="inicioGarantiaEquipamento" class="form-label">Início da
+                                                    garantia</label>
+                                                <input type="date" class="form-control" id="inicioGarantiaEquipamento"
+                                                    value="2023-06-10">
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="fimGarantiaEquipamento" class="form-label">Fim da
+                                                    garantia</label>
+                                                <input type="date" class="form-control" id="fimGarantiaEquipamento"
+                                                    value="2026-06-10">
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="contratoEquipamento" class="form-label">Contrato
+                                                    associado</label>
+                                                <select class="form-select" id="contratoEquipamento">
+                                                    <option value="">Sem contrato associado</option>
+                                                    <option value="CON-001" selected>CON-001 — Contrato de Manutenção
+                                                        UCI</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label for="estadoGarantiaEquipamento" class="form-label">Estado da
+                                                    garantia</label>
+                                                <select class="form-select" id="estadoGarantiaEquipamento">
+                                                    <option value="">Selecionar</option>
+                                                    <option value="Ativo" selected>Ativo</option>
+                                                    <option value="A expirar">A expirar</option>
+                                                    <option value="Expirado">Expirado</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label for="coberturaGarantiaEquipamento"
+                                                    class="form-label">Cobertura</label>
+                                                <textarea class="form-control" id="coberturaGarantiaEquipamento"
+                                                    rows="3">Cobertura de peças, mão de obra e assistência técnica durante o período de garantia.</textarea>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="pdf-upload-card h-100">
+                                                    <label for="ficheirosGarantiaEquipamento"
+                                                        class="form-label fw-semibold">
+                                                        <i class="fa-solid fa-file-pdf me-1 text-danger"></i> Adicionar
+                                                        PDFs da garantia
+                                                    </label>
+
+                                                    <input type="file" class="form-control input-pdf-multiplo"
+                                                        id="ficheirosGarantiaEquipamento"
+                                                        name="ficheirosGarantiaEquipamento[]"
+                                                        accept="application/pdf,.pdf" multiple
+                                                        data-lista="listaFicheirosGarantiaEquipamento">
+
+                                                    <p class="text-muted small mt-2 mb-3">Pode adicionar vários PDFs da
+                                                        garantia.</p>
+
+                                                    <div class="pdf-lista" id="listaFicheirosGarantiaEquipamento">
+                                                        <p class="text-muted small mb-0">Nenhum ficheiro novo
+                                                            selecionado.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="pdf-upload-card h-100">
+                                                    <label for="ficheirosContratoEquipamento"
+                                                        class="form-label fw-semibold">
+                                                        <i class="fa-solid fa-file-pdf me-1 text-danger"></i> Adicionar
+                                                        PDFs do contrato
+                                                    </label>
+
+                                                    <input type="file" class="form-control input-pdf-multiplo"
+                                                        id="ficheirosContratoEquipamento"
+                                                        name="ficheirosContratoEquipamento[]"
+                                                        accept="application/pdf,.pdf" multiple
+                                                        data-lista="listaFicheirosContratoEquipamento">
+
+                                                    <p class="text-muted small mt-2 mb-3">Pode adicionar vários PDFs do
+                                                        contrato.</p>
+
+                                                    <div class="pdf-lista" id="listaFicheirosContratoEquipamento">
+                                                        <p class="text-muted small mb-0">Nenhum ficheiro novo
+                                                            selecionado.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- MANUTENÇÃO -->
+                                    <div class="tab-pane fade" id="aba-manutencao" role="tabpanel">
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <label for="ultimaManutencaoEquipamento" class="form-label">Última
+                                                    manutenção</label>
+                                                <input type="date" class="form-control" id="ultimaManutencaoEquipamento"
+                                                    value="2024-12-15">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="proximaManutencaoEquipamento" class="form-label">Próxima
+                                                    manutenção</label>
+                                                <input type="date" class="form-control"
+                                                    id="proximaManutencaoEquipamento" value="2025-12-15">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="estadoManutencaoEquipamento" class="form-label">Estado da
+                                                    manutenção</label>
+                                                <select class="form-select" id="estadoManutencaoEquipamento">
+                                                    <option value="">Selecionar</option>
+                                                    <option value="Em dia" selected>Em dia</option>
+                                                    <option value="Agendada">Agendada</option>
+                                                    <option value="Pendente">Pendente</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="periodicidadeManutencaoEquipamento"
+                                                    class="form-label">Periodicidade</label>
+                                                <input type="text" class="form-control"
+                                                    id="periodicidadeManutencaoEquipamento" value="Anual">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="responsavelManutencaoEquipamento"
+                                                    class="form-label">Responsável</label>
+                                                <input type="text" class="form-control"
+                                                    id="responsavelManutencaoEquipamento"
+                                                    value="Serviço de Engenharia Clínica">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="prioridadeManutencaoEquipamento"
+                                                    class="form-label">Prioridade</label>
+                                                <select class="form-select" id="prioridadeManutencaoEquipamento">
+                                                    <option value="">Selecionar</option>
+                                                    <option value="Normal" selected>Normal</option>
+                                                    <option value="Média">Média</option>
+                                                    <option value="Alta">Alta</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label for="observacoesEquipamento" class="form-label">Observações
+                                                    gerais</label>
+                                                <textarea class="form-control" id="observacoesEquipamento"
+                                                    rows="3">Equipamento com manutenção preventiva programada e sem intervenção pendente.</textarea>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="col-12 d-flex flex-column flex-sm-row justify-content-end gap-2">
-                                    <a href="equipamentos.html" class="btn btn-outline-secondary">
-                                        Cancelar
-                                    </a>
+                                <!-- MENSAGEM -->
+                                <div id="mensagemEquipamento" class="alert alert-success d-none mt-4">
+                                    <i class="fa-solid fa-check me-1"></i> Equipamento atualizado com sucesso.
+                                </div>
+
+                                <!-- AÇÕES -->
+                                <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
+                                    <a href="equipamentos.html" class="btn btn-outline-secondary">Cancelar</a>
 
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fa-solid fa-floppy-disk me-1"></i> Guardar alterações
                                     </button>
                                 </div>
 
-                            </div>
-                        </form>
+                            </form>
                     </div>
                 </section>
 
@@ -266,4 +585,5 @@
     <!-- JS -->
     <script src="../../../assets/js/1241848.js"></script>
 </body>
+
 </html>
