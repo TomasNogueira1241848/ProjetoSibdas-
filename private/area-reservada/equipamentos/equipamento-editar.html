@@ -209,11 +209,19 @@
                                             </div>
 
                                             <div class="col-md-4">
-                                                <label for="marcaModeloEquipamento" class="form-label">Marca / Modelo
+                                                <label for="marcaEquipamento" class="form-label">Marca
                                                     <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="marcaModeloEquipamento"
-                                                    value="Philips IntelliVue" required>
-                                                <div class="invalid-feedback">Introduza a marca ou modelo.</div>
+                                                <input type="text" class="form-control" id="marcaEquipamento"
+                                                    value="Philips" required>
+                                                <div class="invalid-feedback">Introduza a marca.</div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label for="modeloEquipamento" class="form-label">Modelo
+                                                    <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="modeloEquipamento"
+                                                    value="IntelliVue" required>
+                                                <div class="invalid-feedback">Introduza o modelo.</div>
                                             </div>
 
                                             <div class="col-md-4">
@@ -247,15 +255,19 @@
                                                     <option value="Dräger Portugal">Dräger Portugal</option>
                                                     <option value="MedRepair Norte">MedRepair Norte</option>
                                                 </select>
-                                                <div class="invalid-feedback">Selecione o fornecedor.</div>
-                                            </div>
 
-                                            <div class="col-md-4">
-                                                <label for="dataAquisicaoEquipamento" class="form-label">Data de
-                                                    aquisição</label>
-                                                <input type="date" class="form-control" id="dataAquisicaoEquipamento"
-                                                    value="2023-06-10">
-                                            </div>
+                                                <div class="invalid-feedback">Selecione o fornecedor.</div>
+                                                </div>
+                                                
+                                                <div class="col-md-4">
+                                                    <label for="dataAquisicaoEquipamento" class="form-label">Data de aquisição</label>
+                                                    <input type="date" class="form-control" id="dataAquisicaoEquipamento" value="2023-06-10">
+                                                </div>
+                                                
+                                                <div class="col-md-4">
+                                                    <label for="custoAquisicaoEquipamento" class="form-label">Custo de aquisição (€)</label>
+                                                    <input type="number" class="form-control" id="custoAquisicaoEquipamento" min="0" step="0.01" value="12500">
+                                                </div>
                                         </div>
                                     </div>
 
@@ -284,9 +296,9 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <label for="pisoEquipamento" class="form-label">Piso</label>
-                                                <input type="text" class="form-control" id="pisoEquipamento"
-                                                    value="Piso 2">
+                                                <label for="pisoEquipamento" class="form-label">N.º do andar</label>
+                                                <input type="number" class="form-control" id="pisoEquipamento"
+                                                    min="-1" step="1" value="2">
                                             </div>
 
                                             <div class="col-md-6">
@@ -587,3 +599,4 @@
 </body>
 
 </html>
+

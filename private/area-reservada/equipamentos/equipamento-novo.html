@@ -208,11 +208,17 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label for="marcaModeloEquipamento" class="form-label">Marca / Modelo <span
+                                            <label for="marcaEquipamento" class="form-label">Marca <span
                                                     class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="marcaModeloEquipamento"
-                                                required>
-                                            <div class="invalid-feedback">Introduza a marca ou modelo.</div>
+                                            <input type="text" class="form-control" id="marcaEquipamento">
+                                            <div class="invalid-feedback">Introduza a marca.</div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label for="modeloEquipamento" class="form-label">Modelo <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="modeloEquipamento">
+                                            <div class="invalid-feedback">Introduza o modelo.</div>
                                         </div>
 
                                         <div class="col-md-4">
@@ -250,9 +256,13 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label for="dataAquisicaoEquipamento" class="form-label">Data de
-                                                aquisição</label>
+                                            <label for="dataAquisicaoEquipamento" class="form-label">Data de aquisição</label>
                                             <input type="date" class="form-control" id="dataAquisicaoEquipamento">
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <label for="custoAquisicaoEquipamento" class="form-label">Custo de aquisição (€)</label>
+                                            <input type="number" class="form-control" id="custoAquisicaoEquipamento" min="0" step="0.01">
                                         </div>
                                     </div>
                                 </div>

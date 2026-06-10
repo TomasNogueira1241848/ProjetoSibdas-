@@ -32,9 +32,9 @@ function inicializarTabelas() {
             idPesquisa: 'pesquisaEquipamentos',
             filtros: [
                 { filtroId: 'filtroCategoriaEquipamentos', coluna: 2 },
-                { filtroId: 'filtroLocalizacaoEquipamentos', coluna: 5 },
-                { filtroId: 'filtroEstadoEquipamentos', coluna: 6 },
-                { filtroId: 'filtroManutencaoEquipamentos', coluna: 9 }
+                { filtroId: 'filtroLocalizacaoEquipamentos', coluna: 6 },
+                { filtroId: 'filtroEstadoEquipamentos', coluna: 7 },
+                { filtroId: 'filtroManutencaoEquipamentos', coluna: 10 }
             ]
         },
         {
@@ -51,7 +51,7 @@ function inicializarTabelas() {
             idPesquisa: 'pesquisaLocalizacoes',
             filtros: [
                 { filtroId: 'filtroTipoLocalizacao', coluna: 2 },
-                { filtroId: 'filtroPisoLocalizacao', coluna: 3 },
+                { filtroId: 'filtroAndaresLocalizacao', coluna: 3 },
                 { filtroId: 'filtroEstadoLocalizacao', coluna: 6 }
             ]
         },

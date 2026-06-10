@@ -137,7 +137,7 @@
                         <div class="row g-3">
                             <div class="col-lg-5">
                                 <label for="pesquisaLocalizacoes" class="form-label">Pesquisar</label>
-                                <input type="search" class="form-control" id="pesquisaLocalizacoes" placeholder="Código, nome, responsável ou tipo">
+                                <input type="search" class="form-control" id="pesquisaLocalizacoes" placeholder="Código, nome, responsável, tipo ou n.º de andares">
                             </div>
 
                             <div class="col-md-4 col-lg-3">
@@ -152,13 +152,14 @@
                             </div>
 
                             <div class="col-md-4 col-lg-2">
-                                <label for="filtroPisoLocalizacao" class="form-label">Piso</label>
-                                <select class="form-select" id="filtroPisoLocalizacao">
+                                <label for="filtroAndaresLocalizacao" class="form-label">N.º de andares</label>
+                                <select class="form-select" id="filtroAndaresLocalizacao">
                                     <option value="">Todos</option>
-                                    <option value="Piso 0">Piso 0</option>
-                                    <option value="Piso 1">Piso 1</option>
-                                    <option value="Piso 2">Piso 2</option>
-                                    <option value="Piso 3">Piso 3</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5 ou mais</option>
                                 </select>
                             </div>
 
@@ -184,7 +185,7 @@
                                         <th>Código</th>
                                         <th>Nome</th>
                                         <th>Tipo</th>
-                                        <th>Piso</th>
+                                        <th>N.º de andares</th>
                                         <th>Responsável</th>
                                         <th>Equipamentos</th>
                                         <th>Estado</th>
@@ -197,7 +198,7 @@
                                         <td>LOC-001</td>
                                         <td>Unidade de Cuidados Intensivos</td>
                                         <td>Unidade</td>
-                                        <td>Piso 2</td>
+                                        <td>4</td>
                                         <td>Enf. Ana Martins</td>
                                         <td>26</td>
                                         <td><span class="badge badge-ativo">Ativa</span></td>
