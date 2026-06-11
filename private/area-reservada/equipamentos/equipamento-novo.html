@@ -263,11 +263,63 @@
                                             <div class="invalid-feedback">Introduza o custo de aquisição.</div>
                                         </div>
 
+
+                                        <div class="col-12 mt-2">
+                                            <hr class="my-2">
+                                            <h6 class="fw-bold mb-1">Relações e consumíveis</h6>
+                                            <p class="text-muted small mb-0">
+                                                Indique se este equipamento pertence a outro equipamento e se utiliza
+                                                consumíveis.
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label for="componenteEquipamento" class="form-label">É componente de outro
+                                                equipamento?</label>
+                                            <select class="form-select" id="componenteEquipamento" required>
+                                                <option value="Não" selected>Não</option>
+                                                <option value="Sim">Sim</option>
+                                            </select>
+                                            <div class="invalid-feedback">Indique se o equipamento é componente de
+                                                outro.</div>
+                                        </div>
+
+                                        <div class="col-md-8 d-none" id="grupoEquipamentoPai">
+                                            <label for="equipamentoPaiEquipamento" class="form-label">Equipamento
+                                                principal</label>
+                                            <select class="form-select" id="equipamentoPaiEquipamento">
+                                                <option value="">Selecionar equipamento principal</option>
+                                                <option value="EQ-0042">EQ-0042 — Monitor Multiparamétrico</option>
+                                            </select>
+                                            <div class="invalid-feedback">Selecione o equipamento principal.</div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label for="temConsumiveisEquipamento" class="form-label">Tem
+                                                consumíveis?</label>
+                                            <select class="form-select" id="temConsumiveisEquipamento" required>
+                                                <option value="Não" selected>Não</option>
+                                                <option value="Sim">Sim</option>
+                                            </select>
+                                            <div class="invalid-feedback">Indique se o equipamento tem consumíveis.
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-8 d-none" id="grupoConsumiveisEquipamento">
+                                            <label for="consumiveisEquipamento" class="form-label">Consumíveis
+                                                associados</label>
+                                            <textarea class="form-control" id="consumiveisEquipamento" rows="3"
+                                                placeholder="Ex: elétrodos ECG, sensores SpO2, papel térmico"></textarea>
+                                            <div class="invalid-feedback">Indique os consumíveis associados.</div>
+                                            <div class="form-text">Separe os consumíveis por vírgulas ou por linhas.
+                                            </div>
+                                        </div>
+
                                         <div class="col-12">
                                             <label for="observacoesEquipamento" class="form-label">Observações
                                                 gerais</label>
-                                            <textarea class="form-control" id="observacoesEquipamento"
-                                                rows="3" required></textarea>
+                                            <textarea class="form-control" id="observacoesEquipamento" rows="3"
+                                                required></textarea>
                                             <div class="invalid-feedback">Preencha o campo de observações gerais.</div>
                                         </div>
                                     </div>
@@ -321,13 +373,14 @@
                                                 documento</label>
                                             <input type="text" class="form-control" id="codigoDocumentoEquipamento"
                                                 value="DOC-002" required>
-                                                <div class="invalid-feedback">Introduza o código do documento.</div>
+                                            <div class="invalid-feedback">Introduza o código do documento.</div>
                                         </div>
 
                                         <div class="col-md-8">
                                             <label for="tituloDocumentoEquipamento" class="form-label">Título do
                                                 documento</label>
-                                            <input type="text" class="form-control" id="tituloDocumentoEquipamento" required>
+                                            <input type="text" class="form-control" id="tituloDocumentoEquipamento"
+                                                required>
                                             <div class="invalid-feedback">Introduza o título do documento.</div>
                                         </div>
 
@@ -346,15 +399,17 @@
                                         <div class="col-md-4">
                                             <label for="dataDocumentoEquipamento" class="form-label">Data do
                                                 documento</label>
-                                            <input type="date" class="form-control" id="dataDocumentoEquipamento" required>
+                                            <input type="date" class="form-control" id="dataDocumentoEquipamento"
+                                                required>
                                             <div class="invalid-feedback">Introduza a data do documento.</div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <label for="validadeDocumentoEquipamento"
                                                 class="form-label">Validade</label>
-                                            <input type="date" class="form-control" id="validadeDocumentoEquipamento" required>
-                                             <div class="invalid-feedback">Introduza a data de validade.</div>
+                                            <input type="date" class="form-control" id="validadeDocumentoEquipamento"
+                                                required>
+                                            <div class="invalid-feedback">Introduza a data de validade.</div>
                                         </div>
 
                                         <div class="col-12">
@@ -369,7 +424,7 @@
                                                     id="ficheirosDocumentoEquipamento"
                                                     name="ficheirosDocumentoEquipamento[]" accept="application/pdf,.pdf"
                                                     multiple data-lista="listaFicheirosDocumentoEquipamento" required>
-                                                     <div class="invalid-feedback">Selecione um ficheiro.</div>
+                                                <div class="invalid-feedback">Selecione um ficheiro.</div>
 
                                                 <p class="text-muted small mt-2 mb-3">
                                                     Pode selecionar mais do que um PDF.
@@ -387,27 +442,30 @@
                                                 garantia</label>
                                             <input type="text" class="form-control" id="codigoGarantiaEquipamento"
                                                 value="GAR-003" required>
-                                                <div class="invalid-feedback">Introduza o código da garantia.</div>
+                                            <div class="invalid-feedback">Introduza o código da garantia.</div>
                                         </div>
 
                                         <div class="col-md-8">
                                             <label for="designacaoGarantiaEquipamento" class="form-label">Designação da
                                                 garantia</label>
-                                            <input type="text" class="form-control" id="designacaoGarantiaEquipamento" required>
+                                            <input type="text" class="form-control" id="designacaoGarantiaEquipamento"
+                                                required>
                                             <div class="invalid-feedback">Introduza a designação da garantia.</div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="inicioGarantiaEquipamento" class="form-label">Início da
                                                 garantia</label>
-                                            <input type="date" class="form-control" id="inicioGarantiaEquipamento" required>
+                                            <input type="date" class="form-control" id="inicioGarantiaEquipamento"
+                                                required>
                                             <div class="invalid-feedback">Introduza a data de início da garantia.</div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="fimGarantiaEquipamento" class="form-label">Fim da
                                                 garantia</label>
-                                            <input type="date" class="form-control" id="fimGarantiaEquipamento" required>
+                                            <input type="date" class="form-control" id="fimGarantiaEquipamento"
+                                                required>
                                             <div class="invalid-feedback">Introduza a data de fim da garantia.</div>
                                         </div>
 
@@ -434,12 +492,13 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="coberturaGarantiaEquipamento"
-                                                class="form-label">Cobertura de garantia</label>
-                                            <textarea class="form-control" id="coberturaGarantiaEquipamento"
-                                                rows="3" required></textarea>
-                                                <div class="invalid-feedback">Introduza o campo de cobertura de garantia.</div>
+                                            <label for="coberturaGarantiaEquipamento" class="form-label">Cobertura de
+                                                garantia</label>
+                                            <textarea class="form-control" id="coberturaGarantiaEquipamento" rows="3"
+                                                required></textarea>
+                                            <div class="invalid-feedback">Introduza o campo de cobertura de garantia.
                                             </div>
+                                        </div>
 
                                         <div class="col-md-6">
                                             <div class="pdf-upload-card h-100">
@@ -453,7 +512,7 @@
                                                     id="ficheirosGarantiaEquipamento"
                                                     name="ficheirosGarantiaEquipamento[]" accept="application/pdf,.pdf"
                                                     multiple data-lista="listaFicheirosGarantiaEquipamento" required>
-                                                    <div class="invalid-feedback">Selecione um ficheiro.</div>
+                                                <div class="invalid-feedback">Selecione um ficheiro.</div>
 
                                                 <p class="text-muted small mt-2 mb-3">Pode adicionar vários PDFs da
                                                     garantia.</p>
@@ -472,7 +531,7 @@
                                                     id="ficheirosContratoEquipamento"
                                                     name="ficheirosContratoEquipamento[]" accept="application/pdf,.pdf"
                                                     multiple data-lista="listaFicheirosContratoEquipamento" required>
-                                                    <div class="invalid-feedback">Selecione um ficheiro.</div>
+                                                <div class="invalid-feedback">Selecione um ficheiro.</div>
 
                                                 <p class="text-muted small mt-2 mb-3">Pode adicionar vários PDFs do
                                                     contrato.</p>
@@ -487,14 +546,16 @@
                                         <div class="col-md-4">
                                             <label for="ultimaManutencaoEquipamento" class="form-label">Última
                                                 manutenção</label>
-                                            <input type="date" class="form-control" id="ultimaManutencaoEquipamento" required>
+                                            <input type="date" class="form-control" id="ultimaManutencaoEquipamento"
+                                                required>
                                             <div class="invalid-feedback">Introduza a data da última manutenção.</div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <label for="proximaManutencaoEquipamento" class="form-label">Próxima
                                                 manutenção</label>
-                                            <input type="date" class="form-control" id="proximaManutencaoEquipamento" required>
+                                            <input type="date" class="form-control" id="proximaManutencaoEquipamento"
+                                                required>
                                             <div class="invalid-feedback">Introduza a data da próxima manutenção.</div>
                                         </div>
 
@@ -514,7 +575,8 @@
                                             <label for="periodicidadeManutencaoEquipamento"
                                                 class="form-label">Periodicidade</label>
                                             <input type="text" class="form-control"
-                                                id="periodicidadeManutencaoEquipamento" placeholder="Ex: Anual" required>
+                                                id="periodicidadeManutencaoEquipamento" placeholder="Ex: Anual"
+                                                required>
                                             <div class="invalid-feedback">Introduza a periodicidade da manutenção.</div>
                                         </div>
 
@@ -523,7 +585,7 @@
                                                 class="form-label">Responsável</label>
                                             <input type="text" class="form-control"
                                                 id="responsavelManutencaoEquipamento" required>
-                                                <div class="invalid-feedback">Introduza o resposável da manutenção.</div>
+                                            <div class="invalid-feedback">Introduza o resposável da manutenção.</div>
                                         </div>
 
                                         <div class="col-md-4">

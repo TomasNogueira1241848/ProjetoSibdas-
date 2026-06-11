@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarFormulariosSimulados();
     inicializarGestaoConteudosPublicos();
     inicializarInputsPDFs();
+    inicializarCamposCondicionaisEquipamento();
 
     inicializarGraficosDashboard();
 });
@@ -366,6 +367,60 @@ function focarCampo(campo) {
 
     campo.focus({ preventScroll: true });
 }
+
+
+/* Inicializa campos condicionais dos formulários de equipamentos */
+function inicializarCamposCondicionaisEquipamento() {
+    configurarCampoCondicional({
+        idControlo: 'componenteEquipamento',
+        valorAtivo: 'Sim',
+        idGrupo: 'grupoEquipamentoPai',
+        idsCampos: ['equipamentoPaiEquipamento']
+    });
+
+    configurarCampoCondicional({
+        idControlo: 'temConsumiveisEquipamento',
+        valorAtivo: 'Sim',
+        idGrupo: 'grupoConsumiveisEquipamento',
+        idsCampos: ['consumiveisEquipamento']
+    });
+}
+
+
+/* Mostra ou esconde um grupo de campos, ativando o required apenas quando necessário */
+function configurarCampoCondicional(configuracao) {
+    const controlo = document.getElementById(configuracao.idControlo);
+    const grupo = document.getElementById(configuracao.idGrupo);
+
+    if (!controlo || !grupo) return;
+
+    const campos = configuracao.idsCampos
+        .map(function (idCampo) {
+            return document.getElementById(idCampo);
+        })
+        .filter(function (campo) {
+            return campo !== null;
+        });
+
+    function atualizarGrupoCondicional() {
+        const ativo = controlo.value === configuracao.valorAtivo;
+
+        grupo.classList.toggle('d-none', !ativo);
+
+        campos.forEach(function (campo) {
+            campo.required = ativo;
+            campo.disabled = !ativo;
+
+            if (!ativo) {
+                campo.classList.remove('is-invalid', 'is-valid');
+            }
+        });
+    }
+
+    controlo.addEventListener('change', atualizarGrupoCondicional);
+    atualizarGrupoCondicional();
+}
+
 
 
 /* Mostra os PDFs escolhidos nos formulários */
