@@ -179,23 +179,20 @@
                                 <div class="tab-pane fade show active" id="aba-dados" role="tabpanel">
                                     <div class="row g-3">
                                         <div class="col-md-4">
-                                            <label for="codigoEquipamento" class="form-label">Código <span
-                                                    class="text-danger">*</span></label>
+                                            <label for="codigoEquipamento" class="form-label">Código </label>
                                             <input type="text" class="form-control" id="codigoEquipamento"
                                                 value="EQ-0043" required>
                                             <div class="invalid-feedback">Introduza o código.</div>
                                         </div>
 
                                         <div class="col-md-8">
-                                            <label for="designacaoEquipamento" class="form-label">Designação <span
-                                                    class="text-danger">*</span></label>
+                                            <label for="designacaoEquipamento" class="form-label">Designação </label>
                                             <input type="text" class="form-control" id="designacaoEquipamento" required>
                                             <div class="invalid-feedback">Introduza a designação.</div>
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label for="categoriaEquipamento" class="form-label">Categoria <span
-                                                    class="text-danger">*</span></label>
+                                            <label for="categoriaEquipamento" class="form-label">Categoria </label>
                                             <select class="form-select" id="categoriaEquipamento" required>
                                                 <option value="">Selecionar</option>
                                                 <option value="Monitorização">Monitorização</option>
@@ -208,30 +205,26 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label for="marcaEquipamento" class="form-label">Marca <span
-                                                    class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="marcaEquipamento">
+                                            <label for="marcaEquipamento" class="form-label">Marca </label>
+                                            <input type="text" class="form-control" id="marcaEquipamento" required>
                                             <div class="invalid-feedback">Introduza a marca.</div>
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label for="modeloEquipamento" class="form-label">Modelo <span
-                                                    class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="modeloEquipamento">
+                                            <label for="modeloEquipamento" class="form-label">Modelo </label>
+                                            <input type="text" class="form-control" id="modeloEquipamento" required>
                                             <div class="invalid-feedback">Introduza o modelo.</div>
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label for="numeroSerieEquipamento" class="form-label">N.º de série <span
-                                                    class="text-danger">*</span></label>
+                                            <label for="numeroSerieEquipamento" class="form-label">N.º de série </label>
                                             <input type="text" class="form-control" id="numeroSerieEquipamento"
                                                 required>
                                             <div class="invalid-feedback">Introduza o número de série.</div>
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label for="estadoEquipamento" class="form-label">Estado <span
-                                                    class="text-danger">*</span></label>
+                                            <label for="estadoEquipamento" class="form-label">Estado </label>
                                             <select class="form-select" id="estadoEquipamento" required>
                                                 <option value="">Selecionar</option>
                                                 <option value="Ativo">Ativo</option>
@@ -243,8 +236,7 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label for="fornecedorEquipamento" class="form-label">Fornecedor <span
-                                                    class="text-danger">*</span></label>
+                                            <label for="fornecedorEquipamento" class="form-label">Fornecedor </label>
                                             <select class="form-select" id="fornecedorEquipamento" required>
                                                 <option value="">Selecionar</option>
                                                 <option value="Philips Healthcare Portugal">Philips Healthcare Portugal
@@ -256,13 +248,27 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <label for="dataAquisicaoEquipamento" class="form-label">Data de aquisição</label>
-                                            <input type="date" class="form-control" id="dataAquisicaoEquipamento">
+                                            <label for="dataAquisicaoEquipamento" class="form-label">Data de
+                                                aquisição</label>
+                                            <input type="date" class="form-control" id="dataAquisicaoEquipamento"
+                                                required>
+                                            <div class="invalid-feedback">Introduza a data de aquisição.</div>
                                         </div>
-                                        
+
                                         <div class="col-md-4">
-                                            <label for="custoAquisicaoEquipamento" class="form-label">Custo de aquisição (€)</label>
-                                            <input type="number" class="form-control" id="custoAquisicaoEquipamento" min="0" step="0.01">
+                                            <label for="custoAquisicaoEquipamento" class="form-label">Custo de aquisição
+                                                (€)</label>
+                                            <input type="number" class="form-control" id="custoAquisicaoEquipamento"
+                                                min="0" step="0.01" required>
+                                            <div class="invalid-feedback">Introduza o custo de aquisição.</div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="observacoesEquipamento" class="form-label">Observações
+                                                gerais</label>
+                                            <textarea class="form-control" id="observacoesEquipamento"
+                                                rows="3" required></textarea>
+                                            <div class="invalid-feedback">Preencha o campo de observações gerais.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -271,8 +277,7 @@
                                 <div class="tab-pane fade" id="aba-localizacao" role="tabpanel">
                                     <div class="row g-3">
                                         <div class="col-md-6">
-                                            <label for="localizacaoEquipamento" class="form-label">Localização <span
-                                                    class="text-danger">*</span></label>
+                                            <label for="localizacaoEquipamento" class="form-label">Localização </label>
                                             <select class="form-select" id="localizacaoEquipamento" required>
                                                 <option value="">Selecionar</option>
                                                 <option value="UCI">UCI</option>
@@ -288,19 +293,22 @@
                                         <div class="col-md-6">
                                             <label for="servicoEquipamento" class="form-label">Serviço</label>
                                             <input type="text" class="form-control" id="servicoEquipamento"
-                                                placeholder="Ex: Unidade de Cuidados Intensivos">
+                                                placeholder="Ex: Unidade de Cuidados Intensivos" required>
+                                            <div class="invalid-feedback">Introduza o serviço.</div>
                                         </div>
 
                                         <div class="col-md-6">
-                                            <label for="pisoEquipamento" class="form-label">Piso</label>
-                                            <input type="text" class="form-control" id="pisoEquipamento"
-                                                placeholder="Ex: Piso 2">
+                                            <label for="pisoEquipamento" class="form-label">Andar</label>
+                                            <input type="number" class="form-control" id="pisoEquipamento" min="0"
+                                                step="1" required>
+                                            <div class="invalid-feedback">Introduza o número do andar.</div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="salaEquipamento" class="form-label">Sala</label>
                                             <input type="text" class="form-control" id="salaEquipamento"
-                                                placeholder="Ex: UCI-02">
+                                                placeholder="Ex: UCI-02" required>
+                                            <div class="invalid-feedback">Introduza a sala.</div>
                                         </div>
                                     </div>
                                 </div>
@@ -312,37 +320,41 @@
                                             <label for="codigoDocumentoEquipamento" class="form-label">Código do
                                                 documento</label>
                                             <input type="text" class="form-control" id="codigoDocumentoEquipamento"
-                                                value="DOC-002">
+                                                value="DOC-002" required>
+                                                <div class="invalid-feedback">Introduza o código do documento.</div>
                                         </div>
 
                                         <div class="col-md-8">
                                             <label for="tituloDocumentoEquipamento" class="form-label">Título do
                                                 documento</label>
-                                            <input type="text" class="form-control" id="tituloDocumentoEquipamento"
-                                                placeholder="Ex: Manual técnico do equipamento">
+                                            <input type="text" class="form-control" id="tituloDocumentoEquipamento" required>
+                                            <div class="invalid-feedback">Introduza o título do documento.</div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <label for="tipoDocumentoEquipamento" class="form-label">Tipo</label>
-                                            <select class="form-select" id="tipoDocumentoEquipamento">
+                                            <select class="form-select" id="tipoDocumentoEquipamento" required>
                                                 <option value="">Selecionar</option>
                                                 <option value="Manual">Manual</option>
                                                 <option value="Certificado">Certificado</option>
                                                 <option value="Ficha técnica">Ficha técnica</option>
                                                 <option value="Relatório técnico">Relatório técnico</option>
                                             </select>
+                                            <div class="invalid-feedback">Selecione o tipo do documento.</div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <label for="dataDocumentoEquipamento" class="form-label">Data do
                                                 documento</label>
-                                            <input type="date" class="form-control" id="dataDocumentoEquipamento">
+                                            <input type="date" class="form-control" id="dataDocumentoEquipamento" required>
+                                            <div class="invalid-feedback">Introduza a data do documento.</div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <label for="validadeDocumentoEquipamento"
                                                 class="form-label">Validade</label>
-                                            <input type="date" class="form-control" id="validadeDocumentoEquipamento">
+                                            <input type="date" class="form-control" id="validadeDocumentoEquipamento" required>
+                                             <div class="invalid-feedback">Introduza a data de validade.</div>
                                         </div>
 
                                         <div class="col-12">
@@ -356,15 +368,12 @@
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheirosDocumentoEquipamento"
                                                     name="ficheirosDocumentoEquipamento[]" accept="application/pdf,.pdf"
-                                                    multiple data-lista="listaFicheirosDocumentoEquipamento">
+                                                    multiple data-lista="listaFicheirosDocumentoEquipamento" required>
+                                                     <div class="invalid-feedback">Selecione um ficheiro.</div>
 
                                                 <p class="text-muted small mt-2 mb-3">
                                                     Pode selecionar mais do que um PDF.
                                                 </p>
-
-                                                <div class="pdf-lista" id="listaFicheirosDocumentoEquipamento">
-                                                    <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -377,54 +386,60 @@
                                             <label for="codigoGarantiaEquipamento" class="form-label">Código da
                                                 garantia</label>
                                             <input type="text" class="form-control" id="codigoGarantiaEquipamento"
-                                                value="GAR-003">
+                                                value="GAR-003" required>
+                                                <div class="invalid-feedback">Introduza o código da garantia.</div>
                                         </div>
 
                                         <div class="col-md-8">
                                             <label for="designacaoGarantiaEquipamento" class="form-label">Designação da
                                                 garantia</label>
-                                            <input type="text" class="form-control" id="designacaoGarantiaEquipamento"
-                                                placeholder="Ex: Garantia do equipamento">
+                                            <input type="text" class="form-control" id="designacaoGarantiaEquipamento" required>
+                                            <div class="invalid-feedback">Introduza a designação da garantia.</div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="inicioGarantiaEquipamento" class="form-label">Início da
                                                 garantia</label>
-                                            <input type="date" class="form-control" id="inicioGarantiaEquipamento">
+                                            <input type="date" class="form-control" id="inicioGarantiaEquipamento" required>
+                                            <div class="invalid-feedback">Introduza a data de início da garantia.</div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="fimGarantiaEquipamento" class="form-label">Fim da
                                                 garantia</label>
-                                            <input type="date" class="form-control" id="fimGarantiaEquipamento">
+                                            <input type="date" class="form-control" id="fimGarantiaEquipamento" required>
+                                            <div class="invalid-feedback">Introduza a data de fim da garantia.</div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="contratoEquipamento" class="form-label">Contrato
                                                 associado</label>
-                                            <select class="form-select" id="contratoEquipamento">
+                                            <select class="form-select" id="contratoEquipamento" required>
                                                 <option value="">Sem contrato associado</option>
                                                 <option value="CON-001">CON-001 — Contrato de Manutenção UCI</option>
                                             </select>
+                                            <div class="invalid-feedback">Selecione o contrato associado.</div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label for="estadoGarantiaEquipamento" class="form-label">Estado da
                                                 garantia</label>
-                                            <select class="form-select" id="estadoGarantiaEquipamento">
+                                            <select class="form-select" id="estadoGarantiaEquipamento" required>
                                                 <option value="">Selecionar</option>
                                                 <option value="Ativo">Ativo</option>
                                                 <option value="A expirar">A expirar</option>
                                                 <option value="Expirado">Expirado</option>
                                             </select>
+                                            <div class="invalid-feedback">Selecione o estado da garantia.</div>
                                         </div>
 
                                         <div class="col-12">
                                             <label for="coberturaGarantiaEquipamento"
-                                                class="form-label">Cobertura</label>
+                                                class="form-label">Cobertura de garantia</label>
                                             <textarea class="form-control" id="coberturaGarantiaEquipamento"
-                                                rows="3"></textarea>
-                                        </div>
+                                                rows="3" required></textarea>
+                                                <div class="invalid-feedback">Introduza o campo de cobertura de garantia.</div>
+                                            </div>
 
                                         <div class="col-md-6">
                                             <div class="pdf-upload-card h-100">
@@ -437,14 +452,11 @@
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheirosGarantiaEquipamento"
                                                     name="ficheirosGarantiaEquipamento[]" accept="application/pdf,.pdf"
-                                                    multiple data-lista="listaFicheirosGarantiaEquipamento">
+                                                    multiple data-lista="listaFicheirosGarantiaEquipamento" required>
+                                                    <div class="invalid-feedback">Selecione um ficheiro.</div>
 
                                                 <p class="text-muted small mt-2 mb-3">Pode adicionar vários PDFs da
                                                     garantia.</p>
-
-                                                <div class="pdf-lista" id="listaFicheirosGarantiaEquipamento">
-                                                    <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
-                                                </div>
                                             </div>
                                         </div>
 
@@ -459,14 +471,11 @@
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheirosContratoEquipamento"
                                                     name="ficheirosContratoEquipamento[]" accept="application/pdf,.pdf"
-                                                    multiple data-lista="listaFicheirosContratoEquipamento">
+                                                    multiple data-lista="listaFicheirosContratoEquipamento" required>
+                                                    <div class="invalid-feedback">Selecione um ficheiro.</div>
 
                                                 <p class="text-muted small mt-2 mb-3">Pode adicionar vários PDFs do
                                                     contrato.</p>
-
-                                                <div class="pdf-lista" id="listaFicheirosContratoEquipamento">
-                                                    <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -478,57 +487,55 @@
                                         <div class="col-md-4">
                                             <label for="ultimaManutencaoEquipamento" class="form-label">Última
                                                 manutenção</label>
-                                            <input type="date" class="form-control" id="ultimaManutencaoEquipamento">
+                                            <input type="date" class="form-control" id="ultimaManutencaoEquipamento" required>
+                                            <div class="invalid-feedback">Introduza a data da última manutenção.</div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <label for="proximaManutencaoEquipamento" class="form-label">Próxima
                                                 manutenção</label>
-                                            <input type="date" class="form-control" id="proximaManutencaoEquipamento">
+                                            <input type="date" class="form-control" id="proximaManutencaoEquipamento" required>
+                                            <div class="invalid-feedback">Introduza a data da próxima manutenção.</div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <label for="estadoManutencaoEquipamento" class="form-label">Estado da
                                                 manutenção</label>
-                                            <select class="form-select" id="estadoManutencaoEquipamento">
+                                            <select class="form-select" id="estadoManutencaoEquipamento" required>
                                                 <option value="">Selecionar</option>
                                                 <option value="Em dia">Em dia</option>
                                                 <option value="Agendada">Agendada</option>
                                                 <option value="Pendente">Pendente</option>
                                             </select>
+                                            <div class="invalid-feedback">Selecione o estado da manutenção.</div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <label for="periodicidadeManutencaoEquipamento"
                                                 class="form-label">Periodicidade</label>
                                             <input type="text" class="form-control"
-                                                id="periodicidadeManutencaoEquipamento" placeholder="Ex: Anual">
+                                                id="periodicidadeManutencaoEquipamento" placeholder="Ex: Anual" required>
+                                            <div class="invalid-feedback">Introduza a periodicidade da manutenção.</div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <label for="responsavelManutencaoEquipamento"
                                                 class="form-label">Responsável</label>
                                             <input type="text" class="form-control"
-                                                id="responsavelManutencaoEquipamento"
-                                                placeholder="Ex: Engenharia Clínica">
+                                                id="responsavelManutencaoEquipamento" required>
+                                                <div class="invalid-feedback">Introduza o resposável da manutenção.</div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <label for="prioridadeManutencaoEquipamento"
                                                 class="form-label">Prioridade</label>
-                                            <select class="form-select" id="prioridadeManutencaoEquipamento">
+                                            <select class="form-select" id="prioridadeManutencaoEquipamento" required>
                                                 <option value="">Selecionar</option>
                                                 <option value="Normal">Normal</option>
                                                 <option value="Média">Média</option>
                                                 <option value="Alta">Alta</option>
                                             </select>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <label for="observacoesEquipamento" class="form-label">Observações
-                                                gerais</label>
-                                            <textarea class="form-control" id="observacoesEquipamento"
-                                                rows="3"></textarea>
+                                            <div class="invalid-feedback">Selecione a prioridade da manutenção.</div>
                                         </div>
                                     </div>
                                 </div>

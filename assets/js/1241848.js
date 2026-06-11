@@ -169,13 +169,7 @@ function inicializarFormularioContacto() {
     formContacto.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        if (!formContacto.checkValidity()) {
-            e.stopPropagation();
-            formContacto.classList.add('was-validated');
-            return;
-        }
-
-        formContacto.classList.remove('was-validated');
+        if (!validarFormulario(formContacto)) return;
         formContacto.reset();
 
         const mensagemSucesso = document.getElementById('mensagemSucesso');
@@ -200,10 +194,7 @@ function inicializarLogin() {
     formLogin.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        if (!formLogin.checkValidity()) {
-            formLogin.classList.add('was-validated');
-            return;
-        }
+        if (!validarFormulario(formLogin)) return;
 
         window.location.href = '../area-reservada/index.html';
     });
@@ -302,11 +293,7 @@ function inicializarFormularioSimulado(idFormulario, idMensagem, paginaDestino, 
     formulario.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        if (validarFormulario && !formulario.checkValidity()) {
-            formulario.classList.add('was-validated');
-            abrirAbaComCampoInvalido(formulario);
-            return;
-        }
+        if (validarFormulario && !validarFormularioHTML(formulario)) return;
 
         formulario.classList.remove('was-validated');
 
@@ -321,6 +308,25 @@ function inicializarFormularioSimulado(idFormulario, idMensagem, paginaDestino, 
 }
 
 
+/* Valida qualquer formulário HTML de forma reutilizável */
+function validarFormulario(formulario) {
+    return validarFormularioHTML(formulario);
+}
+
+
+/* Validação base dos formulários com required e invalid-feedback no HTML */
+function validarFormularioHTML(formulario) {
+    if (formulario.checkValidity()) {
+        formulario.classList.remove('was-validated');
+        return true;
+    }
+
+    formulario.classList.add('was-validated');
+    abrirAbaComCampoInvalido(formulario);
+    return false;
+}
+
+
 /* Abre automaticamente a aba onde existe o primeiro campo inválido */
 function abrirAbaComCampoInvalido(formulario) {
     const campoInvalido = formulario.querySelector(':invalid');
@@ -329,14 +335,36 @@ function abrirAbaComCampoInvalido(formulario) {
 
     const aba = campoInvalido.closest('.tab-pane');
 
-    if (!aba) return;
+    if (!aba) {
+        focarCampo(campoInvalido);
+        return;
+    }
 
     const botaoAba = document.querySelector(`[data-bs-target="#${aba.id}"]`);
 
     if (botaoAba && typeof bootstrap !== 'undefined') {
         const tab = new bootstrap.Tab(botaoAba);
         tab.show();
+
+        setTimeout(function () {
+            focarCampo(campoInvalido);
+        }, 250);
+
+        return;
     }
+
+    focarCampo(campoInvalido);
+}
+
+
+/* Coloca o foco no campo inválido e aproxima-o no ecrã */
+function focarCampo(campo) {
+    campo.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+    });
+
+    campo.focus({ preventScroll: true });
 }
 
 
@@ -567,12 +595,7 @@ function inicializarGestaoConteudosPublicos() {
     formulario.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        if (!formulario.checkValidity()) {
-            formulario.classList.add('was-validated');
-            return;
-        }
-
-        formulario.classList.remove('was-validated');
+        if (!validarFormulario(formulario)) return;
 
         const conteudos = {
             heroTitulo: obterValorCampo('conteudoHeroTitulo'),
@@ -821,4 +844,5 @@ function criarGraficoLocalizacao() {
             }
         }
     });
+
 }

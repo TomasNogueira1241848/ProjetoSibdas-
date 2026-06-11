@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +31,8 @@
 
             <div class="col-4 col-md-6 text-end p-3">
                 <div class="dropdown d-inline-block">
-                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         <i class="fa-regular fa-user"></i>
                         <span class="d-none d-sm-inline ms-2">Administrador</span>
                     </button>
@@ -102,14 +104,15 @@
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                     <div>
                         <h4 class="fw-bold mb-1">Detalhes do equipamento</h4>
-                        <p class="text-muted small mb-0">Consulta dos dados principais e associações do equipamento selecionado.</p>
+                        <p class="text-muted small mb-0">Consulta dos dados principais e associações do equipamento
+                            selecionado.</p>
                     </div>
 
                     <div class="d-flex flex-wrap gap-2">
                         <a href="equipamento-editar.html" class="btn btn-primary btn-sm">
                             <i class="fa-solid fa-pen me-1"></i> Editar
                         </a>
-                        
+
                         <a href="equipamentos.html" class="btn btn-outline-secondary btn-sm">
                             <i class="fa-solid fa-arrow-left me-1"></i> Voltar
                         </a>
@@ -140,7 +143,8 @@
                         <!-- ABAS -->
                         <ul class="nav nav-pills abas-equipamento mb-4" id="abasDetalhesEquipamento" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="detalhes-dados-tab" data-bs-toggle="tab" data-bs-target="#detalhes-dados" type="button" role="tab">
+                                <button class="nav-link active" id="detalhes-dados-tab" data-bs-toggle="tab"
+                                    data-bs-target="#detalhes-dados" type="button" role="tab">
                                     <span class="aba-numero">1</span>
                                     <span>
                                         <strong>Dados</strong>
@@ -150,7 +154,8 @@
                             </li>
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="detalhes-localizacao-tab" data-bs-toggle="tab" data-bs-target="#detalhes-localizacao" type="button" role="tab">
+                                <button class="nav-link" id="detalhes-localizacao-tab" data-bs-toggle="tab"
+                                    data-bs-target="#detalhes-localizacao" type="button" role="tab">
                                     <span class="aba-numero">2</span>
                                     <span>
                                         <strong>Localização</strong>
@@ -160,7 +165,8 @@
                             </li>
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="detalhes-fornecedor-tab" data-bs-toggle="tab" data-bs-target="#detalhes-fornecedor" type="button" role="tab">
+                                <button class="nav-link" id="detalhes-fornecedor-tab" data-bs-toggle="tab"
+                                    data-bs-target="#detalhes-fornecedor" type="button" role="tab">
                                     <span class="aba-numero">3</span>
                                     <span>
                                         <strong>Fornecedor</strong>
@@ -170,7 +176,8 @@
                             </li>
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="detalhes-documentacao-tab" data-bs-toggle="tab" data-bs-target="#detalhes-documentacao" type="button" role="tab">
+                                <button class="nav-link" id="detalhes-documentacao-tab" data-bs-toggle="tab"
+                                    data-bs-target="#detalhes-documentacao" type="button" role="tab">
                                     <span class="aba-numero">4</span>
                                     <span>
                                         <strong>Documentação</strong>
@@ -180,7 +187,8 @@
                             </li>
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="detalhes-garantia-tab" data-bs-toggle="tab" data-bs-target="#detalhes-garantia" type="button" role="tab">
+                                <button class="nav-link" id="detalhes-garantia-tab" data-bs-toggle="tab"
+                                    data-bs-target="#detalhes-garantia" type="button" role="tab">
                                     <span class="aba-numero">5</span>
                                     <span>
                                         <strong>Garantia</strong>
@@ -190,7 +198,8 @@
                             </li>
 
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="detalhes-manutencao-tab" data-bs-toggle="tab" data-bs-target="#detalhes-manutencao" type="button" role="tab">
+                                <button class="nav-link" id="detalhes-manutencao-tab" data-bs-toggle="tab"
+                                    data-bs-target="#detalhes-manutencao" type="button" role="tab">
                                     <span class="aba-numero">6</span>
                                     <span>
                                         <strong>Manutenção</strong>
@@ -235,15 +244,22 @@
                                         <p class="text-muted small mb-1">Estado</p>
                                         <p class="mb-0"><span class="badge badge-ativo">Ativo</span></p>
                                     </div>
-                                    
+
                                     <div class="col-md-6 col-xl-4">
                                         <p class="text-muted small mb-1">Data de aquisição</p>
                                         <p class="mb-0">10/06/2023</p>
                                     </div>
-                                    
+
                                     <div class="col-md-6 col-xl-4">
                                         <p class="text-muted small mb-1">Custo de aquisição</p>
                                         <p class="mb-0">12 500,00 €</p>
+                                    </div>
+
+                                     <div class="col-12">
+                                        <p class="text-muted small mb-1">Observações</p>
+                                        <p class="mb-0">
+                                            Equipamento usado como monitor multiparamétrico.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -277,7 +293,8 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <a href="../localizacoes/localizacao-detalhes.html" class="btn btn-outline-primary btn-sm">
+                                        <a href="../localizacoes/localizacao-detalhes.html"
+                                            class="btn btn-outline-primary btn-sm">
                                             <i class="fa-solid fa-location-dot me-1"></i> Ver localização
                                         </a>
                                     </div>
@@ -308,7 +325,8 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <a href="../fornecedores/fornecedor-detalhes.html" class="btn btn-outline-primary btn-sm">
+                                        <a href="../fornecedores/fornecedor-detalhes.html"
+                                            class="btn btn-outline-primary btn-sm">
                                             <i class="fa-solid fa-truck me-1"></i> Ver fornecedor
                                         </a>
                                     </div>
@@ -343,7 +361,8 @@
                                                     <span>manual-monitor-multiparametrico.pdf</span>
                                                 </div>
 
-                                                <a href="../documentacao/documento-detalhes.html" class="btn btn-sm btn-outline-primary">
+                                                <a href="../documentacao/documento-detalhes.html"
+                                                    class="btn btn-sm btn-outline-primary">
                                                     <i class="fa-solid fa-eye me-1"></i> Ver
                                                 </a>
                                             </div>
@@ -351,7 +370,8 @@
                                     </div>
 
                                     <div class="col-12 mt-3">
-                                        <a href="../documentacao/documentacao.html" class="btn btn-outline-secondary btn-sm">
+                                        <a href="../documentacao/documentacao.html"
+                                            class="btn btn-outline-secondary btn-sm">
                                             <i class="fa-solid fa-folder-open me-1"></i> Ver documentação
                                         </a>
                                     </div>
@@ -392,9 +412,10 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <p class="text-muted small mb-1">Cobertura</p>
+                                        <p class="text-muted small mb-1">Cobertura de garantia</p>
                                         <p class="mb-0">
-                                            Cobertura de peças, mão de obra e assistência técnica durante o período de garantia.
+                                            Cobertura de peças, mão de obra e assistência técnica durante o período de
+                                            garantia.
                                         </p>
                                     </div>
 
@@ -408,7 +429,8 @@
                                                     <span>garantia-monitor-multiparametrico.pdf</span>
                                                 </div>
 
-                                                <a href="../contratos/garantia-detalhes.html" class="btn btn-sm btn-outline-primary">
+                                                <a href="../contratos/garantia-detalhes.html"
+                                                    class="btn btn-sm btn-outline-primary">
                                                     <i class="fa-solid fa-eye me-1"></i> Ver garantia
                                                 </a>
                                             </div>
@@ -419,15 +441,17 @@
                                                     <span>contrato-manutencao-uci.pdf</span>
                                                 </div>
 
-                                                <a href="../contratos/contrato-detalhes.html" class="btn btn-sm btn-outline-primary">
+                                                <a href="../contratos/contrato-detalhes.html"
+                                                    class="btn btn-sm btn-outline-primary">
                                                     <i class="fa-solid fa-eye me-1"></i> Ver contrato
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
 
-                                     <div class="col-12 mt-3">
-                                        <a href="../documentacao/documentacao.html" class="btn btn-outline-secondary btn-sm">
+                                    <div class="col-12 mt-3">
+                                        <a href="../documentacao/documentacao.html"
+                                            class="btn btn-outline-secondary btn-sm">
                                             <i class="fa-solid fa-file-contract me-1"></i> Ver garantias e contratos
                                         </a>
                                     </div>
@@ -467,12 +491,6 @@
                                         <p class="mb-0">Normal</p>
                                     </div>
 
-                                    <div class="col-12">
-                                        <p class="text-muted small mb-1">Observações</p>
-                                        <p class="mb-0">
-                                            Equipamento com manutenção preventiva programada e sem intervenção pendente.
-                                        </p>
-                                    </div>
                                 </div>
                             </div>
 
@@ -489,5 +507,5 @@
     <!-- JavaScript -->
     <script src="../../../assets/js/1241848.js"></script>
 </body>
-</html>
 
+</html>

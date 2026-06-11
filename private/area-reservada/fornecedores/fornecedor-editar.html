@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +31,8 @@
 
             <div class="col-4 col-md-6 text-end p-3">
                 <div class="dropdown d-inline-block">
-                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         <i class="fa-regular fa-user"></i>
                         <span class="d-none d-sm-inline ms-2">Administrador</span>
                     </button>
@@ -42,7 +44,9 @@
                             </a>
                         </li>
 
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
 
                         <li>
                             <a class="dropdown-item" href="../../login/login.html">
@@ -86,7 +90,7 @@
                     <a href="../contratos/contratos.html" class="nav-link">
                         <i class="fa-solid fa-shield me-2"></i> Garantias e Contratos
                     </a>
-                    
+
                     <a href="../conteudos/conteudos.html" class="nav-link">
                         <i class="fa-solid fa-pen-to-square me-2"></i> Gestão de Conteúdos
                     </a>
@@ -112,23 +116,25 @@
 
                                 <div class="col-md-8">
                                     <label for="nomeFornecedor" class="form-label">
-                                        Nome do fornecedor <span class="text-danger">*</span>
+                                        Nome do fornecedor
                                     </label>
-                                    <input type="text" class="form-control" id="nomeFornecedor" name="nomeFornecedor" value="Philips Healthcare Portugal" required>
+                                    <input type="text" class="form-control" id="nomeFornecedor" name="nomeFornecedor"
+                                        value="Philips Healthcare Portugal" required>
                                     <div class="invalid-feedback">Introduza o nome do fornecedor.</div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label for="nifFornecedor" class="form-label">
-                                        NIF <span class="text-danger">*</span>
+                                        NIF
                                     </label>
-                                    <input type="text" class="form-control" id="nifFornecedor" name="nifFornecedor" value="501234567" maxlength="9" required>
+                                    <input type="text" class="form-control" id="nifFornecedor" name="nifFornecedor"
+                                        value="501234567" maxlength="9" required>
                                     <div class="invalid-feedback">Introduza o NIF do fornecedor.</div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label for="tipoFornecedor" class="form-label">
-                                        Tipo <span class="text-danger">*</span>
+                                        Tipo
                                     </label>
                                     <select class="form-select" id="tipoFornecedor" name="tipoFornecedor" required>
                                         <option value="">Selecionar tipo</option>
@@ -141,7 +147,7 @@
 
                                 <div class="col-md-6">
                                     <label for="estadoFornecedor" class="form-label">
-                                        Estado <span class="text-danger">*</span>
+                                        Estado
                                     </label>
                                     <select class="form-select" id="estadoFornecedor" name="estadoFornecedor" required>
                                         <option value="">Selecionar estado</option>
@@ -153,41 +159,52 @@
 
                                 <div class="col-md-6">
                                     <label for="emailFornecedor" class="form-label">
-                                        Email <span class="text-danger">*</span>
+                                        Email
                                     </label>
-                                    <input type="email" class="form-control" id="emailFornecedor" name="emailFornecedor" value="suporte@philips.pt" required>
+                                    <input type="email" class="form-control" id="emailFornecedor" name="emailFornecedor"
+                                        value="suporte@philips.pt" required>
                                     <div class="invalid-feedback">Introduza um email válido.</div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label for="telefoneFornecedor" class="form-label">
-                                        Telefone <span class="text-danger">*</span>
+                                        Telefone
                                     </label>
-                                    <input type="tel" class="form-control" id="telefoneFornecedor" name="telefoneFornecedor" value="+351 211 234 567" required>
+                                    <input type="tel" class="form-control" id="telefoneFornecedor"
+                                        name="telefoneFornecedor" value="+351 211 234 567" required>
                                     <div class="invalid-feedback">Introduza o telefone do fornecedor.</div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label for="contratoFornecedor" class="form-label">Contrato ativo</label>
-                                    <select class="form-select" id="contratoFornecedor" name="contratoFornecedor">
-                                        <option value="Não">Não</option>
+                                    <select class="form-select" id="contratoFornecedor" name="contratoFornecedor" required>
+                                        <option value="">Selecionar</option>
                                         <option value="Sim" selected>Sim</option>
-                                    </select>
+                                        <option value="Não">Não</option>
+                                    </select>´
+                                    <div class="invalid-feedback">Selecione o sim ou não.</div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label for="areaFornecedor" class="form-label">Área de atuação</label>
-                                    <input type="text" class="form-control" id="areaFornecedor" name="areaFornecedor" value="Monitorização e diagnóstico">
+                                    <input type="text" class="form-control" id="areaFornecedor" name="areaFornecedor"
+                                        value="Monitorização e diagnóstico" required>
+                                        <div class="invalid-feedback">Introduza a área de atuação.</div>
                                 </div>
 
                                 <div class="col-12">
                                     <label for="moradaFornecedor" class="form-label">Morada</label>
-                                    <input type="text" class="form-control" id="moradaFornecedor" name="moradaFornecedor" value="Av. da República, 90, 1050-190 Lisboa">
+                                    <input type="text" class="form-control" id="moradaFornecedor"
+                                        name="moradaFornecedor" value="Av. da República, 90, 1050-190 Lisboa" required>
+                                        <div class="invalid-feedback">Introduza a morada.</div>
                                 </div>
 
                                 <div class="col-12">
                                     <label for="observacoesFornecedor" class="form-label">Observações</label>
-                                    <textarea class="form-control" id="observacoesFornecedor" name="observacoesFornecedor" rows="3">Fornecedor principal de equipamentos de monitorização.</textarea>
+                                    <textarea class="form-control" id="observacoesFornecedor"
+                                        name="observacoesFornecedor"
+                                        rows="3" required>Fornecedor principal de equipamentos de monitorização.</textarea>
+                                        <div class="invalid-feedback">Preencha o campo de observações.</div>
                                 </div>
 
                                 <div class="col-12">
@@ -220,4 +237,5 @@
     <!-- JS -->
     <script src="../../../assets/js/1241848.js"></script>
 </body>
+
 </html>
