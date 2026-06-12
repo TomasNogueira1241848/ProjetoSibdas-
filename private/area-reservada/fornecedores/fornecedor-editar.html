@@ -127,8 +127,8 @@
                                     <label for="nifFornecedor" class="form-label">
                                         NIF
                                     </label>
-                                    <input type="text" class="form-control" id="nifFornecedor" name="nifFornecedor"
-                                        value="501234567" maxlength="9" required>
+                                    <input type="number" class="form-control" id="nifFornecedor" name="nifFornecedor"
+                                        value="501234567" maxlength="9" min="0" step="1" required>
                                     <div class="invalid-feedback">Introduza o NIF do fornecedor.</div>
                                 </div>
 
@@ -170,8 +170,8 @@
                                     <label for="telefoneFornecedor" class="form-label">
                                         Telefone
                                     </label>
-                                    <input type="tel" class="form-control" id="telefoneFornecedor"
-                                        name="telefoneFornecedor" value="+351 211 234 567" required>
+                                    <input type="number" class="form-control" id="telefoneFornecedor"
+                                        name="telefoneFornecedor" value="+351 211 234 567" min="0" step="1" required>
                                     <div class="invalid-feedback">Introduza o telefone do fornecedor.</div>
                                 </div>
 
@@ -181,7 +181,7 @@
                                         <option value="">Selecionar</option>
                                         <option value="Sim" selected>Sim</option>
                                         <option value="Não">Não</option>
-                                    </select>´
+                                    </select>
                                     <div class="invalid-feedback">Selecione o sim ou não.</div>
                                 </div>
 
