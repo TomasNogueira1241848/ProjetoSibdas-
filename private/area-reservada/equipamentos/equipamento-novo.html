@@ -558,7 +558,8 @@
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheirosOutrosDocumentosEquipamento"
                                                     name="outrosDocumentosEquipamento[]" accept="application/pdf,.pdf"
-                                                    multiple data-lista="listaOutrosDocumentosEquipamento">
+                                                    multiple data-lista="listaOutrosDocumentosEquipamento"
+                                                    data-removivel="true">
 
                                                 <div class="form-text">Campo opcional.</div>
 
@@ -647,11 +648,16 @@
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheirosGarantiaEquipamento"
                                                     name="ficheirosGarantiaEquipamento[]" accept="application/pdf,.pdf"
-                                                    multiple data-lista="listaFicheirosGarantiaEquipamento" required>
+                                                    multiple data-lista="listaFicheirosGarantiaEquipamento" required
+                                                    data-removivel="true">
                                                 <div class="invalid-feedback">Selecione um ficheiro.</div>
 
                                                 <p class="text-muted small mt-2 mb-3">Pode adicionar vários PDFs da
                                                     garantia.</p>
+
+                                                <div class="pdf-lista mt-3" id="listaFicheirosGarantiaEquipamento">
+                                                    <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -666,11 +672,16 @@
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheirosContratoEquipamento"
                                                     name="ficheirosContratoEquipamento[]" accept="application/pdf,.pdf"
-                                                    multiple data-lista="listaFicheirosContratoEquipamento" required>
+                                                    multiple data-lista="listaFicheirosContratoEquipamento" required
+                                                    data-removivel="true">
                                                 <div class="invalid-feedback">Selecione um ficheiro.</div>
 
                                                 <p class="text-muted small mt-2 mb-3">Pode adicionar vários PDFs do
                                                     contrato.</p>
+
+                                                <div class="pdf-lista mt-3" id="listaFicheirosContratoEquipamento">
+                                                    <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarValidacaoCampos();
     inicializarGestaoConteudosPublicos();
     inicializarInputsPDFs();
+    inicializarBotoesRemoverPDFs();
     inicializarCamposCondicionaisEquipamento();
 
     inicializarGraficosDashboard();
@@ -62,8 +63,7 @@ function inicializarTabelas() {
             filtros: [
                 { filtroId: 'filtroTipoDocumento', coluna: 2 },
                 { filtroId: 'filtroAreaDocumento', coluna: 4 },
-                { filtroId: 'filtroManutencaoDocumento', coluna: 5 },
-                { filtroId: 'filtroEstadoDocumento', coluna: 8 }
+                { filtroId: 'filtroEstadoDocumento', coluna: 7 }
             ]
         },
         {
@@ -495,6 +495,22 @@ function inicializarInputsPDFs() {
 }
 
 
+/* Inicializa botões para remover PDFs já existentes nas páginas de edição */
+function inicializarBotoesRemoverPDFs() {
+    const botoes = document.querySelectorAll('.btn-remover-pdf-existente');
+
+    botoes.forEach(function (botao) {
+        botao.addEventListener('click', function () {
+            const item = botao.closest('.pdf-item');
+
+            if (item) {
+                item.remove();
+            }
+        });
+    });
+}
+
+
 /* Atualiza a lista visual de PDFs selecionados */
 function atualizarListaPDFs(input) {
     const lista = document.getElementById(input.dataset.lista);
@@ -508,14 +524,16 @@ function atualizarListaPDFs(input) {
         return;
     }
 
-    Array.from(input.files).forEach(function (ficheiro) {
-        lista.appendChild(criarItemPDF(ficheiro));
+    const permitirRemover = input.dataset.removivel === 'true';
+
+    Array.from(input.files).forEach(function (ficheiro, indice) {
+        lista.appendChild(criarItemPDF(ficheiro, input, indice, permitirRemover));
     });
 }
 
 
 /* Cria um item visual para um ficheiro PDF */
-function criarItemPDF(ficheiro) {
+function criarItemPDF(ficheiro, input, indice, permitirRemover) {
     const item = document.createElement('div');
     item.className = 'pdf-item';
 
@@ -528,17 +546,53 @@ function criarItemPDF(ficheiro) {
     const nome = document.createElement('span');
     nome.textContent = ficheiro.name;
 
+    blocoNome.appendChild(icone);
+    blocoNome.appendChild(nome);
+
+    const blocoAcoes = document.createElement('div');
+    blocoAcoes.className = 'd-flex align-items-center gap-2';
+
     const tamanho = document.createElement('span');
     tamanho.className = 'text-muted small';
     tamanho.textContent = formatarTamanhoFicheiro(ficheiro.size);
 
-    blocoNome.appendChild(icone);
-    blocoNome.appendChild(nome);
+    blocoAcoes.appendChild(tamanho);
+
+    if (permitirRemover) {
+        const botaoRemover = document.createElement('button');
+        botaoRemover.type = 'button';
+        botaoRemover.className = 'btn btn-sm btn-outline-danger';
+        botaoRemover.innerHTML = '<i class="fa-solid fa-trash me-1"></i> Remover';
+
+        botaoRemover.addEventListener('click', function () {
+            removerFicheiroSelecionado(input, indice);
+        });
+
+        blocoAcoes.appendChild(botaoRemover);
+    }
 
     item.appendChild(blocoNome);
-    item.appendChild(tamanho);
+    item.appendChild(blocoAcoes);
 
     return item;
+}
+
+
+/* Remove um PDF selecionado sem repetir lógica por cada input */
+function removerFicheiroSelecionado(input, indiceRemover) {
+    if (!input.files || input.files.length === 0) return;
+
+    const transferencia = new DataTransfer();
+
+    Array.from(input.files).forEach(function (ficheiro, indice) {
+        if (indice !== indiceRemover) {
+            transferencia.items.add(ficheiro);
+        }
+    });
+
+    input.files = transferencia.files;
+    atualizarListaPDFs(input);
+    atualizarEstadoCampo(input);
 }
 
 

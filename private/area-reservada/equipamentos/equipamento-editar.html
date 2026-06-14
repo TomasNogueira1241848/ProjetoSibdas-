@@ -413,7 +413,7 @@
                                                     name="documentosMinimos[manual_utilizador][]"
                                                     accept="application/pdf,.pdf" multiple
                                                     data-lista="listaManualUtilizadorEquipamento">
-                                                <div class="form-text">Opcional: adicionar ou substituir PDF.</div>
+
 
                                                 <div class="pdf-lista mt-3" id="listaManualUtilizadorEquipamento">
                                                     <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
@@ -448,7 +448,7 @@
                                                     name="documentosMinimos[manual_servico][]"
                                                     accept="application/pdf,.pdf" multiple
                                                     data-lista="listaManualServicoEquipamento">
-                                                <div class="form-text">Opcional: adicionar ou substituir PDF.</div>
+
 
                                                 <div class="pdf-lista mt-3" id="listaManualServicoEquipamento">
                                                     <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
@@ -483,7 +483,7 @@
                                                     name="documentosMinimos[certificado_calibracao][]"
                                                     accept="application/pdf,.pdf" multiple
                                                     data-lista="listaCertificadoCalibracaoEquipamento">
-                                                <div class="form-text">Opcional: adicionar ou substituir PDF.</div>
+
 
                                                 <div class="pdf-lista mt-3" id="listaCertificadoCalibracaoEquipamento">
                                                     <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
@@ -518,7 +518,7 @@
                                                     name="documentosMinimos[fatura_guia_aquisicao][]"
                                                     accept="application/pdf,.pdf" multiple
                                                     data-lista="listaFaturaGuiaAquisicaoEquipamento">
-                                                <div class="form-text">Opcional: adicionar ou substituir PDF.</div>
+
 
                                                 <div class="pdf-lista mt-3" id="listaFaturaGuiaAquisicaoEquipamento">
                                                     <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
@@ -553,7 +553,7 @@
                                                     name="documentosMinimos[declaracao_conformidade][]"
                                                     accept="application/pdf,.pdf" multiple
                                                     data-lista="listaDeclaracaoConformidadeEquipamento">
-                                                <div class="form-text">Opcional: adicionar ou substituir PDF.</div>
+
 
                                                 <div class="pdf-lista mt-3" id="listaDeclaracaoConformidadeEquipamento">
                                                     <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
@@ -588,7 +588,7 @@
                                                     name="documentosMinimos[relatorio_tecnico][]"
                                                     accept="application/pdf,.pdf" multiple
                                                     data-lista="listaRelatorioTecnicoEquipamento">
-                                                <div class="form-text">Opcional: adicionar ou substituir PDF.</div>
+
 
                                                 <div class="pdf-lista mt-3" id="listaRelatorioTecnicoEquipamento">
                                                     <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
@@ -612,10 +612,16 @@
                                                         <span>ficha-tecnica-monitor-multiparametrico.pdf</span>
                                                     </div>
 
-                                                    <a href="../documentacao/documento-detalhes.html"
-                                                        class="btn btn-sm btn-outline-primary">
-                                                        <i class="fa-solid fa-eye me-1"></i> Ver
-                                                    </a>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <a href="../documentacao/documento-detalhes.html"
+                                                            class="btn btn-sm btn-outline-primary">
+                                                            <i class="fa-solid fa-eye me-1"></i> Ver
+                                                        </a>
+
+                                                        <button type="button" class="btn btn-sm btn-outline-danger btn-remover-pdf-existente">
+                                                            <i class="fa-solid fa-trash me-1"></i> Eliminar
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -651,7 +657,8 @@
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheirosOutrosDocumentosEquipamento"
                                                     name="outrosDocumentosEquipamento[]" accept="application/pdf,.pdf"
-                                                    multiple data-lista="listaOutrosDocumentosEquipamento">
+                                                    multiple data-lista="listaOutrosDocumentosEquipamento"
+                                                    data-removivel="true">
 
                                                 <div class="form-text">Campo opcional.</div>
 
@@ -742,7 +749,7 @@
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheirosGarantiaEquipamento"
                                                     name="ficheirosGarantiaEquipamento[]" accept="application/pdf,.pdf"
-                                                    multiple data-lista="listaFicheirosGarantiaEquipamento" required>
+                                                    multiple data-lista="listaFicheirosGarantiaEquipamento">
                                                 <div class="invalid-feedback">Selecione um ficheiro.</div>
 
                                                 <p class="text-muted small mt-2 mb-3">Pode adicionar vários PDFs da
@@ -761,7 +768,7 @@
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheirosContratoEquipamento"
                                                     name="ficheirosContratoEquipamento[]" accept="application/pdf,.pdf"
-                                                    multiple data-lista="listaFicheirosContratoEquipamento" required>
+                                                    multiple data-lista="listaFicheirosContratoEquipamento">
                                                 <div class="invalid-feedback">Selecione um ficheiro.</div>
 
                                                 <p class="text-muted small mt-2 mb-3">Pode adicionar vários PDFs do
