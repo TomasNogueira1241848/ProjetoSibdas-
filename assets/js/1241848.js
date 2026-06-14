@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     inicializarTabelas();
     inicializarFormulariosSimulados();
+    inicializarValidacaoCampos();
     inicializarGestaoConteudosPublicos();
     inicializarInputsPDFs();
     inicializarCamposCondicionaisEquipamento();
@@ -34,8 +35,7 @@ function inicializarTabelas() {
             filtros: [
                 { filtroId: 'filtroCategoriaEquipamentos', coluna: 2 },
                 { filtroId: 'filtroLocalizacaoEquipamentos', coluna: 6 },
-                { filtroId: 'filtroEstadoEquipamentos', coluna: 7 },
-                { filtroId: 'filtroManutencaoEquipamentos', coluna: 10 }
+                { filtroId: 'filtroEstadoEquipamentos', coluna: 7 }
             ]
         },
         {
@@ -62,7 +62,8 @@ function inicializarTabelas() {
             filtros: [
                 { filtroId: 'filtroTipoDocumento', coluna: 2 },
                 { filtroId: 'filtroAreaDocumento', coluna: 4 },
-                { filtroId: 'filtroEstadoDocumento', coluna: 6 }
+                { filtroId: 'filtroManutencaoDocumento', coluna: 5 },
+                { filtroId: 'filtroEstadoDocumento', coluna: 8 }
             ]
         },
         {
@@ -172,6 +173,7 @@ function inicializarFormularioContacto() {
 
         if (!validarFormulario(formContacto)) return;
         formContacto.reset();
+        limparValidacaoManual(formContacto);
 
         const mensagemSucesso = document.getElementById('mensagemSucesso');
 
@@ -296,7 +298,7 @@ function inicializarFormularioSimulado(idFormulario, idMensagem, paginaDestino, 
 
         if (validarFormulario && !validarFormularioHTML(formulario)) return;
 
-        formulario.classList.remove('was-validated');
+        limparValidacaoManual(formulario);
 
         if (mensagem) {
             mensagem.classList.remove('d-none');
@@ -317,14 +319,69 @@ function validarFormulario(formulario) {
 
 /* Validação base dos formulários com required e invalid-feedback no HTML */
 function validarFormularioHTML(formulario) {
+    limparValidacaoManual(formulario);
+
     if (formulario.checkValidity()) {
-        formulario.classList.remove('was-validated');
         return true;
     }
 
-    formulario.classList.add('was-validated');
+    marcarCamposInvalidos(formulario);
     abrirAbaComCampoInvalido(formulario);
     return false;
+}
+
+
+/* Atualiza visualmente os campos obrigatórios sem marcar opcionais a verde */
+function inicializarValidacaoCampos() {
+    const formularios = document.querySelectorAll('form');
+
+    formularios.forEach(function (formulario) {
+        const campos = formulario.querySelectorAll('input, select, textarea');
+
+        campos.forEach(function (campo) {
+            campo.addEventListener('input', function () {
+                atualizarEstadoCampo(campo);
+            });
+
+            campo.addEventListener('change', function () {
+                atualizarEstadoCampo(campo);
+            });
+        });
+    });
+}
+
+
+/* Remove apenas as classes colocadas pelo nosso JavaScript */
+function limparValidacaoManual(formulario) {
+    formulario.classList.remove('was-validated');
+
+    formulario.querySelectorAll('.is-invalid').forEach(function (campo) {
+        campo.classList.remove('is-invalid');
+    });
+}
+
+
+/* Marca apenas campos obrigatórios inválidos */
+function marcarCamposInvalidos(formulario) {
+    const campos = formulario.querySelectorAll('input, select, textarea');
+
+    campos.forEach(function (campo) {
+        if (!campo.required || campo.disabled) return;
+
+        if (!campo.checkValidity()) {
+            campo.classList.add('is-invalid');
+        }
+    });
+}
+
+
+/* Limpa o erro quando o campo obrigatório fica válido */
+function atualizarEstadoCampo(campo) {
+    if (!campo.required || campo.disabled) return;
+
+    if (campo.checkValidity()) {
+        campo.classList.remove('is-invalid');
+    }
 }
 
 
@@ -412,7 +469,7 @@ function configurarCampoCondicional(configuracao) {
             campo.disabled = !ativo;
 
             if (!ativo) {
-                campo.classList.remove('is-invalid', 'is-valid');
+                campo.classList.remove('is-invalid');
             }
         });
     }
@@ -428,8 +485,11 @@ function inicializarInputsPDFs() {
     const inputsPDF = document.querySelectorAll('.input-pdf-multiplo');
 
     inputsPDF.forEach(function (input) {
+        atualizarListaPDFs(input);
+
         input.addEventListener('change', function () {
             atualizarListaPDFs(input);
+            atualizarEstadoCampo(input);
         });
     });
 }
@@ -437,8 +497,7 @@ function inicializarInputsPDFs() {
 
 /* Atualiza a lista visual de PDFs selecionados */
 function atualizarListaPDFs(input) {
-    const idLista = input.dataset.lista;
-    const lista = document.getElementById(idLista);
+    const lista = document.getElementById(input.dataset.lista);
 
     if (!lista) return;
 
@@ -450,30 +509,36 @@ function atualizarListaPDFs(input) {
     }
 
     Array.from(input.files).forEach(function (ficheiro) {
-        const item = document.createElement('div');
-        item.className = 'pdf-item';
-
-        const blocoNome = document.createElement('div');
-        blocoNome.className = 'd-flex align-items-center gap-2';
-
-        const icone = document.createElement('i');
-        icone.className = 'fa-solid fa-file-pdf';
-
-        const nome = document.createElement('span');
-        nome.textContent = ficheiro.name;
-
-        const tamanho = document.createElement('span');
-        tamanho.className = 'text-muted small';
-        tamanho.textContent = formatarTamanhoFicheiro(ficheiro.size);
-
-        blocoNome.appendChild(icone);
-        blocoNome.appendChild(nome);
-
-        item.appendChild(blocoNome);
-        item.appendChild(tamanho);
-
-        lista.appendChild(item);
+        lista.appendChild(criarItemPDF(ficheiro));
     });
+}
+
+
+/* Cria um item visual para um ficheiro PDF */
+function criarItemPDF(ficheiro) {
+    const item = document.createElement('div');
+    item.className = 'pdf-item';
+
+    const blocoNome = document.createElement('div');
+    blocoNome.className = 'd-flex align-items-center gap-2';
+
+    const icone = document.createElement('i');
+    icone.className = 'fa-solid fa-file-pdf';
+
+    const nome = document.createElement('span');
+    nome.textContent = ficheiro.name;
+
+    const tamanho = document.createElement('span');
+    tamanho.className = 'text-muted small';
+    tamanho.textContent = formatarTamanhoFicheiro(ficheiro.size);
+
+    blocoNome.appendChild(icone);
+    blocoNome.appendChild(nome);
+
+    item.appendChild(blocoNome);
+    item.appendChild(tamanho);
+
+    return item;
 }
 
 

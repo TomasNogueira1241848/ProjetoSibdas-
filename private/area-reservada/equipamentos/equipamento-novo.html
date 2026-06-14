@@ -218,8 +218,8 @@
 
                                         <div class="col-md-4">
                                             <label for="numeroSerieEquipamento" class="form-label">N.º de série </label>
-                                            <input type="text" class="form-control" id="numeroSerieEquipamento" placeholder="Ex: SN-12345"
-                                                   required>
+                                            <input type="text" class="form-control" id="numeroSerieEquipamento"
+                                                placeholder="Ex: SN-12345" required>
                                             <div class="invalid-feedback">Introduza o número de série.</div>
                                         </div>
 
@@ -368,67 +368,203 @@
                                 <!-- DOCUMENTAÇÃO -->
                                 <div class="tab-pane fade" id="aba-documentacao" role="tabpanel">
                                     <div class="row g-3">
+                                        <div class="col-12">
+                                            <h6 class="fw-bold mb-1">Documentação mínima necessária</h6>
+                                            <p class="text-muted small mb-0">
+                                                Adicione os PDFs obrigatórios para que a ficha do equipamento fique
+                                                completa.
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="pdf-upload-card h-100">
+                                                <label for="ficheiroManualUtilizadorEquipamento"
+                                                    class="form-label fw-semibold">
+                                                    <i class="fa-solid fa-file-pdf me-1 text-danger"></i> Manual de
+                                                    utilizador
+                                                </label>
+
+                                                <input type="file" class="form-control input-pdf-multiplo"
+                                                    id="ficheiroManualUtilizadorEquipamento"
+                                                    name="documentosMinimos[manual_utilizador][]"
+                                                    accept="application/pdf,.pdf" multiple
+                                                    data-lista="listaManualUtilizadorEquipamento" required>
+                                                <div class="invalid-feedback">Adicione o manual de utilizador em PDF.
+                                                </div>
+
+                                                <div class="form-text">Pode selecionar um ou mais PDFs.</div>
+
+                                                <div class="pdf-lista mt-3" id="listaManualUtilizadorEquipamento">
+                                                    <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="pdf-upload-card h-100">
+                                                <label for="ficheiroManualServicoEquipamento"
+                                                    class="form-label fw-semibold">
+                                                    <i class="fa-solid fa-file-pdf me-1 text-danger"></i> Manual de
+                                                    serviço
+                                                </label>
+
+                                                <input type="file" class="form-control input-pdf-multiplo"
+                                                    id="ficheiroManualServicoEquipamento"
+                                                    name="documentosMinimos[manual_servico][]"
+                                                    accept="application/pdf,.pdf" multiple
+                                                    data-lista="listaManualServicoEquipamento" required>
+                                                <div class="invalid-feedback">Adicione o manual de serviço em PDF.</div>
+
+                                                <div class="form-text">Pode selecionar um ou mais PDFs.</div>
+
+                                                <div class="pdf-lista mt-3" id="listaManualServicoEquipamento">
+                                                    <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="pdf-upload-card h-100">
+                                                <label for="ficheiroCertificadoCalibracaoEquipamento"
+                                                    class="form-label fw-semibold">
+                                                    <i class="fa-solid fa-file-pdf me-1 text-danger"></i> Certificado de
+                                                    calibração
+                                                </label>
+
+                                                <input type="file" class="form-control input-pdf-multiplo"
+                                                    id="ficheiroCertificadoCalibracaoEquipamento"
+                                                    name="documentosMinimos[certificado_calibracao][]"
+                                                    accept="application/pdf,.pdf" multiple
+                                                    data-lista="listaCertificadoCalibracaoEquipamento" required>
+                                                <div class="invalid-feedback">Adicione o certificado de calibração em
+                                                    PDF.</div>
+
+                                                <div class="form-text">Pode selecionar um ou mais PDFs.</div>
+
+                                                <div class="pdf-lista mt-3" id="listaCertificadoCalibracaoEquipamento">
+                                                    <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="pdf-upload-card h-100">
+                                                <label for="ficheiroFaturaGuiaAquisicaoEquipamento"
+                                                    class="form-label fw-semibold">
+                                                    <i class="fa-solid fa-file-pdf me-1 text-danger"></i> Fatura ou guia
+                                                    de aquisição
+                                                </label>
+
+                                                <input type="file" class="form-control input-pdf-multiplo"
+                                                    id="ficheiroFaturaGuiaAquisicaoEquipamento"
+                                                    name="documentosMinimos[fatura_guia_aquisicao][]"
+                                                    accept="application/pdf,.pdf" multiple
+                                                    data-lista="listaFaturaGuiaAquisicaoEquipamento" required>
+                                                <div class="invalid-feedback">Adicione a fatura ou guia de aquisição em
+                                                    PDF.</div>
+
+                                                <div class="form-text">Pode selecionar um ou mais PDFs.</div>
+
+                                                <div class="pdf-lista mt-3" id="listaFaturaGuiaAquisicaoEquipamento">
+                                                    <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="pdf-upload-card h-100">
+                                                <label for="ficheiroDeclaracaoConformidadeEquipamento"
+                                                    class="form-label fw-semibold">
+                                                    <i class="fa-solid fa-file-pdf me-1 text-danger"></i> Declaração de
+                                                    conformidade
+                                                </label>
+
+                                                <input type="file" class="form-control input-pdf-multiplo"
+                                                    id="ficheiroDeclaracaoConformidadeEquipamento"
+                                                    name="documentosMinimos[declaracao_conformidade][]"
+                                                    accept="application/pdf,.pdf" multiple
+                                                    data-lista="listaDeclaracaoConformidadeEquipamento" required>
+                                                <div class="invalid-feedback">Adicione a declaração de conformidade em
+                                                    PDF.</div>
+
+                                                <div class="form-text">Pode selecionar um ou mais PDFs.</div>
+
+                                                <div class="pdf-lista mt-3" id="listaDeclaracaoConformidadeEquipamento">
+                                                    <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="pdf-upload-card h-100">
+                                                <label for="ficheiroRelatorioTecnicoEquipamento"
+                                                    class="form-label fw-semibold">
+                                                    <i class="fa-solid fa-file-pdf me-1 text-danger"></i> Relatório
+                                                    técnico
+                                                </label>
+
+                                                <input type="file" class="form-control input-pdf-multiplo"
+                                                    id="ficheiroRelatorioTecnicoEquipamento"
+                                                    name="documentosMinimos[relatorio_tecnico][]"
+                                                    accept="application/pdf,.pdf" multiple
+                                                    data-lista="listaRelatorioTecnicoEquipamento" required>
+                                                <div class="invalid-feedback">Adicione o relatório técnico em PDF.</div>
+
+                                                <div class="form-text">Pode selecionar um ou mais PDFs.</div>
+
+                                                <div class="pdf-lista mt-3" id="listaRelatorioTecnicoEquipamento">
+                                                    <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 mt-3">
+                                            <hr class="my-2">
+                                            <h6 class="fw-bold mb-1">Outros documentos</h6>
+                                            <p class="text-muted small mb-0">
+                                                Área opcional para ficheiros adicionais, como ficha técnica, imagens
+                                                técnicas ou outros anexos.
+                                            </p>
+                                        </div>
+
                                         <div class="col-md-4">
-                                            <label for="codigoDocumentoEquipamento" class="form-label">Código do
+                                            <label for="tipoOutroDocumentoEquipamento" class="form-label">Tipo de
                                                 documento</label>
-                                            <input type="text" class="form-control" id="codigoDocumentoEquipamento"
-                                                value="DOC-002" required>
-                                            <div class="invalid-feedback">Introduza o código do documento.</div>
+                                            <select class="form-select" id="tipoOutroDocumentoEquipamento">
+                                                <option value="">Selecionar</option>
+                                                <option value="Ficha técnica">Ficha técnica</option>
+                                                <option value="Registo de manutenção">Registo de manutenção</option>
+                                                <option value="Relatório de intervenção">Relatório de intervenção
+                                                </option>
+                                                <option value="Outro">Outro</option>
+                                            </select>
                                         </div>
 
                                         <div class="col-md-8">
-                                            <label for="tituloDocumentoEquipamento" class="form-label">Título do
+                                            <label for="tituloOutroDocumentoEquipamento" class="form-label">Título do
                                                 documento</label>
-                                            <input type="text" class="form-control" id="tituloDocumentoEquipamento"
-                                                required>
-                                            <div class="invalid-feedback">Introduza o título do documento.</div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label for="tipoDocumentoEquipamento" class="form-label">Tipo</label>
-                                            <select class="form-select" id="tipoDocumentoEquipamento" required>
-                                                <option value="">Selecionar</option>
-                                                <option value="Manual">Manual</option>
-                                                <option value="Certificado">Certificado</option>
-                                                <option value="Ficha técnica">Ficha técnica</option>
-                                                <option value="Relatório técnico">Relatório técnico</option>
-                                            </select>
-                                            <div class="invalid-feedback">Selecione o tipo do documento.</div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label for="dataDocumentoEquipamento" class="form-label">Data do
-                                                documento</label>
-                                            <input type="date" class="form-control" id="dataDocumentoEquipamento"
-                                                required>
-                                            <div class="invalid-feedback">Introduza a data do documento.</div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label for="validadeDocumentoEquipamento"
-                                                class="form-label">Validade</label>
-                                            <input type="date" class="form-control" id="validadeDocumentoEquipamento"
-                                                required>
-                                            <div class="invalid-feedback">Introduza a data de validade.</div>
+                                            <input type="text" class="form-control" id="tituloOutroDocumentoEquipamento"
+                                                placeholder="Ex: Ficha técnica complementar">
                                         </div>
 
                                         <div class="col-12">
                                             <div class="pdf-upload-card">
-                                                <label for="ficheirosDocumentoEquipamento"
+                                                <label for="ficheirosOutrosDocumentosEquipamento"
                                                     class="form-label fw-semibold">
-                                                    <i class="fa-solid fa-file-pdf me-1 text-danger"></i> Adicionar PDFs
-                                                    da documentação
+                                                    <i class="fa-solid fa-file-pdf me-1 text-danger"></i> PDFs
+                                                    adicionais
                                                 </label>
 
                                                 <input type="file" class="form-control input-pdf-multiplo"
-                                                    id="ficheirosDocumentoEquipamento"
-                                                    name="ficheirosDocumentoEquipamento[]" accept="application/pdf,.pdf"
-                                                    multiple data-lista="listaFicheirosDocumentoEquipamento" required>
-                                                <div class="invalid-feedback">Selecione um ficheiro.</div>
+                                                    id="ficheirosOutrosDocumentosEquipamento"
+                                                    name="outrosDocumentosEquipamento[]" accept="application/pdf,.pdf"
+                                                    multiple data-lista="listaOutrosDocumentosEquipamento">
 
-                                                <p class="text-muted small mt-2 mb-3">
-                                                    Pode selecionar mais do que um PDF.
-                                                </p>
+                                                <div class="form-text">Campo opcional.</div>
+
+                                                <div class="pdf-lista mt-3" id="listaOutrosDocumentosEquipamento">
+                                                    <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
