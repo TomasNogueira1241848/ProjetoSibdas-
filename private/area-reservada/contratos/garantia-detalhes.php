@@ -1,104 +1,20 @@
-<!DOCTYPE html>
-<html lang="pt">
+<?php
+$pageTitle = 'MedInfo Solutions — Detalhes da Garantia';
+$assetPath = '../../../assets';
+$loginPath = '../../../public/login.php';
+$areaPath = '../';
+$activeMenu = 'contratos';
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedInfo Solutions — Detalhes da Garantia</title>
-    <link rel="icon" href="../../../assets/img/Logo empresa.png" type="image/png">
+include __DIR__ . '/../../includes/header.php';
+include __DIR__ . '/../../includes/nav.php';
+?>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../../../assets/bootstrap/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../../assets/fontawesome/all.min.css">
-    <!-- CSS -->
-    <link rel="stylesheet" href="../../../assets/css/1241848.css">
-</head>
+<div class="container-fluid">
+    <div class="row">
 
-<body class="pagina-area-reservada">
+        <?php include __DIR__ . '/../../includes/sidebar.php'; ?>
 
-    <!-- HEADER -->
-    <header class="container-fluid header-area-reservada text-white">
-        <div class="row align-items-center">
-            <div class="col-8 col-md-6 d-flex align-items-center p-3 gap-3">
-                <img src="../../../assets/img/Logo empresa.png" alt="MedInfo Solutions" class="header-logo">
-
-                <div>
-                    <h5 class="mb-0 fw-bold">MedInfo Solutions</h5>
-                    <small class="text-white-50">Gestão de Inventário Hospitalar</small>
-                </div>
-            </div>
-
-            <div class="col-4 col-md-6 text-end p-3">
-                <div class="dropdown d-inline-block">
-                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <i class="fa-regular fa-user"></i>
-                        <span class="d-none d-sm-inline ms-2">Administrador</span>
-                    </button>
-
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" href="#">
-                                <i class="fa-solid fa-key me-2"></i> Alterar password
-                            </a>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-                        <li>
-                            <a class="dropdown-item" href="../../login/login.html">
-                                <i class="fa-solid fa-right-from-bracket me-2"></i> Sair
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="container-fluid">
-        <div class="row">
-
-            <!-- SIDEBAR / MENU -->
-            <aside class="col-12 col-md-3 col-lg-2 sidebar p-3">
-                <p class="text-uppercase text-muted small fw-bold mb-3 mt-2 d-none d-md-block">Menu</p>
-
-                <nav class="nav nav-pills flex-row flex-md-column flex-nowrap overflow-auto gap-2 w-100">
-                    <a href="../index.html" class="nav-link">
-                        <i class="fa-solid fa-gauge me-2"></i> Dashboard
-                    </a>
-
-                    <a href="../equipamentos/equipamentos.html" class="nav-link">
-                        <i class="fa-solid fa-stethoscope me-2"></i> Equipamentos
-                    </a>
-
-                    <a href="../fornecedores/fornecedores.html" class="nav-link">
-                        <i class="fa-solid fa-truck me-2"></i> Fornecedores
-                    </a>
-
-                    <a href="../localizacoes/localizacoes.html" class="nav-link">
-                        <i class="fa-solid fa-location-dot me-2"></i> Localizações
-                    </a>
-
-                    <a href="../documentacao/documentacao.html" class="nav-link">
-                        <i class="fa-solid fa-file-medical me-2"></i> Documentação
-                    </a>
-
-                    <a href="contratos.html" class="nav-link active">
-                        <i class="fa-solid fa-shield me-2"></i> Garantias e Contratos
-                    </a>
-
-                    <a href="../conteudos/conteudos.html" class="nav-link">
-                        <i class="fa-solid fa-pen-to-square me-2"></i> Gestão de Conteúdos
-                    </a>
-                </nav>
-            </aside>
-
-            <!-- CONTEÚDO PRINCIPAL -->
-            <main class="col-12 col-md-9 col-lg-10 p-3 p-md-4 overflow-hidden" id="dashboard">
+<main class="col-12 col-md-9 col-lg-10 p-3 p-md-4 overflow-hidden" id="dashboard">
 
                 <!-- TÍTULO E AÇÕES -->
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
@@ -107,7 +23,7 @@
                         <p class="text-muted small mb-0">Consulta da garantia associada ao equipamento selecionado.</p>
                     </div>
 
-                    <a href="contratos.html" class="btn btn-outline-secondary btn-sm">
+                    <a href="contratos.php" class="btn btn-outline-secondary btn-sm">
                         <i class="fa-solid fa-arrow-left me-1"></i> Voltar
                     </a>
                 </div>
@@ -218,13 +134,7 @@
                 </div>
 
             </main>
-        </div>
     </div>
+</div>
 
-    <!-- Bootstrap JS -->
-    <script src="../../../assets/bootstrap/bootstrap.bundle.min.js"></script>
-    <!-- JavaScript -->
-    <script src="../../../assets/js/1241848.js"></script>
-</body>
-
-</html>
+<?php include __DIR__ . '/../../includes/footer.php'; ?>
