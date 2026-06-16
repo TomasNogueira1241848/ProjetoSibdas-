@@ -1,10 +1,14 @@
+<?php
+require_once __DIR__ . '/../config/config.php';
+?>
+
 <!DOCTYPE html>
 <html lang="pt">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedInfo Solutions</title>
+    <title><?php echo APP_NAME; ?></title>
     <link rel="icon" href="../assets/img/Logo empresa.png" type="image/png">
 
     <!-- Bootstrap CSS -->
@@ -24,7 +28,7 @@
                 <img src="../assets/img/Logo empresa.png" alt="MedInfo Icon" id="logo-icone">
 
                 <div class="brand-text-wrapper d-flex flex-column">
-                    <span class="brand-title">MedInfo Solutions</span>
+                    <span class="brand-title"><?php echo APP_NAME; ?></span>
                     <span class="brand-subtitle">Hospital Inventory</span>
                 </div>
             </a>
@@ -42,7 +46,7 @@
                     <li class="nav-item"><a class="nav-link" href="#contactos">Contactos</a>
                     </li>
                     <li class="nav-item ms-2">
-                        <a class="btn btn-outline-light btn-sm px-3" href="../private/login/login.html">
+                        <a class="btn btn-outline-light btn-sm px-3" href="login.php">
                             <i class="fa-solid fa-right-to-bracket me-1"></i> Entrar
                         </a>
                     </li>
