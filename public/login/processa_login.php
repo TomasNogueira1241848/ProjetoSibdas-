@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../../private/includes/funcoes.php';
+require_once __DIR__ . '/../../private/includes/basedados.php';
 
 start_session();
 
@@ -15,9 +16,9 @@ $password = isset($_POST['text_password']) ? trim($_POST['text_password']) : '';
 $erros = [];
 
 if ($email === '') {
-    $erros[] = 'Introduza o e-mail.';
+    $erros[] = 'Introduza o email.';
 } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $erros[] = 'Introduza um e-mail válido.';
+    $erros[] = 'Introduza um email válido.';
 }
 
 if ($password === '') {
@@ -34,24 +35,86 @@ if (!empty($erros)) {
     exit;
 }
 
-if ($email === 'admin@medinfosolutions.pt' && $password === 'admin123') {
-    $_SESSION['utilizador'] = [
-        'nome' => 'Administrador',
-        'email' => $email,
-        'perfil' => 'Administrador'
+$ligacao = ligar_base_dados();
+
+if ($ligacao === null) {
+    $_SESSION['erros_login'] = [
+        'Não foi possível ligar à base de dados.'
     ];
 
-    header('Location: ' . BASE_URL . '/private/area-reservada/index.php');
+    $_SESSION['old_login'] = [
+        'email' => $email
+    ];
+
+    header('Location: ' . BASE_URL . '/public/login/login.php');
     exit;
 }
 
-$_SESSION['erros_login'] = [
-    'Credenciais inválidas.'
-];
+try {
+    $sql = '
+        SELECT 
+            u.id,
+            u.nome,
+            u.email,
+            u.password_hash,
+            u.estado,
+            p.nome AS perfil
+        FROM utilizadores u
+        INNER JOIN perfis_utilizador p ON p.id = u.perfil_id
+        WHERE u.email = :email
+        LIMIT 1
+    ';
 
-$_SESSION['old_login'] = [
-    'email' => $email
-];
+    $consulta = $ligacao->prepare($sql);
+    $consulta->bindValue(':email', $email);
+    $consulta->execute();
 
-header('Location: ' . BASE_URL . '/public/login/login.php');
-exit;
+    $utilizador = $consulta->fetch();
+
+    if (!$utilizador || $utilizador->estado !== 'Ativo' || !password_verify($password, $utilizador->password_hash)) {
+        $_SESSION['erros_login'] = [
+            'Credenciais inválidas.'
+        ];
+
+        $_SESSION['old_login'] = [
+            'email' => $email
+        ];
+
+        header('Location: ' . BASE_URL . '/public/login/login.php');
+        exit;
+    }
+
+    $_SESSION['utilizador'] = [
+        'id' => $utilizador->id,
+        'nome' => $utilizador->nome,
+        'email' => $utilizador->email,
+        'perfil' => $utilizador->perfil
+    ];
+
+    $atualizarLogin = $ligacao->prepare('
+        UPDATE utilizadores
+        SET ultimo_login = NOW()
+        WHERE id = :id
+    ');
+
+    $atualizarLogin->bindValue(':id', $utilizador->id);
+    $atualizarLogin->execute();
+
+    $ligacao = null;
+
+    header('Location: ' . BASE_URL . '/private/area-reservada/index.php');
+    exit;
+} catch (PDOException $erro) {
+    $ligacao = null;
+
+    $_SESSION['erros_login'] = [
+        'Ocorreu um erro ao validar o login.'
+    ];
+
+    $_SESSION['old_login'] = [
+        'email' => $email
+    ];
+
+    header('Location: ' . BASE_URL . '/public/login/login.php');
+    exit;
+}
