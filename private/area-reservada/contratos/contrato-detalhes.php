@@ -83,8 +83,26 @@ include __DIR__ . '/../../includes/nav.php';
                             </div>
 
                             <div class="col-md-6">
+                                <p class="text-muted small mb-1">Periodicidade</p>
+                                <p class="mb-0">Anual</p>
+                            </div>
+
+                            <div class="col-md-6">
                                 <p class="text-muted small mb-1">Renovação automática</p>
                                 <p class="mb-0">Sim</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Estado</p>
+                                <p class="mb-0">Ativo</p>
+                            </div>
+
+                            <div class="col-12">
+                                <p class="text-muted small mb-1">Documento do contrato</p>
+                                <p class="mb-0">
+                                    <i class="fa-solid fa-file-pdf text-danger me-1"></i>
+                                    contrato-manutencao-uci.pdf
+                                </p>
                             </div>
 
                             <div class="col-12">

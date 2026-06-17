@@ -77,6 +77,16 @@ include __DIR__ . '/../../includes/nav.php';
                                 <p class="mb-0">10/06/2026</p>
                             </div>
 
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Estado</p>
+                                <p class="mb-0">Ativo</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Contrato associado</p>
+                                <p class="mb-0">CON-001 — Contrato de Manutenção UCI</p>
+                            </div>
+
                             <div class="col-12">
                                 <p class="text-muted small mb-1">Documento da garantia</p>
                                 <p class="mb-0">

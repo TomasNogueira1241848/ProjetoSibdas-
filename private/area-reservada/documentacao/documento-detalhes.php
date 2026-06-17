@@ -68,6 +68,11 @@ include __DIR__ . '/../../includes/nav.php';
                             </div>
 
                             <div class="col-md-6">
+                                <p class="text-muted small mb-1">Fornecedor associado</p>
+                                <p class="mb-0">Philips Healthcare Portugal</p>
+                            </div>
+
+                            <div class="col-md-6">
                                 <p class="text-muted small mb-1">Data do documento</p>
                                 <p class="mb-0">2025-03-12</p>
                             </div>

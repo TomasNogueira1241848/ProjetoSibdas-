@@ -72,7 +72,7 @@
 
                     <!-- Link para voltar ao site -->
                     <div class="text-center mt-3">
-                        <a href="../../public/index.html" class="text-muted small text-decoration-none">
+                        <a href="../index.php" class="text-muted small text-decoration-none">
                             <i class="fa-solid fa-arrow-left me-1"></i> Voltar ao site
                         </a>
                     </div>
@@ -94,3 +94,4 @@
 </body>
 
 </html>
+

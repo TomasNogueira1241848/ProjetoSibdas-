@@ -46,7 +46,7 @@ require_once __DIR__ . '/../config/config.php';
                     <li class="nav-item"><a class="nav-link" href="#contactos">Contactos</a>
                     </li>
                     <li class="nav-item ms-2">
-                        <a class="btn btn-outline-light btn-sm px-3" href="login.php">
+                        <a class="btn btn-outline-light btn-sm px-3" href="login/login.php">
                             <i class="fa-solid fa-right-to-bracket me-1"></i> Entrar
                         </a>
                     </li>
@@ -437,3 +437,4 @@ require_once __DIR__ . '/../config/config.php';
 </body>
 
 </html>
+

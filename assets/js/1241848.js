@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarInputsPDFs();
     inicializarBotoesRemoverPDFs();
     inicializarCamposCondicionaisEquipamento();
+    inicializarPesquisaFornecedoresAssociados();
 
     inicializarGraficosDashboard();
 });
@@ -98,55 +99,55 @@ function inicializarFormulariosSimulados() {
         {
             idFormulario: 'formEquipamento',
             idMensagem: 'mensagemEquipamento',
-            paginaDestino: 'equipamentos.html',
+            paginaDestino: 'equipamentos.php',
             validar: true
         },
         {
             idFormulario: 'formFornecedor',
             idMensagem: 'mensagemFornecedor',
-            paginaDestino: 'fornecedores.html',
+            paginaDestino: 'fornecedores.php',
             validar: true
         },
         {
             idFormulario: 'formLocalizacao',
             idMensagem: 'mensagemLocalizacao',
-            paginaDestino: 'localizacoes.html',
+            paginaDestino: 'localizacoes.php',
             validar: true
         },
         {
             idFormulario: 'formEliminarEquipamento',
             idMensagem: 'mensagemEliminarEquipamento',
-            paginaDestino: 'equipamentos.html',
+            paginaDestino: 'equipamentos.php',
             validar: false
         },
         {
             idFormulario: 'formEliminarFornecedor',
             idMensagem: 'mensagemEliminarFornecedor',
-            paginaDestino: 'fornecedores.html',
+            paginaDestino: 'fornecedores.php',
             validar: false
         },
         {
             idFormulario: 'formEliminarLocalizacao',
             idMensagem: 'mensagemEliminarLocalizacao',
-            paginaDestino: 'localizacoes.html',
+            paginaDestino: 'localizacoes.php',
             validar: false
         },
         {
             idFormulario: 'formEliminarDocumento',
             idMensagem: 'mensagemEliminarDocumento',
-            paginaDestino: 'documentacao.html',
+            paginaDestino: 'documentacao.php',
             validar: false
         },
         {
             idFormulario: 'formEliminarContrato',
             idMensagem: 'mensagemEliminarContrato',
-            paginaDestino: 'contratos.html',
+            paginaDestino: 'contratos.php',
             validar: false
         },
         {
             idFormulario: 'formEliminarGarantia',
             idMensagem: 'mensagemEliminarGarantia',
-            paginaDestino: 'contratos.html',
+            paginaDestino: 'contratos.php',
             validar: false
         }
     ];
@@ -610,6 +611,42 @@ function formatarTamanhoFicheiro(bytes) {
 }
 
 
+/* Normaliza texto para pesquisas simples, ignorando maiúsculas e acentos */
+function normalizarTextoPesquisa(texto) {
+    return (texto || '')
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+}
+
+
+/* Pesquisa reutilizável nos fornecedores associados por checkbox */
+function inicializarPesquisaFornecedoresAssociados() {
+    const pesquisas = document.querySelectorAll('.pesquisa-fornecedores-associados');
+
+    pesquisas.forEach(function (pesquisa) {
+        const idContainer = pesquisa.dataset.fornecedoresContainer;
+        const container = document.getElementById(idContainer);
+
+        if (!container) return;
+
+        pesquisa.addEventListener('input', function () {
+            const termo = normalizarTextoPesquisa(pesquisa.value.trim());
+            const itens = container.querySelectorAll('.fornecedor-associado-item, [data-fornecedor-item]');
+
+            itens.forEach(function (item) {
+                const textoItem = normalizarTextoPesquisa(
+                    (item.dataset.fornecedorItem || '') + ' ' + item.textContent
+                );
+
+                item.classList.toggle('d-none', termo !== '' && !textoItem.includes(termo));
+            });
+        });
+    });
+}
+
+
 /* Conteúdos originais da página pública */
 const conteudosPublicosOriginais = {
     heroTitulo: 'Soluções digitais para a gestão hospitalar',
@@ -1020,3 +1057,4 @@ function criarGraficoLocalizacao() {
     });
 
 }
+
