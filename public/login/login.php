@@ -54,9 +54,7 @@ unset($_SESSION['old_login']);
                                 </span>
 
                                 <input type="email" class="form-control" id="emailLogin" name="text_username"
-                                    value="<?php echo htmlspecialchars($emailAntigo); ?>" required>
-
-                                <div class="invalid-feedback">Introduza um email válido.</div>
+                                    value="<?php echo htmlspecialchars($emailAntigo); ?>">
                             </div>
                         </div>
 
@@ -67,18 +65,21 @@ unset($_SESSION['old_login']);
                                     <i class="fa-solid fa-lock"></i>
                                 </span>
 
-                                <input type="password" class="form-control" id="passwordLogin" name="text_password"
-                                    required>
-
-                                <div class="invalid-feedback">Introduza a password.</div>
+                                <input type="password" class="form-control" id="passwordLogin" name="text_password">
                             </div>
                         </div>
 
                         <?php if (!empty($errosLogin)): ?>
-                            <div class="alert alert-danger small mt-3 mb-3">
-                                <?php foreach ($errosLogin as $erro): ?>
-                                    <div><?php echo htmlspecialchars($erro); ?></div>
-                                <?php endforeach; ?>
+                            <div class="alert alert-danger d-flex align-items-start gap-2 small mt-3 mb-3" role="alert">
+                                <i class="fa-solid fa-circle-exclamation mt-1"></i>
+
+                                <div>
+                                    <strong class="d-block mb-1">Não foi possível iniciar sessão</strong>
+
+                                    <?php foreach ($errosLogin as $erro): ?>
+                                        <div><?php echo htmlspecialchars($erro); ?></div>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
                         <?php endif; ?>
 

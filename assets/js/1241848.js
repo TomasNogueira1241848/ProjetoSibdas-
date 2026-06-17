@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     aplicarConteudosPublicos();
 
     inicializarFormularioContacto();
-    inicializarLogin();
 
     inicializarTooltips();
     inicializarToastPublic();
@@ -184,20 +183,6 @@ function inicializarFormularioContacto() {
             setTimeout(function () {
                 mensagemSucesso.classList.add('d-none');
             }, 4000);
-        }
-    });
-}
-
-
-/* Validação visual do login sem impedir o envio POST quando está válido */
-function inicializarLogin() {
-    const formLogin = document.getElementById('formLogin');
-
-    if (!formLogin) return;
-
-    formLogin.addEventListener('submit', function (e) {
-        if (!validarFormularioHTML(formLogin)) {
-            e.preventDefault();
         }
     });
 }

@@ -15,9 +15,9 @@ $password = isset($_POST['text_password']) ? trim($_POST['text_password']) : '';
 $erros = [];
 
 if ($email === '') {
-    $erros[] = 'Introduza o email.';
+    $erros[] = 'Introduza o e-mail.';
 } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $erros[] = 'Introduza um email válido.';
+    $erros[] = 'Introduza um e-mail válido.';
 }
 
 if ($password === '') {
