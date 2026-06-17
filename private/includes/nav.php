@@ -1,6 +1,5 @@
 <?php
 $assetPath = $assetPath ?? '../../assets';
-$loginPath = $loginPath ?? '../../public/login.php';
 ?>
 
 <!-- HEADER -->
@@ -21,7 +20,7 @@ $loginPath = $loginPath ?? '../../public/login.php';
                     aria-expanded="false">
                     <i class="fa-regular fa-user"></i>
                     <span class="d-none d-sm-inline ms-2">
-                        <?php echo htmlspecialchars($_SESSION['utilizador']['nome'] ?? 'Utilizador'); ?>
+                        <?php echo htmlspecialchars($_SESSION['utilizador']['email'] ?? 'Utilizador'); ?>
                     </span>
                 </button>
 

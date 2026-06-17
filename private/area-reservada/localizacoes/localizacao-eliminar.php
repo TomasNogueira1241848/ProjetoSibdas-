@@ -108,4 +108,4 @@ include __DIR__ . '/../../includes/nav.php';
     </div>
 </div>
 
-<?php include __DIR__ . '/../../includes/footer.php'; ?>localizacao-eliminar
+<?php include __DIR__ . '/../../includes/footer.php'; ?>
