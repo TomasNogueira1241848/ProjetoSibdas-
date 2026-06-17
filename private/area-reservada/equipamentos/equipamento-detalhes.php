@@ -1220,7 +1220,7 @@ include __DIR__ . '/../../includes/nav.php';
                                 </div>
 
                                 <div class="col-md-6 col-xl-4">
-                                    <p class="text-muted small mb-1">Telefone/p>
+                                    <p class="text-muted small mb-1">Telefone</p>
                                     <p class="mb-0">912345678</p>
                                 </div>
 
