@@ -31,7 +31,7 @@ include __DIR__ . '/../../includes/nav.php';
 
             <div class="row g-3">
 
-                <div class="col-lg-8">
+                <div class="col-lg-5">
                     <div class="card p-4 h-100">
                         <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
                             <div>
@@ -48,7 +48,12 @@ include __DIR__ . '/../../includes/nav.php';
 
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <p class="text-muted small mb-1">Tipo</p>
+                                <p class="text-muted small mb-1">Nome do documento</p>
+                                <p class="mb-0">Manual do Monitor Multiparamétrico</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Tipo de documento</p>
                                 <p class="mb-0">Manual de utilizador</p>
                             </div>
 
@@ -58,18 +63,8 @@ include __DIR__ . '/../../includes/nav.php';
                             </div>
 
                             <div class="col-md-6">
-                                <p class="text-muted small mb-1">Associado a</p>
-                                <p class="mb-0">EQ-0042 — Monitor Multiparamétrico</p>
-                            </div>
-
-                            <div class="col-md-6">
-                                <p class="text-muted small mb-1">Responsável</p>
-                                <p class="mb-0">Téc. João Ferreira</p>
-                            </div>
-
-                            <div class="col-md-6">
-                                <p class="text-muted small mb-1">Fornecedor associado</p>
-                                <p class="mb-0">Philips Healthcare Portugal</p>
+                                <p class="text-muted small mb-1">Estado</p>
+                                <p class="mb-0">Válido</p>
                             </div>
 
                             <div class="col-md-6">
@@ -80,6 +75,21 @@ include __DIR__ . '/../../includes/nav.php';
                             <div class="col-md-6">
                                 <p class="text-muted small mb-1">Validade</p>
                                 <p class="mb-0">2027-03-12</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Associado a</p>
+                                <p class="mb-0">EQ-0042 — Monitor Multiparamétrico</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Fornecedor associado</p>
+                                <p class="mb-0">Philips Healthcare Portugal</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Responsável</p>
+                                <p class="mb-0">Téc. João Ferreira</p>
                             </div>
 
                             <div class="col-12">
@@ -101,25 +111,32 @@ include __DIR__ . '/../../includes/nav.php';
                     </div>
                 </div>
 
-                <div class="col-lg-4">
+                <div class="col-lg-7">
                     <div class="card p-4 h-100">
-                        <h6 class="fw-bold mb-3">
-                            <i class="fa-solid fa-circle-info me-2 text-primary"></i> Informação rápida
-                        </h6>
+                        <h6 class="fw-bold mb-3">Equipamentos associados a este documento</h6>
 
-                        <div class="alert alert-success small">
-                            <i class="fa-solid fa-check me-1"></i>
-                            Documento válido e disponível.
-                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dashboard table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Equipamento</th>
+                                        <th>Localização</th>
+                                        <th>Fornecedor associado</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
 
-                        <div class="alert alert-light border small">
-                            <i class="fa-solid fa-stethoscope me-1"></i>
-                            Associado ao equipamento EQ-0042.
-                        </div>
-
-                        <div class="alert alert-light border small mb-0">
-                            <i class="fa-solid fa-file-pdf me-1"></i>
-                            manual-monitor-multiparametrico.pdf
+                                <tbody>
+                                    <tr>
+                                        <td>EQ-0042</td>
+                                        <td>Monitor Multiparamétrico</td>
+                                        <td>UCI — Sala UCI-02</td>
+                                        <td>Philips Healthcare Portugal</td>
+                                        <td><span class="badge badge-ativo">Ativo</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

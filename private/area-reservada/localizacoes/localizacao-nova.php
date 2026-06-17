@@ -29,40 +29,58 @@ include __DIR__ . '/../../includes/nav.php';
                         <div class="row g-3">
 
                             <div class="col-md-4">
-                                <label for="codigoLocalizacao" class="form-label">Código </label>
+                                <label for="codigoLocalizacao" class="form-label">Código</label>
                                 <input type="text" class="form-control" id="codigoLocalizacao" name="codigoLocalizacao"
                                     value="LOC-002" required>
                                 <div class="invalid-feedback">Introduza o código da localização.</div>
                             </div>
 
                             <div class="col-md-8">
-                                <label for="nomeLocalizacao" class="form-label">Nome </label>
+                                <label for="nomeLocalizacao" class="form-label">Nome da localização</label>
                                 <input type="text" class="form-control" id="nomeLocalizacao" name="nomeLocalizacao"
                                     required>
                                 <div class="invalid-feedback">Introduza o nome da localização.</div>
                             </div>
 
                             <div class="col-md-4">
-                                <label for="tipoLocalizacao" class="form-label">Tipo </label>
+                                <label for="tipoLocalizacao" class="form-label">Tipo de localização</label>
                                 <select class="form-select" id="tipoLocalizacao" name="tipoLocalizacao" required>
                                     <option value="">Selecionar</option>
-                                    <option value="Serviço">Serviço</option>
-                                    <option value="Unidade">Unidade</option>
-                                    <option value="Sala">Sala</option>
+                                    <option value="Edifício principal">Edifício principal</option>
+                                    <option value="UCI">UCI</option>
+                                    <option value="Urgência">Urgência</option>
+                                    <option value="Bloco operatório">Bloco operatório</option>
+                                    <option value="Consulta externa">Consulta externa</option>
+                                    <option value="Laboratório">Laboratório</option>
                                     <option value="Armazém">Armazém</option>
+                                    <option value="Área técnica">Área técnica</option>
                                 </select>
                                 <div class="invalid-feedback">Selecione o tipo de localização.</div>
                             </div>
 
                             <div class="col-md-4">
-                                <label for="numeroAndaresLocalizacao" class="form-label">N.º de andares </label>
+                                <label for="edificioLocalizacao" class="form-label">Edifício</label>
+                                <input type="text" class="form-control" id="edificioLocalizacao"
+                                    name="edificioLocalizacao" required>
+                                <div class="invalid-feedback">Introduza o edifício da localização.</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="pisoPrincipalLocalizacao" class="form-label">Piso principal</label>
+                                <input type="number" class="form-control" id="pisoPrincipalLocalizacao"
+                                    name="pisoPrincipalLocalizacao" min="-1" step="1" required>
+                                <div class="invalid-feedback">Introduza o piso principal.</div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="numeroAndaresLocalizacao" class="form-label">N.º de andares</label>
                                 <input type="number" class="form-control" id="numeroAndaresLocalizacao"
                                     name="numeroAndaresLocalizacao" min="1" step="1" required>
                                 <div class="invalid-feedback">Introduza o número de andares.</div>
                             </div>
 
                             <div class="col-md-4">
-                                <label for="estadoLocalizacao" class="form-label">Estado </label>
+                                <label for="estadoLocalizacao" class="form-label">Estado</label>
                                 <select class="form-select" id="estadoLocalizacao" name="estadoLocalizacao" required>
                                     <option value="">Selecionar</option>
                                     <option value="Ativa">Ativa</option>
@@ -72,17 +90,17 @@ include __DIR__ . '/../../includes/nav.php';
                                 <div class="invalid-feedback">Selecione o estado da localização.</div>
                             </div>
 
-                            <div class="col-md-6">
-                                <label for="responsavelLocalizacao" class="form-label">Responsável </label>
+                            <div class="col-md-4">
+                                <label for="responsavelLocalizacao" class="form-label">Responsável</label>
                                 <input type="text" class="form-control" id="responsavelLocalizacao"
                                     name="responsavelLocalizacao" required>
                                 <div class="invalid-feedback">Introduza o responsável pela localização.</div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="telefoneLocalizacao" class="form-label">Contacto interno</label>
                                 <input type="text" class="form-control" id="telefoneLocalizacao"
-                                    name="telefoneLocalizacao" placeholder=" Ext. 1234" required>
+                                    name="telefoneLocalizacao" required>
                                 <div class="invalid-feedback">Introduza o contacto interno.</div>
                             </div>
 

@@ -77,8 +77,9 @@ include __DIR__ . '/../../includes/nav.php';
                             <select class="form-select" id="filtroTipoFornecedor">
                                 <option value="">Todos</option>
                                 <option value="Fabricante">Fabricante</option>
-                                <option value="Distribuidor">Distribuidor</option>
-                                <option value="Assistência Técnica">Assistência Técnica</option>
+                                <option value="Distribuidor / fornecedor comercial">Distribuidor / fornecedor comercial</option>
+                                <option value="Prestador de assistência técnica">Prestador de assistência técnica</option>
+                                <option value="Fornecedor de consumíveis e acessórios">Fornecedor de consumíveis e acessórios</option>
                             </select>
                         </div>
 
@@ -143,6 +144,70 @@ include __DIR__ . '/../../includes/nav.php';
 
                                         <a href="fornecedor-eliminar.php" class="btn btn-sm btn-outline-danger"
                                             data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>Dräger Portugal</td>
+                                    <td>502345678</td>
+                                    <td>Distribuidor / fornecedor comercial</td>
+                                    <td>geral@draeger.pt</td>
+                                    <td>+351 214 123 000</td>
+                                    <td>Sim</td>
+                                    <td><span class="badge badge-ativo">Ativo</span></td>
+                                    <td class="text-center">
+                                        <a href="fornecedor-detalhes.php" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                        <a href="fornecedor-editar.php" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                        <a href="fornecedor-eliminar.php" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+
+
+                                <tr>
+                                    <td>MedRepair Norte</td>
+                                    <td>503456789</td>
+                                    <td>Prestador de assistência técnica</td>
+                                    <td>assistencia@medrepair.pt</td>
+                                    <td>+351 221 900 300</td>
+                                    <td>Sim</td>
+                                    <td><span class="badge badge-ativo">Ativo</span></td>
+                                    <td class="text-center">
+                                        <a href="fornecedor-detalhes.php" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                        <a href="fornecedor-editar.php" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                        <a href="fornecedor-eliminar.php" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>ForneConsumíveis SA</td>
+                                    <td>504567890</td>
+                                    <td>Fornecedor de consumíveis e acessórios</td>
+                                    <td>encomendas@forneconsumiveis.pt</td>
+                                    <td>+351 225 300 400</td>
+                                    <td>Não</td>
+                                    <td><span class="badge badge-ativo">Ativo</span></td>
+                                    <td class="text-center">
+                                        <a href="fornecedor-detalhes.php" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                        <a href="fornecedor-editar.php" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                        <a href="fornecedor-eliminar.php" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
                                             <i class="fa-solid fa-trash"></i>
                                         </a>
                                     </td>

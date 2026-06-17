@@ -59,13 +59,28 @@ include __DIR__ . '/../../includes/nav.php';
                             </div>
 
                             <div class="col-md-6">
-                                <p class="text-muted small mb-1">Tipo</p>
+                                <p class="text-muted small mb-1">Tipo de fornecedor</p>
                                 <p class="mb-0">Fabricante</p>
                             </div>
 
                             <div class="col-md-6">
                                 <p class="text-muted small mb-1">Email</p>
                                 <p class="mb-0">suporte@philips.pt</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Telefone</p>
+                                <p class="mb-0">+351 211 234 567</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Pessoa responsável / contacto</p>
+                                <p class="mb-0">Eng.ª Ana Martins</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Telefone da pessoa responsável</p>
+                                <p class="mb-0">+351 913 456 789</p>
                             </div>
 
                             <div class="col-md-6">

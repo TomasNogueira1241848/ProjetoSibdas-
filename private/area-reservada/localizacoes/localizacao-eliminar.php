@@ -1,3 +1,4 @@
+
 <?php
 $pageTitle = 'MedInfo Solutions — Eliminar Localização';
 $assetPath = '../../../assets';
@@ -60,8 +61,18 @@ include __DIR__ . '/../../includes/nav.php';
                             </div>
 
                             <div class="col-md-6">
-                                <p class="text-muted small mb-1">Tipo</p>
-                                <p class="mb-0">Unidade</p>
+                                <p class="text-muted small mb-1">Tipo de localização</p>
+                                <p class="mb-0">UCI</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Edifício</p>
+                                <p class="mb-0">Edifício Central</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Piso principal</p>
+                                <p class="mb-0">2</p>
                             </div>
 
                             <div class="col-md-6">

@@ -19,8 +19,7 @@ include __DIR__ . '/../../includes/nav.php';
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                     <div>
                         <h4 class="fw-bold mb-1">Localizações</h4>
-                        <p class="text-muted small mb-0">Gestão dos serviços, salas e unidades onde os equipamentos
-                            estão instalados.</p>
+                        <p class="text-muted small mb-0">Gestão das localizações principais do hospital onde os equipamentos podem estar associados.</p>
                     </div>
 
                     <a href="localizacao-nova.php" class="btn btn-primary btn-sm">
@@ -66,29 +65,31 @@ include __DIR__ . '/../../includes/nav.php';
                             <div class="col-lg-5">
                                 <label for="pesquisaLocalizacoes" class="form-label">Pesquisar</label>
                                 <input type="search" class="form-control" id="pesquisaLocalizacoes"
-                                    placeholder="Código, nome, responsável, tipo ou n.º de andares">
+                                    placeholder="Código, nome, tipo, edifício ou responsável">
                             </div>
 
                             <div class="col-md-4 col-lg-3">
-                                <label for="filtroTipoLocalizacao" class="form-label">Tipo</label>
+                                <label for="filtroTipoLocalizacao" class="form-label">Tipo de localização</label>
                                 <select class="form-select" id="filtroTipoLocalizacao">
                                     <option value="">Todos</option>
-                                    <option value="Serviço">Serviço</option>
-                                    <option value="Unidade">Unidade</option>
-                                    <option value="Sala">Sala</option>
+                                    <option value="Edifício principal">Edifício principal</option>
+                                    <option value="UCI">UCI</option>
+                                    <option value="Urgência">Urgência</option>
+                                    <option value="Bloco operatório">Bloco operatório</option>
+                                    <option value="Consulta externa">Consulta externa</option>
+                                    <option value="Laboratório">Laboratório</option>
                                     <option value="Armazém">Armazém</option>
+                                    <option value="Área técnica">Área técnica</option>
                                 </select>
                             </div>
 
                             <div class="col-md-4 col-lg-2">
-                                <label for="filtroAndaresLocalizacao" class="form-label">N.º de andares</label>
-                                <select class="form-select" id="filtroAndaresLocalizacao">
+                                <label for="filtroEdificioLocalizacao" class="form-label">Edifício</label>
+                                <select class="form-select" id="filtroEdificioLocalizacao">
                                     <option value="">Todos</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5 ou mais</option>
+                                    <option value="Edifício Central">Edifício Central</option>
+                                    <option value="Edifício Consultas Externas">Edifício Consultas Externas</option>
+                                    <option value="Edifício Técnico">Edifício Técnico</option>
                                 </select>
                             </div>
 
@@ -114,8 +115,8 @@ include __DIR__ . '/../../includes/nav.php';
                                         <th>Código</th>
                                         <th>Nome</th>
                                         <th>Tipo</th>
-                                        <th>N.º de andares</th>
-                                        <th>Responsável</th>
+                                        <th>Edifício</th>
+                                        <th>Piso principal</th>
                                         <th>Equipamentos</th>
                                         <th>Estado</th>
                                         <th class="text-center">Ações</th>
@@ -126,9 +127,9 @@ include __DIR__ . '/../../includes/nav.php';
                                     <tr>
                                         <td>LOC-001</td>
                                         <td>Unidade de Cuidados Intensivos</td>
-                                        <td>Unidade</td>
-                                        <td>4</td>
-                                        <td>Enf. Ana Martins</td>
+                                        <td>UCI</td>
+                                        <td>Edifício Central</td>
+                                        <td>2</td>
                                         <td>26</td>
                                         <td><span class="badge badge-ativo">Ativa</span></td>
                                         <td class="text-center">

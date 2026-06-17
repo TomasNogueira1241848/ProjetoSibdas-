@@ -34,7 +34,7 @@ include __DIR__ . '/../../includes/nav.php';
 
             <div class="row g-3">
 
-                <div class="col-lg-8">
+                <div class="col-lg-5">
                     <div class="card p-4 h-100">
                         <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
                             <div>
@@ -51,8 +51,18 @@ include __DIR__ . '/../../includes/nav.php';
 
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <p class="text-muted small mb-1">Tipo</p>
-                                <p class="mb-0">Unidade</p>
+                                <p class="text-muted small mb-1">Tipo de localização</p>
+                                <p class="mb-0">UCI</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Edifício</p>
+                                <p class="mb-0">Edifício Central</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Piso principal</p>
+                                <p class="mb-0">2</p>
                             </div>
 
                             <div class="col-md-6">
@@ -83,34 +93,39 @@ include __DIR__ . '/../../includes/nav.php';
                             <div class="col-12">
                                 <p class="text-muted small mb-1">Descrição</p>
                                 <p class="mb-0">
-                                    Unidade hospitalar destinada a doentes críticos, com equipamentos de
-                                    monitorização,
-                                    ventilação e suporte de vida.
+                                    Localização principal da UCI no Edifício Central, usada para equipamentos de
+                                    monitorização, ventilação e suporte de vida.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4">
-                    <div class="card p-4 h-100">
-                        <h6 class="fw-bold mb-3">
-                            <i class="fa-solid fa-circle-info me-2 text-primary"></i> Informação rápida
-                        </h6>
+                <div class="col-7">
+                    <div class="card p-4">
+                        <h6 class="fw-bold mb-3">Equipamentos nesta localização</h6>
 
-                        <div class="alert alert-success small">
-                            <i class="fa-solid fa-check me-1"></i>
-                            Localização ativa e disponível.
-                        </div>
-
-                        <div class="alert alert-warning small">
-                            <i class="fa-solid fa-triangle-exclamation me-1"></i>
-                            Contém equipamentos críticos.
-                        </div>
-
-                        <div class="alert alert-light border small mb-0">
-                            <i class="fa-solid fa-stethoscope me-1"></i>
-                            26 equipamentos registados nesta localização.
+                        <div class="table-responsive">
+                            <table class="table table-dashboard table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Equipamento</th>
+                                        <th>Departamento/serviço</th>
+                                        <th>Sala/gabinete</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>EQ-0042</td>
+                                        <td>Monitor Multiparamétrico</td>
+                                        <td>Cuidados Intensivos</td>
+                                        <td>UCI-02</td>
+                                        <td><span class="badge badge-ativo">Ativo</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

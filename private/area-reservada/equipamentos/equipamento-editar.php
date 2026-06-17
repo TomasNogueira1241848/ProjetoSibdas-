@@ -93,6 +93,10 @@ include __DIR__ . '/../../includes/nav.php';
                             <!-- DADOS PRINCIPAIS -->
                             <div class="tab-pane fade show active" id="aba-dados" role="tabpanel">
                                 <div class="row g-3">
+                                    <div class="col-12">
+                                        <h6 class="fw-bold mb-1">Dados do Equipamento</h6>
+                                        <p class="text-muted small mb-0">Registe a identificação, características e entidades associadas ao equipamento.</p>
+                                    </div>
                                     <div class="col-md-4">
                                         <label for="codigoEquipamento" class="form-label">Código</label>
                                         <input type="text" class="form-control" id="codigoEquipamento" value="EQ-0042"
@@ -157,11 +161,11 @@ include __DIR__ . '/../../includes/nav.php';
                                         <div class="invalid-feedback">Selecione o estado.</div>
                                     </div>
 
-                                    <div class="col-md-4">
+                                     <div class="col-md-4">
                                         <label for="criticidadeEquipamento" class="form-label">Criticidade</label>
                                         <select class="form-select" id="criticidadeEquipamento" required>
                                             <option value="">Selecionar</option>
-                                            <option value="Baixa">Baixa</option>
+                                            <option value="Baixa" >Baixa</option>
                                             <option value="Média">Média</option>
                                             <option value="Alta" selected>Alta</option>
                                             <option value="Crítica">Crítica</option>
@@ -169,103 +173,6 @@ include __DIR__ . '/../../includes/nav.php';
                                         <div class="invalid-feedback">Selecione a criticidade.</div>
                                     </div>
 
-                                    <div class="col-md-4">
-                                        <label for="fornecedorEquipamento" class="form-label">Fornecedor principal</label>
-                                        <select class="form-select" id="fornecedorEquipamento" name="fornecedor_principal_id" required>
-                                            <option value="">Selecionar</option>
-                                            <option value="Philips Healthcare Portugal" selected>Philips Healthcare Portugal</option>
-                                            <option value="Dräger Portugal">Dräger Portugal</option>
-                                            <option value="MedRepair Norte">MedRepair Norte</option>
-                                            <option value="ForneConsumíveis SA">ForneConsumíveis SA</option>
-                                        </select>
-
-                                        <div class="form-text">Fornecedor comercial principal do equipamento.</div>
-                                        <div class="invalid-feedback">Selecione o fornecedor principal.</div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label for="fabricanteEquipamento" class="form-label">Fabricante principal</label>
-                                        <select class="form-select" id="fabricanteEquipamento" name="fabricante_id" required>
-                                            <option value="">Selecionar</option>
-                                            <option value="Philips Healthcare Portugal" selected>Philips Healthcare Portugal</option>
-                                            <option value="Dräger Portugal">Dräger Portugal</option>
-                                        </select>
-                                        <div class="form-text">Entidade fabricante do equipamento.</div>
-                                        <div class="invalid-feedback">Selecione o fabricante.</div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label for="assistenciaEquipamento" class="form-label">Prestador de assistência técnica principal</label>
-                                        <select class="form-select" id="assistenciaEquipamento" name="prestador_assistencia_id" required>
-                                            <option value="">Selecionar</option>
-                                            <option value="Dräger Portugal">Dräger Portugal</option>
-                                            <option value="MedRepair Norte" selected>MedRepair Norte</option>
-                                        </select>
-                                        <div class="form-text">Entidade responsável pela assistência técnica.</div>
-                                        <div class="invalid-feedback">Selecione o prestador de assistência técnica.</div>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <label for="pesquisaFornecedoresAssociadosEquipamento" class="form-label">Fornecedores associados adicionais</label>
-                                        <input type="search" class="form-control mb-2 pesquisa-fornecedores-associados"
-                                            id="pesquisaFornecedoresAssociadosEquipamento"
-                                            placeholder="Pesquisar fornecedor, fabricante, assistência técnica ou consumíveis..."
-                                            data-fornecedores-container="listaFornecedoresAssociadosEquipamento">
-
-                                        <div class="border rounded p-3" id="listaFornecedoresAssociadosEquipamento">
-                                            <div class="row g-2">
-                                                <div class="col-md-6 fornecedor-associado-item" data-fornecedor-item="Philips Healthcare PortugalFabricante">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="fornecedoresAssociadosEquipamento[]"
-                                                            id="fornecedorAssociadoPhilipsEquipamento"
-                                                            value="Philips Healthcare Portugal">
-                                                        <label class="form-check-label" for="fornecedorAssociadoPhilipsEquipamento">
-                                                            <strong>Philips Healthcare Portugal</strong><br>
-                                                            <span class="text-muted small">Fabricante / fornecedor comercial</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 fornecedor-associado-item" data-fornecedor-item="Dräger Portugal Distribuidor / assistência técnica">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="fornecedoresAssociadosEquipamento[]"
-                                                            id="fornecedorAssociadoDragerEquipamento"
-                                                            value="Dräger Portugal" checked>
-                                                        <label class="form-check-label" for="fornecedorAssociadoDragerEquipamento">
-                                                            <strong>Dräger Portugal</strong><br>
-                                                            <span class="text-muted small">Distribuidor / assistência técnica</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 fornecedor-associado-item" data-fornecedor-item="MedRepair Norte Prestador de assistência técnica">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="fornecedoresAssociadosEquipamento[]"
-                                                            id="fornecedorAssociadoMedrepairEquipamento"
-                                                            value="MedRepair Norte">
-                                                        <label class="form-check-label" for="fornecedorAssociadoMedrepairEquipamento">
-                                                            <strong>MedRepair Norte</strong><br>
-                                                            <span class="text-muted small">Prestador de assistência técnica</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 fornecedor-associado-item" data-fornecedor-item="ForneConsumíveis SA Consumíveis e acessórios">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="fornecedoresAssociadosEquipamento[]"
-                                                            id="fornecedorAssociadoForneconsumiveisEquipamento"
-                                                            value="ForneConsumíveis SA" checked>
-                                                        <label class="form-check-label" for="fornecedorAssociadoForneconsumiveisEquipamento">
-                                                            <strong>ForneConsumíveis SA</strong><br>
-                                                            <span class="text-muted small">Consumíveis e acessórios</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-text">Pode selecionar vários fornecedores adicionais associados ao equipamento.</div>
-                                    </div>
                                     <div class="col-md-4">
                                         <label for="dataAquisicaoEquipamento" class="form-label">Data de aquisição</label>
                                         <input type="date" class="form-control" id="dataAquisicaoEquipamento" value="2023-06-10" required>
@@ -306,6 +213,105 @@ include __DIR__ . '/../../includes/nav.php';
                                             required>Equipamento usado como monitor multiparamétrico..</textarea>
                                         <div class="invalid-feedback">Preencha o campo de observações gerais.
                                         </div>
+                                    </div>
+                                    
+                                     <div class="col-12" mt-2>
+                                        <hr class="my-2">
+                                        <h6 class="fw-bold mb-1">Entidades associadas ao equipamento</h6>
+                                        <p class="text-muted small mb-0">Registe o fornecedor principal, fabricante, prestador de assistência técnica e restantes fornecedores associados.</p>
+                                    </div>
+                                     <div class="col-md-4">
+                                        <label for="fornecedorEquipamento" class="form-label">Fornecedor principal</label>
+                                        <select class="form-select" id="fornecedorEquipamento" name="fornecedor_principal_id" required>
+                                            <option value="">Selecionar</option>
+                                            <option value="Philips Healthcare Portugal" selected>Philips Healthcare Portugal</option>
+                                            <option value="Dräger Portugal">Dräger Portugal</option>
+                                            <option value="MedRepair Norte">MedRepair Norte</option>
+                                            <option value="ForneConsumíveis SA">ForneConsumíveis SA</option>
+                                        </select>
+                                        <div class="invalid-feedback">Selecione o fornecedor principal.</div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="fabricanteEquipamento" class="form-label">Fabricante principal</label>
+                                        <select class="form-select" id="fabricanteEquipamento" name="fabricante_id" required>
+                                            <option value="">Selecionar</option>
+                                            <option value="Philips Healthcare Portugal " selected>Philips Healthcare Portugal</option>
+                                            <option value="Dräger Portugal">Dräger Portugal</option>
+                                        </select>
+                                        <div class="invalid-feedback">Selecione o fabricante.</div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="assistenciaEquipamento" class="form-label">Prestador de assistência técnica principal</label>
+                                        <select class="form-select" id="assistenciaEquipamento" name="prestador_assistencia_id" required>
+                                            <option value="">Selecionar</option>
+                                            <option value="Dräger Portugal">Dräger Portugal</option>
+                                            <option value="MedRepair Norte" selected>MedRepair Norte</option>
+                                        </select>
+                                        <div class="invalid-feedback">Selecione o prestador de assistência técnica.</div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label for="pesquisaFornecedoresAssociadosEquipamento" class="form-label">Fornecedores associados adicionais</label>
+                                        <input type="search" class="form-control mb-2 pesquisa-fornecedores-associados"
+                                            id="pesquisaFornecedoresAssociadosEquipamento"
+                                            placeholder="Pesquisar fornecedor, fabricante ou assistência técnica..."
+                                            data-fornecedores-container="listaFornecedoresAssociadosEquipamento">
+
+                                        <div class="border rounded p-3" id="listaFornecedoresAssociadosEquipamento">
+                                            <div class="row g-2">
+                                                <div class="col-md-6 fornecedor-associado-item" data-fornecedor-item="Philips Healthcare Portugal Fabricante">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            name="fornecedoresAssociadosEquipamento[]"
+                                                            id="fornecedorAssociadoPhilipsEquipamento"
+                                                            value="Philips Healthcare Portugal">
+                                                        <label class="form-check-label" for="fornecedorAssociadoPhilipsEquipamento">
+                                                            <strong>Philips Healthcare Portugal</strong><br>
+
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 fornecedor-associado-item" data-fornecedor-item="Dräger Portugal Distribuidor / fornecedor comercial">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            name="fornecedoresAssociadosEquipamento[]"
+                                                            id="fornecedorAssociadoDragerEquipamento"
+                                                            value="Dräger Portugal" checked>
+                                                        <label class="form-check-label" for="fornecedorAssociadoDragerEquipamento">
+                                                            <strong>Dräger Portugal</strong><br>
+
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 fornecedor-associado-item" data-fornecedor-item="MedRepair Norte Prestador de assistência técnica">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            name="fornecedoresAssociadosEquipamento[]"
+                                                            id="fornecedorAssociadoMedrepairEquipamento"
+                                                            value="MedRepair Norte" >
+                                                        <label class="form-check-label" for="fornecedorAssociadoMedrepairEquipamento">
+                                                            <strong>MedRepair Norte</strong><br>
+
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 fornecedor-associado-item" data-fornecedor-item="ForneConsumíveis SA Fornecedor de consumíveis e acessórios">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            name="fornecedoresAssociadosEquipamento[]"
+                                                            id="fornecedorAssociadoForneconsumiveisEquipamento"
+                                                            value="ForneConsumíveis SA" checked>
+                                                        <label class="form-check-label" for="fornecedorAssociadoForneconsumiveisEquipamento">
+                                                            <strong>ForneConsumíveis SA</strong><br>
+
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-text">Pode selecionar vários fornecedores adicionais associados ao equipamento.</div>
                                     </div>
 
                                     <div class="col-12 mt-2">
@@ -364,40 +370,41 @@ include __DIR__ . '/../../includes/nav.php';
                             <!-- LOCALIZAÇÃO -->
                             <div class="tab-pane fade" id="aba-localizacao" role="tabpanel">
                                 <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="localizacaoEquipamento" class="form-label">Localização
-                                        </label>
-                                        <select class="form-select" id="localizacaoEquipamento" required>
-                                            <option value="">Selecionar</option>
-                                            <option value="UCI" selected>UCI</option>
-                                            <option value="Urgência">Urgência</option>
-                                            <option value="Bloco Operatório">Bloco Operatório</option>
-                                            <option value="Medicina Interna">Medicina Interna</option>
-                                            <option value="Consulta Externa">Consulta Externa</option>
-                                            <option value="Laboratório">Laboratório</option>
-                                        </select>
-                                        <div class="invalid-feedback">Selecione a localização.</div>
+                                    <div class="col-12">
+                                        <h6 class="fw-bold mb-1">Localização física do equipamento</h6>
+                                        <p class="text-muted small mb-0">
+                                            Associe o equipamento a uma localização principal e indique a posição específica dentro dessa localização.
+                                        </p>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label for="servicoEquipamento" class="form-label">Serviço</label>
-                                        <input type="text" class="form-control" id="servicoEquipamento"
-                                            value="Unidade de Cuidados Intensivos" required>
-                                        <div class="invalid-feedback">Introduza o serviço.</div>
+                                        <label for="localizacaoEquipamento" class="form-label">Localização principal</label>
+                                        <select class="form-select" id="localizacaoEquipamento" name="localizacaoEquipamento" required>
+                                            <option value="">Selecionar</option>
+                                            <option value="LOC-001" selected>LOC-001 — Unidade de Cuidados Intensivos</option>
+                                        </select>
+                                        <div class="invalid-feedback">Selecione a localização principal.</div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="departamentoServicoEquipamento" class="form-label">Departamento / serviço</label>
+                                        <input type="text" class="form-control" id="departamentoServicoEquipamento"
+                                            name="departamentoServicoEquipamento" value="Cuidados Intensivos" required>
+                                        <div class="invalid-feedback">Introduza o departamento ou serviço.</div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label for="pisoEquipamento" class="form-label">N.º do andar</label>
-                                        <input type="number" class="form-control" id="pisoEquipamento" min="-1" step="1"
-                                            value="2" required>
+                                        <input type="number" class="form-control" id="pisoEquipamento" name="pisoEquipamento"
+                                            min="-1" step="1" value="2" required>
                                         <div class="invalid-feedback">Introduza o número do andar.</div>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label for="salaEquipamento" class="form-label">Sala</label>
-                                        <input type="text" class="form-control" id="salaEquipamento" value="UCI-02"
-                                            required>
-                                        <div class="invalid-feedback">Introduza a sala.</div>
+                                        <label for="salaGabineteEquipamento" class="form-label">Sala / gabinete</label>
+                                        <input type="text" class="form-control" id="salaGabineteEquipamento"
+                                            name="salaGabineteEquipamento" value="UCI-02" required>
+                                        <div class="invalid-feedback">Introduza a sala ou gabinete.</div>
                                     </div>
                                 </div>
                             </div>
@@ -408,7 +415,7 @@ include __DIR__ . '/../../includes/nav.php';
                                     <div class="col-12">
                                         <h6 class="fw-bold mb-1">Documentação mínima necessária</h6>
                                         <p class="text-muted small mb-0">
-                                            Estes documentos já estão associados ao equipamento. Pode atualizar os dados e substituir PDFs se necessário.
+                                            Adicione os dados e PDFs obrigatórios para que a ficha do equipamento fique completa.
                                         </p>
                                     </div>
 
@@ -1770,6 +1777,10 @@ include __DIR__ . '/../../includes/nav.php';
                             <!-- MANUTENÇÃO -->
                             <div class="tab-pane fade" id="aba-manutencao" role="tabpanel">
                                 <div class="row g-3">
+                                    <div class="col-12">
+                                        <h6 class="fw-bold mb-1">Manutenção</h6>
+                                        <p class="text-muted small mb-0">Defina o acompanhamento técnico, periodicidade e prioridade de manutenção do equipamento.</p>
+                                    </div>
                                     <div class="col-md-4">
                                         <label for="ultimaManutencaoEquipamento" class="form-label">Última
                                             manutenção</label>
@@ -1872,3 +1883,4 @@ include __DIR__ . '/../../includes/nav.php';
 </div>
 
 <?php include __DIR__ . '/../../includes/footer.php'; ?>
+

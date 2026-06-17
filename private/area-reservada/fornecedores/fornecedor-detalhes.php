@@ -20,7 +20,7 @@ include __DIR__ . '/../../includes/nav.php';
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                 <div>
                     <h4 class="fw-bold mb-1">Detalhes do fornecedor</h4>
-                    <p class="text-muted small mb-0">Consulta da ficha do fornecedor selecionado.</p>
+                    <p class="text-muted small mb-0">Consulta da ficha do fornecedor selecionado e dos equipamentos associados.</p>
                 </div>
 
                 <div class="d-flex gap-2">
@@ -36,13 +36,12 @@ include __DIR__ . '/../../includes/nav.php';
 
             <div class="row g-3">
 
-                <!-- DADOS PRINCIPAIS -->
-                <div class="col-lg-8">
+                <!-- DADOS DO FORNECEDOR -->
+                <div class="col-lg-5">
                     <div class="card p-4 h-100">
                         <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
                             <div>
                                 <h5 class="fw-bold mb-1">Philips Healthcare Portugal</h5>
-                                <p class="text-muted small mb-0">NIF: 501234567</p>
                             </div>
 
                             <div>
@@ -54,13 +53,13 @@ include __DIR__ . '/../../includes/nav.php';
 
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <p class="text-muted small mb-1">Tipo</p>
-                                <p class="mb-0">Fabricante</p>
+                                <p class="text-muted small mb-1">NIF</p>
+                                <p class="mb-0">501234567</p>
                             </div>
 
                             <div class="col-md-6">
-                                <p class="text-muted small mb-1">Contrato ativo</p>
-                                <p class="mb-0">Sim</p>
+                                <p class="text-muted small mb-1">Tipo de fornecedor</p>
+                                <p class="mb-0">Fabricante</p>
                             </div>
 
                             <div class="col-md-6">
@@ -74,8 +73,28 @@ include __DIR__ . '/../../includes/nav.php';
                             </div>
 
                             <div class="col-md-6">
+                                <p class="text-muted small mb-1">Website</p>
+                                <p class="mb-0">www.philips.pt/healthcare</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Contrato ativo</p>
+                                <p class="mb-0">Sim</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Pessoa responsável</p>
+                                <p class="mb-0">Eng.ª Ana Martins</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Telefone da pessoa responsável</p>
+                                <p class="mb-0">+351 913 456 789</p>
+                            </div>
+
+                            <div class="col-md-6">
                                 <p class="text-muted small mb-1">Área de atuação</p>
-                                <p class="mb-0">Monitorização e equipamentos de diagnóstico</p>
+                                <p class="mb-0">Monitorização e diagnóstico</p>
                             </div>
 
                             <div class="col-md-6">
@@ -91,34 +110,40 @@ include __DIR__ . '/../../includes/nav.php';
                             <div class="col-12">
                                 <p class="text-muted small mb-1">Observações</p>
                                 <p class="mb-0">
-                                    Fornecedor principal de equipamentos de monitorização. Possui contrato de
-                                    assistência técnica ativo.
+                                    Entidade associada ao fornecimento e fabrico de equipamentos de monitorização hospitalar.
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- INFORMAÇÃO RÁPIDA -->
-                <div class="col-lg-4">
+                <!-- EQUIPAMENTOS ASSOCIADOS -->
+                <div class="col-lg-7">
                     <div class="card p-4 h-100">
-                        <h6 class="fw-bold mb-3">
-                            <i class="fa-solid fa-circle-info me-2 text-primary"></i> Informação rápida
-                        </h6>
+                        <h6 class="fw-bold mb-3">Equipamentos associados a este fornecedor</h6>
 
-                        <div class="alert alert-success small">
-                            <i class="fa-solid fa-check me-1"></i>
-                            Fornecedor ativo no sistema.
-                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dashboard table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Equipamento</th>
+                                        <th>Ligação</th>
+                                        <th>Localização</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
 
-                        <div class="alert alert-warning small">
-                            <i class="fa-solid fa-file-contract me-1"></i>
-                            Contrato de manutenção associado a equipamentos críticos.
-                        </div>
-
-                        <div class="alert alert-light border small mb-0">
-                            <i class="fa-solid fa-stethoscope me-1"></i>
-                            Associado a monitores multiparamétricos e equipamentos de diagnóstico.
+                                <tbody>
+                                    <tr>
+                                        <td>EQ-0042</td>
+                                        <td>Monitor Multiparamétrico</td>
+                                        <td>Fornecedor principal / fabricante</td>
+                                        <td>UCI — Sala UCI-02</td>
+                                        <td><span class="badge badge-ativo">Ativo</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -130,3 +155,4 @@ include __DIR__ . '/../../includes/nav.php';
 </div>
 
 <?php include __DIR__ . '/../../includes/footer.php'; ?>
+

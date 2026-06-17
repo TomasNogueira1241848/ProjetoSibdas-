@@ -54,7 +54,7 @@ function inicializarTabelas() {
             idPesquisa: 'pesquisaLocalizacoes',
             filtros: [
                 { filtroId: 'filtroTipoLocalizacao', coluna: 2 },
-                { filtroId: 'filtroAndaresLocalizacao', coluna: 3 },
+                { filtroId: 'filtroEdificioLocalizacao', coluna: 3 },
                 { filtroId: 'filtroEstadoLocalizacao', coluna: 6 }
             ]
         },
@@ -1057,4 +1057,5 @@ function criarGraficoLocalizacao() {
     });
 
 }
+
 

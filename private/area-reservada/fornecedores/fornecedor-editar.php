@@ -55,8 +55,9 @@ include __DIR__ . '/../../includes/nav.php';
                                 <select class="form-select" id="tipoFornecedor" name="tipoFornecedor" required>
                                     <option value="">Selecionar tipo</option>
                                     <option value="Fabricante" selected>Fabricante</option>
-                                    <option value="Distribuidor">Distribuidor</option>
-                                    <option value="Assistência Técnica">Assistência Técnica</option>
+                                    <option value="Distribuidor / fornecedor comercial">Distribuidor / fornecedor comercial</option>
+                                    <option value="Prestador de assistência técnica">Prestador de assistência técnica</option>
+                                    <option value="Fornecedor de consumíveis e acessórios">Fornecedor de consumíveis e acessórios</option>
                                 </select>
                                 <div class="invalid-feedback">Selecione o tipo de fornecedor.</div>
                             </div>
@@ -86,8 +87,8 @@ include __DIR__ . '/../../includes/nav.php';
                                 <label for="telefoneFornecedor" class="form-label">
                                     Telefone
                                 </label>
-                                <input type="number" class="form-control" id="telefoneFornecedor"
-                                    name="telefoneFornecedor" value="+351 211 234 567" min="0" step="1" required>
+                                <input type="text" class="form-control" id="telefoneFornecedor"
+                                    name="telefoneFornecedor" value="+351 211 234 567" required>
                                 <div class="invalid-feedback">Introduza o telefone do fornecedor.</div>
                             </div>
 
@@ -106,6 +107,24 @@ include __DIR__ . '/../../includes/nav.php';
                                 <input type="text" class="form-control" id="areaFornecedor" name="areaFornecedor"
                                     value="Monitorização e diagnóstico" required>
                                 <div class="invalid-feedback">Introduza a área de atuação.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="websiteFornecedor" class="form-label">Website</label>
+                                <input type="text" class="form-control" id="websiteFornecedor" name="websiteFornecedor" value="www.philips.pt/healthcare" required>
+                                <div class="invalid-feedback">Introduza o website do fornecedor.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="pessoaContactoFornecedor" class="form-label">Pessoa responsável / contacto</label>
+                                <input type="text" class="form-control" id="pessoaContactoFornecedor" name="pessoaContactoFornecedor" value="Eng.ª Ana Martins" required>
+                                <div class="invalid-feedback">Introduza a pessoa responsável.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="telefoneContactoFornecedor" class="form-label">Telefone da pessoa responsável</label>
+                                <input type="text" class="form-control" id="telefoneContactoFornecedor" name="telefoneContactoFornecedor" value="+351 913 456 789" required>
+                                <div class="invalid-feedback">Introduza o telefone da pessoa responsável.</div>
                             </div>
 
                             <div class="col-12">

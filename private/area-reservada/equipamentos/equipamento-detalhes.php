@@ -131,6 +131,10 @@ include __DIR__ . '/../../includes/nav.php';
                         <!-- DADOS -->
                         <div class="tab-pane fade show active" id="detalhes-dados" role="tabpanel">
                             <div class="row g-3">
+                                <div class="col-12">
+                                        <h6 class="fw-bold mb-1">Dados do Equipamento</h6>
+                                        <p class="text-muted small mb-0">Consulta da identificação, características e entidades associadas ao equipamento.</p>
+                                    </div>
                                 <div class="col-md-6 col-xl-4">
                                     <p class="text-muted small mb-1">Designação</p>
                                     <p class="mb-0">Monitor Multiparamétrico</p>
@@ -173,7 +177,7 @@ include __DIR__ . '/../../includes/nav.php';
 
                                 <div class="col-md-6 col-xl-4">
                                     <p class="text-muted small mb-1">Ano de fabrico</p>
-                                    <p class="mb-0">2020</p>
+                                    <p class="mb-0">2022</p>
                                 </div>
 
                                 <div class="col-md-6 col-xl-4">
@@ -224,19 +228,36 @@ include __DIR__ . '/../../includes/nav.php';
                         <!-- LOCALIZAÇÃO -->
                         <div class="tab-pane fade" id="detalhes-localizacao" role="tabpanel">
                             <div class="row g-3">
+                                <div class="col-12">
+                                    <h6 class="fw-bold mb-1">Localização física do equipamento</h6>
+                                    <p class="text-muted small mb-0">
+                                        Localização principal associada e posição específica do equipamento no hospital.
+                                    </p>
+                                </div>
+
                                 <div class="col-md-6 col-xl-4">
-                                    <p class="text-muted small mb-1">Código</p>
+                                    <p class="text-muted small mb-1">Código da localização</p>
                                     <p class="mb-0">LOC-001</p>
                                 </div>
 
                                 <div class="col-md-6 col-xl-4">
-                                    <p class="text-muted small mb-1">Localização</p>
+                                    <p class="text-muted small mb-1">Localização principal</p>
                                     <p class="mb-0">Unidade de Cuidados Intensivos</p>
                                 </div>
 
                                 <div class="col-md-6 col-xl-4">
-                                    <p class="text-muted small mb-1">Serviço</p>
+                                    <p class="text-muted small mb-1">Tipo de localização</p>
                                     <p class="mb-0">UCI</p>
+                                </div>
+
+                                <div class="col-md-6 col-xl-4">
+                                    <p class="text-muted small mb-1">Edifício</p>
+                                    <p class="mb-0">Edifício Central</p>
+                                </div>
+
+                                <div class="col-md-6 col-xl-4">
+                                    <p class="text-muted small mb-1">Departamento / serviço</p>
+                                    <p class="mb-0">Cuidados Intensivos</p>
                                 </div>
 
                                 <div class="col-md-6 col-xl-4">
@@ -245,7 +266,7 @@ include __DIR__ . '/../../includes/nav.php';
                                 </div>
 
                                 <div class="col-md-6 col-xl-4">
-                                    <p class="text-muted small mb-1">Sala</p>
+                                    <p class="text-muted small mb-1">Sala / gabinete</p>
                                     <p class="mb-0">UCI-02</p>
                                 </div>
 
@@ -264,41 +285,85 @@ include __DIR__ . '/../../includes/nav.php';
                                 <div class="col-12">
                                     <h6 class="fw-bold mb-1">Entidades associadas ao equipamento</h6>
                                     <p class="text-muted small mb-0">
-                                        Informação alinhada com os campos de fornecedores existentes no novo e editar equipamento.
+                                        Consulta do fornecedor principal, fabricante, prestador de assistência técnica e restantes fornecedores associados.
                                     </p>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-xl-4">
                                     <div class="border rounded p-3 h-100 bg-light">
-                                        <p class="text-muted small mb-1">Fornecedor principal</p>
-                                        <h6 class="fw-bold mb-1">Philips Healthcare Portugal</h6>
-                                        <p class="text-muted small mb-2">Fornecedor comercial principal</p>
+                                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Fornecedor principal</h6>
+                                                <p class="text-muted small mb-0">Philips Healthcare Portugal</p>
+                                            </div>
+                                            <span class="badge bg-primary">Principal</span>
+                                        </div>
+
+                                        <p class="small mb-1"><strong>Tipo:</strong> Fabricante</p>
                                         <p class="small mb-1"><strong>NIF:</strong> 501234567</p>
-                                        <p class="small mb-1"><strong>Email:</strong> support.pt@philips.com</p>
-                                        <p class="small mb-1"><strong>Telefone:</strong> +351 222 456 789</p>
-                                        <p class="small mb-0"><strong>Pessoa de contacto:</strong> Eng.ª Ana Martins</p>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="border rounded p-3 h-100 bg-light">
-                                        <p class="text-muted small mb-1">Fabricante principal</p>
-                                        <h6 class="fw-bold mb-1">Philips Healthcare Portugal</h6>
-                                        <p class="text-muted small mb-2">Fabricante do equipamento</p>
+                                        <p class="small mb-1"><strong>Email:</strong> suporte@philips.pt</p>
+                                        <p class="small mb-1"><strong>Telefone:</strong> +351 211 234 567</p>
                                         <p class="small mb-1"><strong>Website:</strong> www.philips.pt/healthcare</p>
-                                        <p class="small mb-1"><strong>Email:</strong> support.pt@philips.com</p>
-                                        <p class="small mb-0"><strong>Morada:</strong> Rua da Saúde, 120 — Porto</p>
+                                        <p class="small mb-1"><strong>Morada:</strong> Av. da República, 90, 1050-190 Lisboa</p>
+                                        <p class="small mb-1"><strong>Pessoa responsável:</strong> Eng.ª Ana Martins</p>
+                                        <p class="small mb-1"><strong>Telefone da pessoa responsável:</strong> +351 913 456 789</p>
+                                        <p class="small mb-0"><strong>Observações:</strong> Entidade associada ao fornecimento do equipamento.</p>
+
+                                        <a href="../fornecedores/fornecedor-detalhes.php" class="btn btn-outline-primary btn-sm mt-3">
+                                            <i class="fa-solid fa-truck me-1"></i> Ver fornecedor
+                                        </a>
                                     </div>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-6 col-xl-4">
                                     <div class="border rounded p-3 h-100 bg-light">
-                                        <p class="text-muted small mb-1">Prestador de assistência técnica principal</p>
-                                        <h6 class="fw-bold mb-1">MedRepair Norte</h6>
-                                        <p class="text-muted small mb-2">Assistência técnica e manutenção</p>
+                                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Fabricante principal</h6>
+                                                <p class="text-muted small mb-0">Philips Healthcare Portugal</p>
+                                            </div>
+                                            <span class="badge bg-secondary">Fabricante</span>
+                                        </div>
+
+                                        <p class="small mb-1"><strong>Tipo:</strong> Fabricante</p>
+                                        <p class="small mb-1"><strong>NIF:</strong> 501234567</p>
+                                        <p class="small mb-1"><strong>Email:</strong> suporte@philips.pt</p>
+                                        <p class="small mb-1"><strong>Telefone:</strong> +351 211 234 567</p>
+                                        <p class="small mb-1"><strong>Website:</strong> www.philips.pt/healthcare</p>
+                                        <p class="small mb-1"><strong>Morada:</strong> Av. da República, 90, 1050-190 Lisboa</p>
+                                        <p class="small mb-1"><strong>Pessoa responsável:</strong> Eng.ª Ana Martins</p>
+                                        <p class="small mb-1"><strong>Telefone da pessoa responsável:</strong> +351 913 456 789</p>
+                                        <p class="small mb-0"><strong>Observações:</strong> Fabricante do monitor multiparamétrico.</p>
+
+                                        <a href="../fornecedores/fornecedor-detalhes.php" class="btn btn-outline-primary btn-sm mt-3">
+                                            <i class="fa-solid fa-truck me-1"></i> Ver fornecedor
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-xl-4">
+                                    <div class="border rounded p-3 h-100 bg-light">
+                                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Prestador de assistência técnica principal</h6>
+                                                <p class="text-muted small mb-0">MedRepair Norte</p>
+                                            </div>
+                                            <span class="badge bg-info text-dark">Assistência</span>
+                                        </div>
+
+                                        <p class="small mb-1"><strong>Tipo:</strong> Prestador de assistência técnica</p>
+                                        <p class="small mb-1"><strong>NIF:</strong> 503456789</p>
                                         <p class="small mb-1"><strong>Email:</strong> assistencia@medrepair.pt</p>
                                         <p class="small mb-1"><strong>Telefone:</strong> +351 221 900 300</p>
-                                        <p class="small mb-0"><strong>Pessoa de contacto:</strong> Téc. Carlos Almeida</p>
+                                        <p class="small mb-1"><strong>Website:</strong> www.medrepair.pt</p>
+                                        <p class="small mb-1"><strong>Morada:</strong> Rua da Saúde, 120, 4200-250 Porto</p>
+                                        <p class="small mb-1"><strong>Pessoa responsável:</strong> Téc. João Ferreira</p>
+                                        <p class="small mb-1"><strong>Telefone da pessoa responsável:</strong> +351 914 222 300</p>
+                                        <p class="small mb-0"><strong>Observações:</strong> Responsável pela manutenção preventiva e corretiva.</p>
+
+                                        <a href="../fornecedores/fornecedor-detalhes.php" class="btn btn-outline-primary btn-sm mt-3">
+                                            <i class="fa-solid fa-truck me-1"></i> Ver fornecedor
+                                        </a>
                                     </div>
                                 </div>
 
@@ -306,32 +371,48 @@ include __DIR__ . '/../../includes/nav.php';
                                     <hr class="my-2">
                                     <h6 class="fw-bold mb-1">Fornecedores associados adicionais</h6>
                                     <p class="text-muted small mb-0">
-                                        Outras entidades associadas ao equipamento, como distribuidores, assistência técnica ou fornecedores de consumíveis.
+                                        Outros fornecedores, distribuidores comerciais ou entidades de consumíveis associados ao equipamento.
                                     </p>
                                 </div>
 
                                 <div class="col-md-6 col-xl-4">
                                     <div class="border rounded p-3 h-100 bg-light">
                                         <h6 class="fw-bold mb-1">Dräger Portugal</h6>
-                                        <p class="text-muted small mb-2">Distribuidor / assistência técnica</p>
+                                        <p class="text-muted small mb-2">Distribuidor / fornecedor comercial</p>
+                                        <p class="small mb-1"><strong>Tipo:</strong> Distribuidor / fornecedor comercial</p>
+                                        <p class="small mb-1"><strong>NIF:</strong> 502345678</p>
                                         <p class="small mb-1"><strong>Email:</strong> geral@draeger.pt</p>
-                                        <p class="small mb-0"><strong>Telefone:</strong> +351 214 123 000</p>
+                                        <p class="small mb-1"><strong>Telefone:</strong> +351 214 123 000</p>
+                                        <p class="small mb-1"><strong>Website:</strong> www.draeger.pt</p>
+                                        <p class="small mb-1"><strong>Morada:</strong> Rua Técnica, 45, 2790-120 Lisboa</p>
+                                        <p class="small mb-1"><strong>Pessoa responsável:</strong> Eng. Ricardo Sousa</p>
+                                        <p class="small mb-1"><strong>Telefone da pessoa responsável:</strong> +351 912 345 678</p>
+                                        <p class="small mb-0"><strong>Observações:</strong> Entidade comercial associada ao apoio técnico complementar.</p>
+
+                                        <a href="../fornecedores/fornecedor-detalhes.php" class="btn btn-outline-primary btn-sm mt-3">
+                                            <i class="fa-solid fa-truck me-1"></i> Ver fornecedor
+                                        </a>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6 col-xl-4">
                                     <div class="border rounded p-3 h-100 bg-light">
                                         <h6 class="fw-bold mb-1">ForneConsumíveis SA</h6>
-                                        <p class="text-muted small mb-2">Consumíveis e acessórios</p>
+                                        <p class="text-muted small mb-2">Fornecedor de consumíveis e acessórios</p>
+                                        <p class="small mb-1"><strong>Tipo:</strong> Fornecedor de consumíveis e acessórios</p>
+                                        <p class="small mb-1"><strong>NIF:</strong> 504567890</p>
                                         <p class="small mb-1"><strong>Email:</strong> encomendas@forneconsumiveis.pt</p>
-                                        <p class="small mb-0"><strong>Telefone:</strong> +351 225 300 400</p>
-                                    </div>
-                                </div>
+                                        <p class="small mb-1"><strong>Telefone:</strong> +351 225 300 400</p>
+                                        <p class="small mb-1"><strong>Website:</strong> www.forneconsumiveis.pt</p>
+                                        <p class="small mb-1"><strong>Morada:</strong> Zona Industrial Norte, Lote 8, 4470-100 Maia</p>
+                                        <p class="small mb-1"><strong>Pessoa responsável:</strong> Marta Almeida</p>
+                                        <p class="small mb-1"><strong>Telefone da pessoa responsável:</strong> +351 915 300 400</p>
+                                        <p class="small mb-0"><strong>Observações:</strong> Fornecimento de sensores, cabos, acessórios e consumíveis.</p>
 
-                                <div class="col-12">
-                                    <a href="../fornecedores/fornecedor-detalhes.php" class="btn btn-outline-primary btn-sm">
-                                        <i class="fa-solid fa-truck me-1"></i> Ver fornecedor
-                                    </a>
+                                        <a href="../fornecedores/fornecedor-detalhes.php" class="btn btn-outline-primary btn-sm mt-3">
+                                            <i class="fa-solid fa-truck me-1"></i> Ver fornecedor
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -981,6 +1062,11 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <p class="mb-0">Sim</p>
                                             </div>
 
+                                            <div class="col-md-6 col-xl-3">
+                                                <p class="text-muted small mb-1">Estado do contrato</p>
+                                                <p class="mb-0">Ativo</p>
+                                            </div>
+
                                             <div class="col-12">
                                                 <p class="text-muted small mb-1">Observações</p>
                                                 <p class="mb-0">Contrato associado à manutenção preventiva dos equipamentos da UCI, incluindo assistência técnica programada e apoio em caso de avaria.</p>
@@ -1006,7 +1092,13 @@ include __DIR__ . '/../../includes/nav.php';
 
                                 <div class="col-12">
                                     <div class="border rounded p-3 bg-light">
-                                        <h6 class="fw-bold mb-3">Outros contratos associados</h6>
+                                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-2 mb-3">
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Outros contratos associados</h6>
+                                                <p class="text-muted small mb-0">CON-002 — Contrato de Assistência Técnica</p>
+                                            </div>
+                                            <span class="badge badge-ativo align-self-start">Ativo</span>
+                                        </div>
 
                                         <div class="row g-3">
                                             <div class="col-md-6 col-xl-3">
@@ -1020,13 +1112,63 @@ include __DIR__ . '/../../includes/nav.php';
                                             </div>
 
                                             <div class="col-md-6 col-xl-3">
-                                                <p class="text-muted small mb-1">Estado</p>
-                                                <p class="mb-0"><span class="badge badge-ativo">Ativo</span></p>
+                                                <p class="text-muted small mb-1">Associado a</p>
+                                                <p class="mb-0">EQ-0042 — Monitor Multiparamétrico</p>
                                             </div>
 
                                             <div class="col-md-6 col-xl-3">
-                                                <p class="text-muted small mb-1">Validade</p>
+                                                <p class="text-muted small mb-1">Responsável</p>
+                                                <p class="mb-0">Téc. João Ferreira</p>
+                                            </div>
+
+                                            <div class="col-md-6 col-xl-3">
+                                                <p class="text-muted small mb-1">Data de início</p>
+                                                <p class="mb-0">01/01/2024</p>
+                                            </div>
+
+                                            <div class="col-md-6 col-xl-3">
+                                                <p class="text-muted small mb-1">Data de fim</p>
                                                 <p class="mb-0">31/12/2025</p>
+                                            </div>
+
+                                            <div class="col-md-6 col-xl-3">
+                                                <p class="text-muted small mb-1">Valor anual</p>
+                                                <p class="mb-0">2 400€</p>
+                                            </div>
+
+                                            <div class="col-md-6 col-xl-3">
+                                                <p class="text-muted small mb-1">Periodicidade</p>
+                                                <p class="mb-0">Semestral</p>
+                                            </div>
+
+                                            <div class="col-md-6 col-xl-3">
+                                                <p class="text-muted small mb-1">Renovação automática</p>
+                                                <p class="mb-0">Não</p>
+                                            </div>
+
+                                            <div class="col-md-6 col-xl-3">
+                                                <p class="text-muted small mb-1">Estado</p>
+                                                <p class="mb-0">Ativo</p>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <p class="text-muted small mb-1">Observações</p>
+                                                <p class="mb-0">Contrato adicional de apoio técnico e assistência corretiva ao monitor multiparamétrico.</p>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="pdf-lista">
+                                                    <div class="pdf-item">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <i class="fa-solid fa-file-pdf"></i>
+                                                            <span>contrato-assistencia-tecnica-monitor.pdf</span>
+                                                        </div>
+
+                                                        <a href="../contratos/contrato-detalhes.php" class="btn btn-sm btn-outline-primary">
+                                                            <i class="fa-solid fa-eye me-1"></i> Ver
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1043,6 +1185,10 @@ include __DIR__ . '/../../includes/nav.php';
                         <!-- MANUTENÇÃO -->
                         <div class="tab-pane fade" id="detalhes-manutencao" role="tabpanel">
                             <div class="row g-3">
+                                <div class="col-12">
+                                        <h6 class="fw-bold mb-1">Manutenção</h6>
+                                        <p class="text-muted small mb-0">Consulte o acompanhamento técnico, periodicidade e prioridade de manutenção do equipamento.</p>
+                                    </div>
                                 <div class="col-md-6 col-xl-4">
                                     <p class="text-muted small mb-1">Última manutenção</p>
                                     <p class="mb-0">15/12/2024</p>
@@ -1064,8 +1210,18 @@ include __DIR__ . '/../../includes/nav.php';
                                 </div>
 
                                 <div class="col-md-6 col-xl-4">
-                                    <p class="text-muted small mb-1">Responsável</p>
-                                    <p class="mb-0">Serviço de Engenharia Clínica</p>
+                                    <p class="text-muted small mb-1">Empresa responsável</p>
+                                    <p class="mb-0">Dräger Portugal</p>
+                                </div>
+
+                                <div class="col-md-6 col-xl-4">
+                                    <p class="text-muted small mb-1">Pessoa responsável</p>
+                                    <p class="mb-0">Eng.ª Paula Costa</p>
+                                </div>
+
+                                <div class="col-md-6 col-xl-4">
+                                    <p class="text-muted small mb-1">Telefone/p>
+                                    <p class="mb-0">912345678</p>
                                 </div>
 
                                 <div class="col-md-6 col-xl-4">
@@ -1085,3 +1241,5 @@ include __DIR__ . '/../../includes/nav.php';
 </div>
 
 <?php include __DIR__ . '/../../includes/footer.php'; ?>
+
+

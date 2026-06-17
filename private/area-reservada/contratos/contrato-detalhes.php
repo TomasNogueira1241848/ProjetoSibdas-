@@ -31,7 +31,7 @@ include __DIR__ . '/../../includes/nav.php';
             <div class="row g-3">
 
                 <!-- DADOS DO CONTRATO -->
-                <div class="col-lg-8">
+                <div class="col-lg-5">
                     <div class="card p-4 h-100">
                         <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
                             <div>
@@ -48,13 +48,13 @@ include __DIR__ . '/../../includes/nav.php';
 
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <p class="text-muted small mb-1">Tipo</p>
-                                <p class="mb-0">Manutenção</p>
+                                <p class="text-muted small mb-1">Designação</p>
+                                <p class="mb-0">Contrato de Manutenção UCI</p>
                             </div>
 
                             <div class="col-md-6">
-                                <p class="text-muted small mb-1">Associado a</p>
-                                <p class="mb-0">Equipamentos UCI</p>
+                                <p class="text-muted small mb-1">Tipo</p>
+                                <p class="mb-0">Manutenção</p>
                             </div>
 
                             <div class="col-md-6">
@@ -63,8 +63,18 @@ include __DIR__ . '/../../includes/nav.php';
                             </div>
 
                             <div class="col-md-6">
+                                <p class="text-muted small mb-1">Associado a</p>
+                                <p class="mb-0">Equipamentos UCI</p>
+                            </div>
+
+                            <div class="col-md-6">
                                 <p class="text-muted small mb-1">Responsável</p>
                                 <p class="mb-0">Eng.ª Mariana Silva</p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-muted small mb-1">Estado</p>
+                                <p class="mb-0">Ativo</p>
                             </div>
 
                             <div class="col-md-6">
@@ -92,11 +102,6 @@ include __DIR__ . '/../../includes/nav.php';
                                 <p class="mb-0">Sim</p>
                             </div>
 
-                            <div class="col-md-6">
-                                <p class="text-muted small mb-1">Estado</p>
-                                <p class="mb-0">Ativo</p>
-                            </div>
-
                             <div class="col-12">
                                 <p class="text-muted small mb-1">Documento do contrato</p>
                                 <p class="mb-0">
@@ -116,31 +121,33 @@ include __DIR__ . '/../../includes/nav.php';
                     </div>
                 </div>
 
-                <!-- INFORMAÇÃO RÁPIDA -->
-                <div class="col-lg-4">
+                <!-- EQUIPAMENTOS ASSOCIADOS -->
+                <div class="col-lg-7">
                     <div class="card p-4 h-100">
-                        <h6 class="fw-bold mb-3">
-                            <i class="fa-solid fa-circle-info me-2 text-primary"></i> Informação rápida
-                        </h6>
+                        <h6 class="fw-bold mb-3">Equipamentos abrangidos por este contrato</h6>
 
-                        <div class="alert alert-success small">
-                            <i class="fa-solid fa-check me-1"></i>
-                            Contrato ativo.
-                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dashboard table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Equipamento</th>
+                                        <th>Departamento/serviço</th>
+                                        <th>Sala/gabinete</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
 
-                        <div class="alert alert-light border small">
-                            <i class="fa-solid fa-truck-medical me-1"></i>
-                            Fornecedor: Dräger Portugal.
-                        </div>
-
-                        <div class="alert alert-light border small">
-                            <i class="fa-solid fa-rotate me-1"></i>
-                            Renovação automática: Sim.
-                        </div>
-
-                        <div class="alert alert-warning small mb-0">
-                            <i class="fa-solid fa-calendar-days me-1"></i>
-                            Termina em 31/12/2025.
+                                <tbody>
+                                    <tr>
+                                        <td>EQ-0042</td>
+                                        <td>Monitor Multiparamétrico</td>
+                                        <td>Cuidados Intensivos</td>
+                                        <td>UCI-02</td>
+                                        <td><span class="badge badge-ativo">Ativo</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
