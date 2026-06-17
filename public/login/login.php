@@ -32,7 +32,7 @@
                     </div>
 
                     <!-- Formulário -->
-                    <form id="formLogin" novalidate>
+                    <form id="formLogin" action="processa_login.php" method="post" novalidate>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <div class="input-group">
