@@ -189,18 +189,16 @@ function inicializarFormularioContacto() {
 }
 
 
-/* Login simulado para a área reservada */
+/* Validação visual do login sem impedir o envio POST quando está válido */
 function inicializarLogin() {
     const formLogin = document.getElementById('formLogin');
 
     if (!formLogin) return;
 
     formLogin.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        if (!validarFormulario(formLogin)) return;
-
-        window.location.href = '../area-reservada/index.html';
+        if (!validarFormularioHTML(formLogin)) {
+            e.preventDefault();
+        }
     });
 }
 

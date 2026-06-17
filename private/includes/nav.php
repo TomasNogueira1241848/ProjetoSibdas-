@@ -20,7 +20,9 @@ $loginPath = $loginPath ?? '../../public/login.php';
                 <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
                     <i class="fa-regular fa-user"></i>
-                    <span class="d-none d-sm-inline ms-2">Administrador</span>
+                    <span class="d-none d-sm-inline ms-2">
+                        <?php echo htmlspecialchars($_SESSION['utilizador']['nome'] ?? 'Utilizador'); ?>
+                    </span>
                 </button>
 
                 <ul class="dropdown-menu dropdown-menu-end">
@@ -35,7 +37,7 @@ $loginPath = $loginPath ?? '../../public/login.php';
                     </li>
 
                     <li>
-                        <a class="dropdown-item" href="<?php echo $loginPath; ?>">
+                        <a class="dropdown-item" href="<?php echo BASE_URL; ?>/public/login/logout.php">
                             <i class="fa-solid fa-right-from-bracket me-2"></i> Sair
                         </a>
                     </li>
