@@ -21,9 +21,14 @@ $bodyClass = $bodyClass ?? 'pagina-area-reservada';
     <link rel="stylesheet" href="<?php echo $assetPath; ?>/bootstrap/bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="<?php echo $assetPath; ?>/fontawesome/all.min.css">
+    <?php if (!empty($extraCss)): ?>
+        <?php foreach ($extraCss as $css): ?>
+            <link rel="stylesheet" href="<?php echo htmlspecialchars($css); ?>">
+        <?php endforeach; ?>
+    <?php endif; ?>
+
     <!-- CSS -->
     <link rel="stylesheet" href="<?php echo $assetPath; ?>/css/1241848.css">
 </head>
 
 <body class="<?php echo $bodyClass; ?>">
-

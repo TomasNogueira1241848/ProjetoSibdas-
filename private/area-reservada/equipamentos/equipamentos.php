@@ -5,6 +5,72 @@ $assetPath = '../../../assets';
 $areaPath = '../';
 $activeMenu = 'equipamentos';
 
+$extraCss = [
+    $assetPath . '/bootstrap/dataTables.bootstrap5.min.css'
+];
+
+$extraScripts = [
+    $assetPath . '/jquery/jquery-3.7.1.min.js',
+    $assetPath . '/js/jquery.dataTables.min.js',
+    $assetPath . '/bootstrap/dataTables.bootstrap5.min.js'
+];
+
+$pageScript = <<<'JS'
+$(document).ready(function () {
+    const tabelaEquipamentos = $('#tabelaEquipamentos').DataTable({
+        pageLength: 5,
+        lengthChange: false,
+        pagingType: 'simple_numbers',
+        ordering: true,
+        autoWidth: false,
+        order: [[0, 'asc']],
+        columnDefs: [
+            {
+                orderable: false,
+                targets: -1
+            }
+        ],
+        dom:
+            't' +
+            '<"equipamentos-datatable-footer d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3"ip>',
+        language: {
+            decimal: '',
+            emptyTable: 'Sem equipamentos registados.',
+            info: 'A mostrar _START_ a _END_ de _TOTAL_ equipamentos',
+            infoEmpty: 'Sem equipamentos para mostrar',
+            infoFiltered: '(filtrado de _MAX_ equipamentos)',
+            loadingRecords: 'A carregar...',
+            processing: 'A processar...',
+            zeroRecords: 'Nenhum equipamento encontrado.',
+            paginate: {
+                next: 'Seguinte',
+                previous: 'Anterior'
+            },
+            aria: {
+                sortAscending: ': ordenar de forma crescente',
+                sortDescending: ': ordenar de forma decrescente'
+            }
+        }
+    });
+
+    $('#pesquisaEquipamentosDT').on('input', function () {
+        tabelaEquipamentos.search(this.value).draw();
+    });
+
+    $('#filtroCategoriaEquipamentosDT').on('change', function () {
+        tabelaEquipamentos.column(2).search(this.value).draw();
+    });
+
+    $('#filtroLocalizacaoEquipamentosDT').on('change', function () {
+        tabelaEquipamentos.column(6).search(this.value).draw();
+    });
+
+    $('#filtroEstadoEquipamentosDT').on('change', function () {
+        tabelaEquipamentos.column(7).search(this.value).draw();
+    });
+});
+JS;
+
 require_once __DIR__ . '/../../includes/basedados.php';
 
 $equipamentos = [];
@@ -132,14 +198,14 @@ include __DIR__ . '/../../includes/nav.php';
                 <div class="card p-3">
                     <div class="row g-3">
                         <div class="col-lg-4">
-                            <label for="pesquisaEquipamentos" class="form-label">Pesquisar</label>
-                            <input type="search" class="form-control" id="pesquisaEquipamentos"
-                                placeholder="Código, nome, marca, modelo ou n.º de série">
+                            <label for="pesquisaEquipamentosDT" class="form-label">Pesquisar</label>
+                            <input type="search" class="form-control" id="pesquisaEquipamentosDT"
+                                placeholder="Código, designação, marca, modelo ou n.º de série">
                         </div>
 
                         <div class="col-md-4 col-lg-3">
-                            <label for="filtroCategoriaEquipamentos" class="form-label">Categoria</label>
-                            <select class="form-select" id="filtroCategoriaEquipamentos">
+                            <label for="filtroCategoriaEquipamentosDT" class="form-label">Categoria</label>
+                            <select class="form-select" id="filtroCategoriaEquipamentosDT">
                                 <option value="">Todas</option>
                                 <option value="Monitorização">Monitorização</option>
                                 <option value="Suporte de Vida">Suporte de Vida</option>
@@ -150,23 +216,24 @@ include __DIR__ . '/../../includes/nav.php';
                         </div>
 
                         <div class="col-md-4 col-lg-2">
-                            <label for="filtroEstadoEquipamentos" class="form-label">Estado</label>
-                            <select class="form-select" id="filtroEstadoEquipamentos">
+                            <label for="filtroEstadoEquipamentosDT" class="form-label">Estado</label>
+                            <select class="form-select" id="filtroEstadoEquipamentosDT">
                                 <option value="">Todos</option>
                                 <option value="Ativo">Ativo</option>
                                 <option value="Em Manutenção">Em Manutenção</option>
                                 <option value="Inativo">Inativo</option>
                                 <option value="Em Calibração">Em Calibração</option>
+                                <option value="Abatido">Abatido</option>
                             </select>
                         </div>
 
                         <div class="col-md-4 col-lg-3">
-                            <label for="filtroLocalizacaoEquipamentos" class="form-label">Localização</label>
-                            <select class="form-select" id="filtroLocalizacaoEquipamentos">
+                            <label for="filtroLocalizacaoEquipamentosDT" class="form-label">Localização</label>
+                            <select class="form-select" id="filtroLocalizacaoEquipamentosDT">
                                 <option value="">Todas</option>
-                                <option value="UCI">UCI</option>
-                                <option value="Urgência">Urgência</option>
-                                <option value="Bloco Operatório">Bloco Operatório</option>
+                                <option value="Unidade de Cuidados Intensivos">Unidade de Cuidados Intensivos</option>
+                                <option value="Serviço de Urgência">Serviço de Urgência</option>
+                                <option value="Bloco Operatório Central">Bloco Operatório Central</option>
                                 <option value="Medicina Interna">Medicina Interna</option>
                                 <option value="Consulta Externa">Consulta Externa</option>
                             </select>
@@ -179,7 +246,7 @@ include __DIR__ . '/../../includes/nav.php';
             <section class="mb-4">
                 <div class="card p-3">
                     <div class="table-responsive">
-                        <table class="table table-dashboard table-hover align-middle mb-0" id="tabelaEquipamentos">
+                        <table class="table table-dashboard table-hover align-middle mb-0 tabela-datatable-clean" id="tabelaEquipamentos">
                             <thead>
                                 <tr>
                                     <th>Código</th>
@@ -196,69 +263,61 @@ include __DIR__ . '/../../includes/nav.php';
                             </thead>
 
                             <tbody>
-                                <?php if (empty($equipamentos)): ?>
+                                <?php foreach ($equipamentos as $equipamento): ?>
+                                    <?php
+                                    $classeEstado = 'badge-inativo';
+
+                                    if ($equipamento->estado === 'Ativo') {
+                                        $classeEstado = 'badge-ativo';
+                                    } elseif ($equipamento->estado === 'Em Manutenção') {
+                                        $classeEstado = 'badge-manutencao';
+                                    }
+                                    ?>
+
                                     <tr>
-                                        <td colspan="10" class="text-center text-muted small">
-                                            Não existem equipamentos registados.
+                                        <td><?php echo htmlspecialchars($equipamento->codigo); ?></td>
+                                        <td><?php echo htmlspecialchars($equipamento->designacao); ?></td>
+                                        <td><?php echo htmlspecialchars($equipamento->categoria); ?></td>
+                                        <td><?php echo htmlspecialchars($equipamento->marca); ?></td>
+                                        <td><?php echo htmlspecialchars($equipamento->modelo); ?></td>
+                                        <td><?php echo htmlspecialchars($equipamento->numero_serie); ?></td>
+                                        <td><?php echo htmlspecialchars($equipamento->localizacao); ?></td>
+                                        <td>
+                                            <span class="badge <?php echo $classeEstado; ?>">
+                                                <?php echo htmlspecialchars($equipamento->estado); ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <?php if (!empty($equipamento->fim_garantia)): ?>
+                                                <?php echo htmlspecialchars($equipamento->fim_garantia); ?>
+                                            <?php else: ?>
+                                                <span class="text-muted small">Sem garantia</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="equipamento-detalhes.php?id=<?php echo htmlspecialchars($equipamento->id); ?>"
+                                                class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="tooltip"
+                                                data-bs-title="Ver detalhes">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+
+                                            <a href="equipamento-editar.php?id=<?php echo htmlspecialchars($equipamento->id); ?>"
+                                                class="btn btn-sm btn-outline-secondary"
+                                                data-bs-toggle="tooltip"
+                                                data-bs-title="Editar">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
+
+                                            <a href="equipamento-eliminar.php?id=<?php echo htmlspecialchars($equipamento->id); ?>"
+                                                class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="tooltip"
+                                                data-bs-title="Eliminar">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
                                         </td>
                                     </tr>
-                                <?php else: ?>
-                                    <?php foreach ($equipamentos as $equipamento): ?>
-                                        <?php
-                                        $classeEstado = 'badge-inativo';
-
-                                        if ($equipamento->estado === 'Ativo') {
-                                            $classeEstado = 'badge-ativo';
-                                        } elseif ($equipamento->estado === 'Em Manutenção') {
-                                            $classeEstado = 'badge-manutencao';
-                                        }
-                                        ?>
-
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($equipamento->codigo); ?></td>
-                                            <td><?php echo htmlspecialchars($equipamento->designacao); ?></td>
-                                            <td><?php echo htmlspecialchars($equipamento->categoria); ?></td>
-                                            <td><?php echo htmlspecialchars($equipamento->marca); ?></td>
-                                            <td><?php echo htmlspecialchars($equipamento->modelo); ?></td>
-                                            <td><?php echo htmlspecialchars($equipamento->numero_serie); ?></td>
-                                            <td><?php echo htmlspecialchars($equipamento->localizacao); ?></td>
-                                            <td>
-                                                <span class="badge <?php echo $classeEstado; ?>">
-                                                    <?php echo htmlspecialchars($equipamento->estado); ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <?php if (!empty($equipamento->fim_garantia)): ?>
-                                                    <?php echo htmlspecialchars($equipamento->fim_garantia); ?>
-                                                <?php else: ?>
-                                                    <span class="text-muted small">Sem garantia</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="equipamento-detalhes.php?id=<?php echo htmlspecialchars($equipamento->id); ?>"
-                                                    class="btn btn-sm btn-outline-primary"
-                                                    data-bs-toggle="tooltip"
-                                                    data-bs-title="Ver detalhes">
-                                                    <i class="fa-solid fa-eye"></i>
-                                                </a>
-
-                                                <a href="equipamento-editar.php?id=<?php echo htmlspecialchars($equipamento->id); ?>"
-                                                    class="btn btn-sm btn-outline-secondary"
-                                                    data-bs-toggle="tooltip"
-                                                    data-bs-title="Editar">
-                                                    <i class="fa-solid fa-pen"></i>
-                                                </a>
-
-                                                <a href="equipamento-eliminar.php?id=<?php echo htmlspecialchars($equipamento->id); ?>"
-                                                    class="btn btn-sm btn-outline-danger"
-                                                    data-bs-toggle="tooltip"
-                                                    data-bs-title="Eliminar">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>

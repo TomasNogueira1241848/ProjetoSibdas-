@@ -29,60 +29,6 @@ function inicializarTabelas() {
         },
         {
             idTabela: 'tabelaManutencoes'
-        },
-        {
-            idTabela: 'tabelaEquipamentos',
-            idPesquisa: 'pesquisaEquipamentos',
-            filtros: [
-                { filtroId: 'filtroCategoriaEquipamentos', coluna: 2 },
-                { filtroId: 'filtroLocalizacaoEquipamentos', coluna: 6 },
-                { filtroId: 'filtroEstadoEquipamentos', coluna: 7 }
-            ]
-        },
-        {
-            idTabela: 'tabelaFornecedores',
-            idPesquisa: 'pesquisaFornecedores',
-            filtros: [
-                { filtroId: 'filtroTipoFornecedor', coluna: 2 },
-                { filtroId: 'filtroContratoFornecedor', coluna: 5 },
-                { filtroId: 'filtroEstadoFornecedor', coluna: 6 }
-            ]
-        },
-        {
-            idTabela: 'tabelaLocalizacoes',
-            idPesquisa: 'pesquisaLocalizacoes',
-            filtros: [
-                { filtroId: 'filtroTipoLocalizacao', coluna: 2 },
-                { filtroId: 'filtroEdificioLocalizacao', coluna: 3 },
-                { filtroId: 'filtroEstadoLocalizacao', coluna: 6 }
-            ]
-        },
-        {
-            idTabela: 'tabelaDocumentacao',
-            idPesquisa: 'pesquisaDocumentacao',
-            filtros: [
-                { filtroId: 'filtroTipoDocumento', coluna: 2 },
-                { filtroId: 'filtroAreaDocumento', coluna: 4 },
-                { filtroId: 'filtroEstadoDocumento', coluna: 7 }
-            ]
-        },
-        {
-            idTabela: 'tabelaGarantias',
-            idPesquisa: 'pesquisaContratos',
-            filtros: [
-                { filtroId: 'filtroTipoContrato', coluna: 2 },
-                { filtroId: 'filtroFornecedorContrato', coluna: 4 },
-                { filtroId: 'filtroEstadoContrato', coluna: 7 }
-            ]
-        },
-        {
-            idTabela: 'tabelaContratos',
-            idPesquisa: 'pesquisaContratos',
-            filtros: [
-                { filtroId: 'filtroTipoContrato', coluna: 2 },
-                { filtroId: 'filtroFornecedorContrato', coluna: 4 },
-                { filtroId: 'filtroEstadoContrato', coluna: 7 }
-            ]
         }
     ];
 
@@ -1040,5 +986,3 @@ function criarGraficoLocalizacao() {
     });
 
 }
-
-

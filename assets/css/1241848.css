@@ -502,3 +502,57 @@ section {
 .pdf-item .btn {
     white-space: nowrap;
 }
+
+/* DataTables - tabelas da área reservada */
+.dataTables_length,
+.dataTables_filter {
+    display: none !important;
+}
+
+.tabela-datatable.dataTable {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.tabela-datatable thead th {
+    white-space: nowrap;
+}
+
+.tabela-datatable tbody td {
+    vertical-align: middle;
+}
+
+.tabela-datatable.dataTable thead .sorting::before,
+.tabela-datatable.dataTable thead .sorting::after,
+.tabela-datatable.dataTable thead .sorting_asc::before,
+.tabela-datatable.dataTable thead .sorting_asc::after,
+.tabela-datatable.dataTable thead .sorting_desc::before,
+.tabela-datatable.dataTable thead .sorting_desc::after {
+    opacity: 0.25;
+    font-size: 0.65rem;
+}
+
+.datatable-footer {
+    padding-top: 1rem;
+    border-top: 1px solid #edf0f3;
+}
+
+.datatable-footer .dataTables_info {
+    padding-top: 0 !important;
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.datatable-footer .pagination {
+    margin-bottom: 0;
+}
+
+.datatable-footer .page-link {
+    color: var(--cor-primaria);
+}
+
+.datatable-footer .page-item.active .page-link {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    color: #ffffff;
+}
