@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarTooltips();
     inicializarToastPublic();
 
-    inicializarTabelas();
     inicializarFormulariosSimulados();
     inicializarValidacaoCampos();
     inicializarGestaoConteudosPublicos();
@@ -18,24 +17,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     inicializarGraficosDashboard();
 });
-
-
-/* Configuração reutilizável das tabelas */
-function inicializarTabelas() {
-    const tabelas = [
-        {
-            idTabela: 'tabelaGarantiasConteudo',
-            idPesquisa: 'pesquisaTabela'
-        },
-        {
-            idTabela: 'tabelaManutencoes'
-        }
-    ];
-
-    tabelas.forEach(function (tabela) {
-        inicializarTabela(tabela.idTabela, tabela.idPesquisa, tabela.filtros);
-    });
-}
 
 
 /* Configuração reutilizável dos formulários */
@@ -156,63 +137,6 @@ function inicializarToastPublic() {
         const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
         toast.show();
     }
-}
-
-
-/* Pesquisa e filtros reutilizáveis em tabelas */
-function inicializarTabela(idTabela, idPesquisa, filtros) {
-    const tabela = document.getElementById(idTabela);
-
-    if (!tabela) return;
-
-    const pesquisa = document.getElementById(idPesquisa);
-    const corpoTabela = tabela.querySelector('tbody') || tabela;
-
-    const filtrosAtivos = (filtros || [])
-        .map(function (filtro) {
-            return {
-                elemento: document.getElementById(filtro.filtroId),
-                coluna: filtro.coluna
-            };
-        })
-        .filter(function (filtro) {
-            return filtro.elemento !== null;
-        });
-
-    function aplicarPesquisaEFiltros() {
-        const termo = pesquisa ? pesquisa.value.trim().toLowerCase() : '';
-        const linhas = corpoTabela.querySelectorAll('tr');
-
-        linhas.forEach(function (linha) {
-            const textoLinha = linha.textContent.toLowerCase();
-
-            const pesquisaOk = termo === '' || textoLinha.includes(termo);
-
-            const filtrosOk = filtrosAtivos.every(function (filtro) {
-                const valorFiltro = filtro.elemento.value;
-
-                if (valorFiltro === '') return true;
-
-                const celula = linha.children[filtro.coluna];
-
-                if (!celula) return true;
-
-                const valorLinha = celula.textContent.trim();
-
-                return valorLinha === valorFiltro;
-            });
-
-            linha.classList.toggle('d-none', !(pesquisaOk && filtrosOk));
-        });
-    }
-
-    if (pesquisa) {
-        pesquisa.addEventListener('input', aplicarPesquisaEFiltros);
-    }
-
-    filtrosAtivos.forEach(function (filtro) {
-        filtro.elemento.addEventListener('change', aplicarPesquisaEFiltros);
-    });
 }
 
 
