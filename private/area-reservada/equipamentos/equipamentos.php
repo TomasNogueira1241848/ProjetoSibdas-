@@ -1,9 +1,54 @@
 <?php
+
 $pageTitle = 'MedInfo Solutions — Equipamentos';
 $assetPath = '../../../assets';
-$loginPath = '../../../public/login.php';
 $areaPath = '../';
 $activeMenu = 'equipamentos';
+
+require_once __DIR__ . '/../../includes/basedados.php';
+
+$equipamentos = [];
+$erroBD = '';
+
+$indicadores = [
+    'total' => 0,
+    'ativos' => 0,
+    'manutencao' => 0,
+    'inativos' => 0
+];
+
+$ligacao = ligar_base_dados();
+
+if ($ligacao === null) {
+    $erroBD = 'Não foi possível ligar à base de dados.';
+} else {
+    try {
+        $sqlEquipamentos = "
+            SELECT *
+            FROM vw_equipamentos_listagem
+            ORDER BY codigo
+        ";
+
+        $equipamentos = $ligacao->query($sqlEquipamentos)->fetchAll();
+
+        $sqlIndicadores = "
+            SELECT
+                COUNT(*) AS total,
+                SUM(CASE WHEN ee.nome = 'Ativo' THEN 1 ELSE 0 END) AS ativos,
+                SUM(CASE WHEN ee.nome = 'Em Manutenção' THEN 1 ELSE 0 END) AS manutencao,
+                SUM(CASE WHEN ee.nome = 'Inativo' THEN 1 ELSE 0 END) AS inativos
+            FROM equipamentos e
+            INNER JOIN estados_equipamento ee ON ee.id = e.estado_id
+        ";
+
+        $indicadores = $ligacao->query($sqlIndicadores)->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $erro) {
+        $erroBD = 'A ligação foi feita, mas ocorreu um erro ao carregar os equipamentos.';
+        $equipamentos = [];
+    }
+}
+
+$ligacao = null;
 
 include __DIR__ . '/../../includes/header.php';
 include __DIR__ . '/../../includes/nav.php';
@@ -20,8 +65,9 @@ include __DIR__ . '/../../includes/nav.php';
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                 <div>
                     <h4 class="fw-bold mb-1">Equipamentos</h4>
-                    <p class="text-muted small mb-0">Listagem e gestão dos equipamentos médicos registados no
-                        inventário.</p>
+                    <p class="text-muted small mb-0">
+                        Listagem e gestão dos equipamentos médicos registados no inventário.
+                    </p>
                 </div>
 
                 <a href="equipamento-novo.php" class="btn btn-primary btn-sm">
@@ -29,34 +75,53 @@ include __DIR__ . '/../../includes/nav.php';
                 </a>
             </div>
 
+            <?php if ($erroBD !== ''): ?>
+                <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
+                    <i class="fa-solid fa-circle-exclamation mt-1"></i>
+
+                    <div>
+                        <strong class="d-block">Erro na base de dados</strong>
+                        <span><?php echo htmlspecialchars($erroBD); ?></span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <!-- INDICADORES -->
             <section class="mb-4">
                 <div class="row g-3">
                     <div class="col-6 col-md-3">
                         <div class="card card-dashboard p-3 h-100">
                             <p class="text-muted small mb-1">Total</p>
-                            <h4 class="fw-bold mb-0">142</h4>
+                            <h4 class="fw-bold mb-0">
+                                <?php echo htmlspecialchars($indicadores['total'] ?? 0); ?>
+                            </h4>
                         </div>
                     </div>
 
                     <div class="col-6 col-md-3">
                         <div class="card card-dashboard border-success-dashboard p-3 h-100">
                             <p class="text-muted small mb-1">Ativos</p>
-                            <h4 class="fw-bold mb-0">118</h4>
+                            <h4 class="fw-bold mb-0">
+                                <?php echo htmlspecialchars($indicadores['ativos'] ?? 0); ?>
+                            </h4>
                         </div>
                     </div>
 
                     <div class="col-6 col-md-3">
                         <div class="card card-dashboard border-warning-dashboard p-3 h-100">
                             <p class="text-muted small mb-1">Em manutenção</p>
-                            <h4 class="fw-bold mb-0">14</h4>
+                            <h4 class="fw-bold mb-0">
+                                <?php echo htmlspecialchars($indicadores['manutencao'] ?? 0); ?>
+                            </h4>
                         </div>
                     </div>
 
                     <div class="col-6 col-md-3">
                         <div class="card card-dashboard border-secondary-dashboard p-3 h-100">
                             <p class="text-muted small mb-1">Inativos</p>
-                            <h4 class="fw-bold mb-0">10</h4>
+                            <h4 class="fw-bold mb-0">
+                                <?php echo htmlspecialchars($indicadores['inativos'] ?? 0); ?>
+                            </h4>
                         </div>
                     </div>
                 </div>
@@ -131,33 +196,69 @@ include __DIR__ . '/../../includes/nav.php';
                             </thead>
 
                             <tbody>
-                                <tr>
-                                    <td>EQ-0042</td>
-                                    <td>Monitor Multiparamétrico</td>
-                                    <td>Monitorização</td>
-                                    <td>Philips</td>
-                                    <td>IntelliVue</td>
-                                    <td>SN-90821</td>
-                                    <td>UCI</td>
-                                    <td><span class="badge badge-ativo">Ativo</span></td>
-                                    <td>2026-06-10</td>
-                                    <td class="text-center">
-                                        <a href="equipamento-detalhes.php" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </a>
+                                <?php if (empty($equipamentos)): ?>
+                                    <tr>
+                                        <td colspan="10" class="text-center text-muted small">
+                                            Não existem equipamentos registados.
+                                        </td>
+                                    </tr>
+                                <?php else: ?>
+                                    <?php foreach ($equipamentos as $equipamento): ?>
+                                        <?php
+                                        $classeEstado = 'badge-inativo';
 
-                                        <a href="equipamento-editar.php" class="btn btn-sm btn-outline-secondary"
-                                            data-bs-toggle="tooltip" data-bs-title="Editar">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </a>
+                                        if ($equipamento->estado === 'Ativo') {
+                                            $classeEstado = 'badge-ativo';
+                                        } elseif ($equipamento->estado === 'Em Manutenção') {
+                                            $classeEstado = 'badge-manutencao';
+                                        }
+                                        ?>
 
-                                        <a href="equipamento-eliminar.php" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="tooltip" data-bs-title="Eliminar">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($equipamento->codigo); ?></td>
+                                            <td><?php echo htmlspecialchars($equipamento->designacao); ?></td>
+                                            <td><?php echo htmlspecialchars($equipamento->categoria); ?></td>
+                                            <td><?php echo htmlspecialchars($equipamento->marca); ?></td>
+                                            <td><?php echo htmlspecialchars($equipamento->modelo); ?></td>
+                                            <td><?php echo htmlspecialchars($equipamento->numero_serie); ?></td>
+                                            <td><?php echo htmlspecialchars($equipamento->localizacao); ?></td>
+                                            <td>
+                                                <span class="badge <?php echo $classeEstado; ?>">
+                                                    <?php echo htmlspecialchars($equipamento->estado); ?>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <?php if (!empty($equipamento->fim_garantia)): ?>
+                                                    <?php echo htmlspecialchars($equipamento->fim_garantia); ?>
+                                                <?php else: ?>
+                                                    <span class="text-muted small">Sem garantia</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="equipamento-detalhes.php?id=<?php echo htmlspecialchars($equipamento->id); ?>"
+                                                    class="btn btn-sm btn-outline-primary"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-title="Ver detalhes">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </a>
+
+                                                <a href="equipamento-editar.php?id=<?php echo htmlspecialchars($equipamento->id); ?>"
+                                                    class="btn btn-sm btn-outline-secondary"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-title="Editar">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </a>
+
+                                                <a href="equipamento-eliminar.php?id=<?php echo htmlspecialchars($equipamento->id); ?>"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-title="Eliminar">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
