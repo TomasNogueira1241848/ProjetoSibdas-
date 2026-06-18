@@ -1,9 +1,154 @@
 <?php
+
 $pageTitle = 'MedInfo Solutions — Documentação';
 $assetPath = '../../../assets';
-$loginPath = '../../../public/login.php';
 $areaPath = '../';
 $activeMenu = 'documentacao';
+
+$extraCss = [
+    $assetPath . '/bootstrap/dataTables.bootstrap5.min.css'
+];
+
+$extraScripts = [
+    $assetPath . '/jquery/jquery-3.7.1.min.js',
+    $assetPath . '/js/jquery.dataTables.min.js',
+    $assetPath . '/bootstrap/dataTables.bootstrap5.min.js'
+];
+
+$pageScript = <<<'JS'
+$(document).ready(function () {
+    const tabelaDocumentacao = $('#tabelaDocumentacao').DataTable({
+        pageLength: 5,
+        lengthChange: false,
+        pagingType: 'simple_numbers',
+        ordering: true,
+        autoWidth: false,
+        order: [[0, 'asc']],
+        columnDefs: [
+            {
+                orderable: false,
+                targets: -1
+            }
+        ],
+        dom: 't' + '<"datatable-footer d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3"ip>',
+        language: {
+            decimal: '',
+            emptyTable: 'Sem documentos registados.',
+            info: 'A mostrar _START_ a _END_ de _TOTAL_ documentos',
+            infoEmpty: 'Sem documentos para mostrar',
+            infoFiltered: '(filtrado de _MAX_ documentos)',
+            loadingRecords: 'A carregar...',
+            processing: 'A processar...',
+            zeroRecords: 'Nenhum documento encontrado.',
+            paginate: {
+                next: 'Seguinte',
+                previous: 'Anterior'
+            },
+            aria: {
+                sortAscending: ': ordenar de forma crescente',
+                sortDescending: ': ordenar de forma decrescente'
+            }
+        }
+    });
+
+    $('#pesquisaDocumentacaoDT').on('input', function () {
+        tabelaDocumentacao.search(this.value).draw();
+    });
+
+    $('#filtroTipoDocumentoDT').on('change', function () {
+        tabelaDocumentacao.column(2).search(this.value).draw();
+    });
+
+    $('#filtroAreaDocumentoDT').on('change', function () {
+        tabelaDocumentacao.column(3).search(this.value).draw();
+    });
+
+    $('#filtroEstadoDocumentoDT').on('change', function () {
+        tabelaDocumentacao.column(7).search(this.value).draw();
+    });
+});
+JS;
+
+require_once __DIR__ . '/../../includes/basedados.php';
+
+$documentos = [];
+$tiposDocumento = [];
+$areasDocumento = [];
+$estadosDocumento = [];
+$erroBD = '';
+
+$indicadores = [
+    'total' => 0,
+    'validos' => 0,
+    'expirados' => 0,
+    'obrigatorios' => 0
+];
+
+$ligacao = ligar_base_dados();
+
+if ($ligacao === null) {
+    $erroBD = 'Não foi possível ligar à base de dados.';
+} else {
+    try {
+        $tiposDocumento = $ligacao
+            ->query('SELECT nome FROM tipos_documento ORDER BY nome')
+            ->fetchAll();
+
+        $areasDocumento = $ligacao
+            ->query('SELECT nome FROM areas_documento ORDER BY nome')
+            ->fetchAll();
+
+        $estadosDocumento = $ligacao
+            ->query('SELECT nome FROM estados_documento ORDER BY nome')
+            ->fetchAll();
+
+        $sqlDocumentos = "
+            SELECT
+                d.id,
+                d.codigo,
+                d.titulo,
+                td.nome AS tipo,
+                ad.nome AS area,
+                COALESCE(
+                    CONCAT(e.codigo, ' — ', e.designacao),
+                    f.nome,
+                    CONCAT('Manutenção #', m.id),
+                    'Sem associação'
+                ) AS associado,
+                d.data_documento,
+                d.validade,
+                ed.nome AS estado,
+                d.obrigatorio
+            FROM documentos d
+            INNER JOIN tipos_documento td ON td.id = d.tipo_documento_id
+            INNER JOIN areas_documento ad ON ad.id = d.area_documento_id
+            INNER JOIN estados_documento ed ON ed.id = d.estado_documento_id
+            LEFT JOIN equipamentos e ON e.id = d.equipamento_id
+            LEFT JOIN fornecedores f ON f.id = d.fornecedor_id
+            LEFT JOIN manutencoes m ON m.id = d.manutencao_id
+            ORDER BY d.codigo
+        ";
+
+        $documentos = $ligacao->query($sqlDocumentos)->fetchAll();
+
+        $sqlIndicadores = "
+            SELECT
+                COUNT(*) AS total,
+                SUM(CASE WHEN ed.nome = 'Válido' THEN 1 ELSE 0 END) AS validos,
+                SUM(CASE WHEN ed.nome = 'Expirado' THEN 1 ELSE 0 END) AS expirados,
+                SUM(CASE WHEN d.obrigatorio = 1 THEN 1 ELSE 0 END) AS obrigatorios
+            FROM documentos d
+            INNER JOIN estados_documento ed ON ed.id = d.estado_documento_id
+        ";
+
+        $indicadores = $ligacao->query($sqlIndicadores)->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $erro) {
+        $erroBD = 'A ligação foi feita, mas ocorreu um erro ao carregar a documentação.';
+        $documentos = [];
+    }
+}
+
+$ligacao = null;
 
 include __DIR__ . '/../../includes/header.php';
 include __DIR__ . '/../../includes/nav.php';
@@ -14,107 +159,123 @@ include __DIR__ . '/../../includes/nav.php';
 
         <?php include __DIR__ . '/../../includes/sidebar.php'; ?>
 
+        <!-- CONTEÚDO PRINCIPAL -->
         <main class="col-12 col-md-9 col-lg-10 p-3 p-md-4 overflow-hidden" id="dashboard">
 
+            <!-- TÍTULO E AÇÕES -->
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                 <div>
                     <h4 class="fw-bold mb-1">Documentação</h4>
-                    <p class="text-muted small mb-0">Gestão de manuais, certificados, relatórios técnicos e
-                        documentos associados aos equipamentos.</p>
+                    <p class="text-muted small mb-0">
+                        Gestão dos documentos técnicos, administrativos e legais associados aos equipamentos.
+                    </p>
                 </div>
             </div>
 
+            <?php if ($erroBD !== ''): ?>
+                <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
+                    <i class="fa-solid fa-circle-exclamation mt-1"></i>
+                    <div>
+                        <strong class="d-block">Erro na base de dados</strong>
+                        <span><?php echo htmlspecialchars($erroBD); ?></span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- INDICADORES -->
             <section class="mb-4">
                 <div class="row g-3">
                     <div class="col-6 col-md-3">
                         <div class="card card-dashboard p-3 h-100">
                             <p class="text-muted small mb-1">Total</p>
-                            <h4 class="fw-bold mb-0">10</h4>
+                            <h4 class="fw-bold mb-0"><?php echo htmlspecialchars($indicadores['total'] ?? 0); ?></h4>
                         </div>
                     </div>
 
                     <div class="col-6 col-md-3">
                         <div class="card card-dashboard border-success-dashboard p-3 h-100">
                             <p class="text-muted small mb-1">Válidos</p>
-                            <h4 class="fw-bold mb-0">8</h4>
+                            <h4 class="fw-bold mb-0"><?php echo htmlspecialchars($indicadores['validos'] ?? 0); ?></h4>
                         </div>
                     </div>
 
                     <div class="col-6 col-md-3">
                         <div class="card card-dashboard border-warning-dashboard p-3 h-100">
-                            <p class="text-muted small mb-1">Por rever</p>
-                            <h4 class="fw-bold mb-0">1</h4>
+                            <p class="text-muted small mb-1">Expirados</p>
+                            <h4 class="fw-bold mb-0"><?php echo htmlspecialchars($indicadores['expirados'] ?? 0); ?></h4>
                         </div>
                     </div>
 
                     <div class="col-6 col-md-3">
-                        <div class="card card-dashboard border-secondary-dashboard p-3 h-100">
-                            <p class="text-muted small mb-1">Expirados</p>
-                            <h4 class="fw-bold mb-0">1</h4>
+                        <div class="card card-dashboard border-info-dashboard p-3 h-100">
+                            <p class="text-muted small mb-1">Obrigatórios</p>
+                            <h4 class="fw-bold mb-0"><?php echo htmlspecialchars($indicadores['obrigatorios'] ?? 0); ?></h4>
                         </div>
                     </div>
                 </div>
             </section>
 
+            <!-- FILTROS -->
             <section class="mb-4">
                 <div class="card p-3">
                     <div class="row g-3">
-                        <div class="col-lg-4">
-                            <label for="pesquisaDocumentacao" class="form-label">Pesquisar</label>
-                            <input type="search" class="form-control" id="pesquisaDocumentacao"
-                                placeholder="Código, título, equipamento ou data">
+                        <div class="col-lg-5">
+                            <label for="pesquisaDocumentacaoDT" class="form-label">Pesquisar</label>
+                            <input type="search" class="form-control" id="pesquisaDocumentacaoDT"
+                                placeholder="Código, título, tipo, área ou associação">
                         </div>
 
                         <div class="col-md-4 col-lg-3">
-                            <label for="filtroTipoDocumento" class="form-label">Tipo</label>
-                            <select class="form-select" id="filtroTipoDocumento">
+                            <label for="filtroTipoDocumentoDT" class="form-label">Tipo</label>
+                            <select class="form-select" id="filtroTipoDocumentoDT">
                                 <option value="">Todos</option>
-                                <option value="Manual de utilizador">Manual de utilizador</option>
-                                <option value="Manual de serviço">Manual de serviço</option>
-                                <option value="Certificado de calibração">Certificado de calibração</option>
-                                <option value="Fatura ou guia de aquisição">Fatura ou guia de aquisição</option>
-                                <option value="Declaração de conformidade">Declaração de conformidade</option>
-                                <option value="Relatório técnico">Relatório técnico</option>
-                                <option value="Relatório de manutenção">Relatório de manutenção</option>
-                                <option value="Ficha técnica">Ficha técnica</option>
-                                <option value="Outro">Outro</option>
+                                <?php foreach ($tiposDocumento as $tipo): ?>
+                                    <option value="<?php echo htmlspecialchars($tipo->nome); ?>">
+                                        <?php echo htmlspecialchars($tipo->nome); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="col-md-4 col-lg-2">
-                            <label for="filtroAreaDocumento" class="form-label">Área</label>
-                            <select class="form-select" id="filtroAreaDocumento">
+                            <label for="filtroAreaDocumentoDT" class="form-label">Área</label>
+                            <select class="form-select" id="filtroAreaDocumentoDT">
                                 <option value="">Todas</option>
-                                <option value="Equipamento">Equipamento</option>
-                                <option value="Fornecedor">Fornecedor</option>
-                                <option value="Manutenção">Manutenção</option>
+                                <?php foreach ($areasDocumento as $area): ?>
+                                    <option value="<?php echo htmlspecialchars($area->nome); ?>">
+                                        <?php echo htmlspecialchars($area->nome); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="col-md-4 col-lg-2">
-                            <label for="filtroEstadoDocumento" class="form-label">Estado</label>
-                            <select class="form-select" id="filtroEstadoDocumento">
+                            <label for="filtroEstadoDocumentoDT" class="form-label">Estado</label>
+                            <select class="form-select" id="filtroEstadoDocumentoDT">
                                 <option value="">Todos</option>
-                                <option value="Válido">Válido</option>
-                                <option value="Por rever">Por rever</option>
-                                <option value="Expirado">Expirado</option>
+                                <?php foreach ($estadosDocumento as $estado): ?>
+                                    <option value="<?php echo htmlspecialchars($estado->nome); ?>">
+                                        <?php echo htmlspecialchars($estado->nome); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
                 </div>
             </section>
 
+            <!-- TABELA -->
             <section class="mb-4">
                 <div class="card p-3">
                     <div class="table-responsive">
-                        <table class="table table-dashboard table-hover align-middle mb-0" id="tabelaDocumentacao">
+                        <table class="table table-dashboard table-hover align-middle mb-0 tabela-datatable" id="tabelaDocumentacao">
                             <thead>
                                 <tr>
                                     <th>Código</th>
                                     <th>Título</th>
                                     <th>Tipo</th>
-                                    <th>Associado a</th>
                                     <th>Área</th>
+                                    <th>Associado a</th>
                                     <th>Data</th>
                                     <th>Validade</th>
                                     <th>Estado</th>
@@ -123,198 +284,45 @@ include __DIR__ . '/../../includes/nav.php';
                             </thead>
 
                             <tbody>
-                                <tr>
-                                    <td>DOC-001</td>
-                                    <td>Manual de utilizador do Monitor Multiparamétrico</td>
-                                    <td>Manual de utilizador</td>
-                                    <td>EQ-0042</td>
-                                    <td>Equipamento</td>
-                                    <td>2025-03-12</td>
-                                    <td>2027-03-12</td>
-                                    <td><span class="badge badge-ativo">Válido</span></td>
-                                    <td class="text-center">
-                                        <a href="documento-detalhes.php" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </a>
+                                <?php foreach ($documentos as $documento): ?>
+                                    <?php
+                                    $classeEstado = 'badge-inativo';
 
-                                        <a href="documento-eliminar.php" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="tooltip" data-bs-title="Eliminar">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                    if ($documento->estado === 'Válido') {
+                                        $classeEstado = 'badge-ativo';
+                                    } elseif ($documento->estado === 'Pendente') {
+                                        $classeEstado = 'badge-manutencao';
+                                    }
+                                    ?>
 
-                                <tr>
-                                    <td>DOC-002</td>
-                                    <td>Manual de serviço do Monitor Multiparamétrico</td>
-                                    <td>Manual de serviço</td>
-                                    <td>EQ-0042</td>
-                                    <td>Equipamento</td>
-                                    <td>2025-03-12</td>
-                                    <td>2027-03-12</td>
-                                    <td><span class="badge badge-ativo">Válido</span></td>
-                                    <td class="text-center">
-                                        <a href="documento-detalhes.php" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" data-bs-title="Ver detalhes"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                        <a href="documento-eliminar.php" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="tooltip" data-bs-title="Eliminar"><i
-                                                class="fa-solid fa-trash"></i></a>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($documento->codigo); ?></td>
+                                        <td><?php echo htmlspecialchars($documento->titulo); ?></td>
+                                        <td><?php echo htmlspecialchars($documento->tipo); ?></td>
+                                        <td><?php echo htmlspecialchars($documento->area); ?></td>
+                                        <td><?php echo htmlspecialchars($documento->associado); ?></td>
+                                        <td><?php echo htmlspecialchars($documento->data_documento ?? '—'); ?></td>
+                                        <td><?php echo htmlspecialchars($documento->validade ?? '—'); ?></td>
+                                        <td>
+                                            <span class="badge <?php echo $classeEstado; ?>">
+                                                <?php echo htmlspecialchars($documento->estado); ?>
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="documento-detalhes.php?id=<?php echo htmlspecialchars($documento->id); ?>"
+                                                class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
+                                                data-bs-title="Ver detalhes">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
 
-                                <tr>
-                                    <td>DOC-003</td>
-                                    <td>Certificado de calibração do Monitor Multiparamétrico</td>
-                                    <td>Certificado de calibração</td>
-                                    <td>EQ-0042</td>
-                                    <td>Equipamento</td>
-                                    <td>2025-02-20</td>
-                                    <td>2026-02-20</td>
-                                    <td><span class="badge badge-ativo">Válido</span></td>
-                                    <td class="text-center">
-                                        <a href="documento-detalhes.php" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" data-bs-title="Ver detalhes"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                        <a href="documento-eliminar.php" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="tooltip" data-bs-title="Eliminar"><i
-                                                class="fa-solid fa-trash"></i></a>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>DOC-004</td>
-                                    <td>Fatura de aquisição do Monitor Multiparamétrico</td>
-                                    <td>Fatura ou guia de aquisição</td>
-                                    <td>EQ-0042</td>
-                                    <td>Equipamento</td>
-                                    <td>2023-06-10</td>
-                                    <td>—</td>
-                                    <td><span class="badge badge-ativo">Válido</span></td>
-                                    <td class="text-center">
-                                        <a href="documento-detalhes.php" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" data-bs-title="Ver detalhes"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                        <a href="documento-eliminar.php" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="tooltip" data-bs-title="Eliminar"><i
-                                                class="fa-solid fa-trash"></i></a>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>DOC-005</td>
-                                    <td>Declaração de conformidade do Monitor Multiparamétrico</td>
-                                    <td>Declaração de conformidade</td>
-                                    <td>EQ-0042</td>
-                                    <td>Equipamento</td>
-                                    <td>2023-06-10</td>
-                                    <td>—</td>
-                                    <td><span class="badge badge-ativo">Válido</span></td>
-                                    <td class="text-center">
-                                        <a href="documento-detalhes.php" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" data-bs-title="Ver detalhes"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                        <a href="documento-eliminar.php" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="tooltip" data-bs-title="Eliminar"><i
-                                                class="fa-solid fa-trash"></i></a>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>DOC-006</td>
-                                    <td>Relatório técnico inicial do Monitor Multiparamétrico</td>
-                                    <td>Relatório técnico</td>
-                                    <td>EQ-0042</td>
-                                    <td>Equipamento</td>>
-                                    <td>2023-06-15</td>
-                                    <td>—</td>
-                                    <td><span class="badge badge-ativo">Válido</span></td>
-                                    <td class="text-center">
-                                        <a href="documento-detalhes.php" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" data-bs-title="Ver detalhes"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                        <a href="documento-eliminar.php" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="tooltip" data-bs-title="Eliminar"><i
-                                                class="fa-solid fa-trash"></i></a>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>DOC-007</td>
-                                    <td>Relatório de manutenção preventiva</td>
-                                    <td>Relatório de manutenção</td>
-                                    <td>EQ-0042</td>
-                                    <td>Manutenção</td>
-                                    <td>2024-12-15</td>
-                                    <td>—</td>
-                                    <td><span class="badge badge-ativo">Válido</span></td>
-                                    <td class="text-center">
-                                        <a href="documento-detalhes.php" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" data-bs-title="Ver detalhes"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                        <a href="documento-eliminar.php" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="tooltip" data-bs-title="Eliminar"><i
-                                                class="fa-solid fa-trash"></i></a>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>DOC-008</td>
-                                    <td>Relatório de intervenção corretiva</td>
-                                    <td>Relatório de manutenção</td>
-                                    <td>EQ-0042</td>
-                                    <td>Manutenção</td>
-                                    <td>2025-01-20</td>
-                                    <td>—</td>
-                                    <td><span class="badge badge-manutencao">Por rever</span></td>
-                                    <td class="text-center">
-                                        <a href="documento-detalhes.php" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" data-bs-title="Ver detalhes"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                        <a href="documento-eliminar.php" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="tooltip" data-bs-title="Eliminar"><i
-                                                class="fa-solid fa-trash"></i></a>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>DOC-009</td>
-                                    <td>Ficha técnica do Monitor Multiparamétrico</td>
-                                    <td>Ficha técnica</td>
-                                    <td>EQ-0042</td>
-                                    <td>Equipamento</td>
-                                    <td>2023-06-10</td>
-                                    <td>—</td>
-                                    <td><span class="badge badge-ativo">Válido</span></td>
-                                    <td class="text-center">
-                                        <a href="documento-detalhes.php" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" data-bs-title="Ver detalhes"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                        <a href="documento-eliminar.php" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="tooltip" data-bs-title="Eliminar"><i
-                                                class="fa-solid fa-trash"></i></a>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>DOC-010</td>
-                                    <td>Procedimento de limpeza e conservação</td>
-                                    <td>Outro</td>
-                                    <td>EQ-0042</td>
-                                    <td>Equipamento</td>
-                                    <td>2022-01-08</td>
-                                    <td>2025-01-08</td>
-                                    <td><span class="badge badge-inativo">Expirado</span></td>
-                                    <td class="text-center">
-                                        <a href="documento-detalhes.php" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" data-bs-title="Ver detalhes"><i
-                                                class="fa-solid fa-eye"></i></a>
-                                        <a href="documento-eliminar.php" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="tooltip" data-bs-title="Eliminar"><i
-                                                class="fa-solid fa-trash"></i></a>
-                                    </td>
-                                </tr>
+                                            <a href="documento-eliminar.php?id=<?php echo htmlspecialchars($documento->id); ?>"
+                                                class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip"
+                                                data-bs-title="Eliminar">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>

@@ -1,9 +1,132 @@
 <?php
+
 $pageTitle = 'MedInfo Solutions — Fornecedores';
 $assetPath = '../../../assets';
-$loginPath = '../../../public/login.php';
 $areaPath = '../';
 $activeMenu = 'fornecedores';
+
+$extraCss = [
+    $assetPath . '/bootstrap/dataTables.bootstrap5.min.css'
+];
+
+$extraScripts = [
+    $assetPath . '/jquery/jquery-3.7.1.min.js',
+    $assetPath . '/js/jquery.dataTables.min.js',
+    $assetPath . '/bootstrap/dataTables.bootstrap5.min.js'
+];
+
+$pageScript = <<<'JS'
+$(document).ready(function () {
+    const tabelaFornecedores = $('#tabelaFornecedores').DataTable({
+        pageLength: 5,
+        lengthChange: false,
+        pagingType: 'simple_numbers',
+        ordering: true,
+        autoWidth: false,
+        order: [[0, 'asc']],
+        columnDefs: [
+            {
+                orderable: false,
+                targets: -1
+            }
+        ],
+        dom: 't' + '<"datatable-footer d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3"ip>',
+        language: {
+            decimal: '',
+            emptyTable: 'Sem fornecedores registados.',
+            info: 'A mostrar _START_ a _END_ de _TOTAL_ fornecedores',
+            infoEmpty: 'Sem fornecedores para mostrar',
+            infoFiltered: '(filtrado de _MAX_ fornecedores)',
+            loadingRecords: 'A carregar...',
+            processing: 'A processar...',
+            zeroRecords: 'Nenhum fornecedor encontrado.',
+            paginate: {
+                next: 'Seguinte',
+                previous: 'Anterior'
+            },
+            aria: {
+                sortAscending: ': ordenar de forma crescente',
+                sortDescending: ': ordenar de forma decrescente'
+            }
+        }
+    });
+
+    $('#pesquisaFornecedoresDT').on('input', function () {
+        tabelaFornecedores.search(this.value).draw();
+    });
+
+    $('#filtroTipoFornecedorDT').on('change', function () {
+        tabelaFornecedores.column(2).search(this.value).draw();
+    });
+
+    $('#filtroContratoFornecedorDT').on('change', function () {
+        tabelaFornecedores.column(5).search(this.value).draw();
+    });
+
+    $('#filtroEstadoFornecedorDT').on('change', function () {
+        tabelaFornecedores.column(6).search(this.value).draw();
+    });
+});
+JS;
+
+require_once __DIR__ . '/../../includes/basedados.php';
+
+$fornecedores = [];
+$tiposFornecedores = [];
+$erroBD = '';
+
+$indicadores = [
+    'total' => 0,
+    'ativos' => 0,
+    'contrato_ativo' => 0,
+    'assistencia' => 0
+];
+
+$ligacao = ligar_base_dados();
+
+if ($ligacao === null) {
+    $erroBD = 'Não foi possível ligar à base de dados.';
+} else {
+    try {
+        $tiposFornecedores = $ligacao
+            ->query('SELECT nome FROM tipos_fornecedor ORDER BY nome')
+            ->fetchAll();
+
+        $sqlFornecedores = "
+            SELECT
+                f.id,
+                f.nome,
+                f.nif,
+                tf.nome AS tipo,
+                f.email,
+                f.telefone,
+                CASE WHEN f.contrato_ativo = 1 THEN 'Sim' ELSE 'Não' END AS contrato,
+                f.estado
+            FROM fornecedores f
+            INNER JOIN tipos_fornecedor tf ON tf.id = f.tipo_fornecedor_id
+            ORDER BY f.nome
+        ";
+
+        $fornecedores = $ligacao->query($sqlFornecedores)->fetchAll();
+
+        $sqlIndicadores = "
+            SELECT
+                COUNT(*) AS total,
+                SUM(CASE WHEN f.estado = 'Ativo' THEN 1 ELSE 0 END) AS ativos,
+                SUM(CASE WHEN f.contrato_ativo = 1 THEN 1 ELSE 0 END) AS contrato_ativo,
+                SUM(CASE WHEN tf.nome = 'Prestador de assistência técnica' THEN 1 ELSE 0 END) AS assistencia
+            FROM fornecedores f
+            INNER JOIN tipos_fornecedor tf ON tf.id = f.tipo_fornecedor_id
+        ";
+
+        $indicadores = $ligacao->query($sqlIndicadores)->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $erro) {
+        $erroBD = 'A ligação foi feita, mas ocorreu um erro ao carregar os fornecedores.';
+        $fornecedores = [];
+    }
+}
+
+$ligacao = null;
 
 include __DIR__ . '/../../includes/header.php';
 include __DIR__ . '/../../includes/nav.php';
@@ -14,14 +137,16 @@ include __DIR__ . '/../../includes/nav.php';
 
         <?php include __DIR__ . '/../../includes/sidebar.php'; ?>
 
+        <!-- CONTEÚDO PRINCIPAL -->
         <main class="col-12 col-md-9 col-lg-10 p-3 p-md-4 overflow-hidden" id="dashboard">
 
-            <!-- TÍTULO -->
+            <!-- TÍTULO E AÇÕES -->
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                 <div>
                     <h4 class="fw-bold mb-1">Fornecedores</h4>
-                    <p class="text-muted small mb-0">Listagem e gestão dos fornecedores associados aos equipamentos
-                        médicos.</p>
+                    <p class="text-muted small mb-0">
+                        Listagem e gestão dos fornecedores associados aos equipamentos médicos.
+                    </p>
                 </div>
 
                 <a href="fornecedor-novo.php" class="btn btn-primary btn-sm">
@@ -29,34 +154,44 @@ include __DIR__ . '/../../includes/nav.php';
                 </a>
             </div>
 
+            <?php if ($erroBD !== ''): ?>
+                <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
+                    <i class="fa-solid fa-circle-exclamation mt-1"></i>
+                    <div>
+                        <strong class="d-block">Erro na base de dados</strong>
+                        <span><?php echo htmlspecialchars($erroBD); ?></span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <!-- INDICADORES -->
             <section class="mb-4">
                 <div class="row g-3">
                     <div class="col-6 col-md-3">
                         <div class="card card-dashboard p-3 h-100">
                             <p class="text-muted small mb-1">Total</p>
-                            <h4 class="fw-bold mb-0">17</h4>
+                            <h4 class="fw-bold mb-0"><?php echo htmlspecialchars($indicadores['total'] ?? 0); ?></h4>
                         </div>
                     </div>
 
                     <div class="col-6 col-md-3">
                         <div class="card card-dashboard border-success-dashboard p-3 h-100">
                             <p class="text-muted small mb-1">Ativos</p>
-                            <h4 class="fw-bold mb-0">14</h4>
+                            <h4 class="fw-bold mb-0"><?php echo htmlspecialchars($indicadores['ativos'] ?? 0); ?></h4>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-3">
+                        <div class="card card-dashboard border-info-dashboard p-3 h-100">
+                            <p class="text-muted small mb-1">Contrato ativo</p>
+                            <h4 class="fw-bold mb-0"><?php echo htmlspecialchars($indicadores['contrato_ativo'] ?? 0); ?></h4>
                         </div>
                     </div>
 
                     <div class="col-6 col-md-3">
                         <div class="card card-dashboard border-warning-dashboard p-3 h-100">
-                            <p class="text-muted small mb-1">Com contrato</p>
-                            <h4 class="fw-bold mb-0">5</h4>
-                        </div>
-                    </div>
-
-                    <div class="col-6 col-md-3">
-                        <div class="card card-dashboard border-secondary-dashboard p-3 h-100">
-                            <p class="text-muted small mb-1">Inativos</p>
-                            <h4 class="fw-bold mb-0">3</h4>
+                            <p class="text-muted small mb-1">Assistência técnica</p>
+                            <h4 class="fw-bold mb-0"><?php echo htmlspecialchars($indicadores['assistencia'] ?? 0); ?></h4>
                         </div>
                     </div>
                 </div>
@@ -67,25 +202,26 @@ include __DIR__ . '/../../includes/nav.php';
                 <div class="card p-3">
                     <div class="row g-3">
                         <div class="col-lg-5">
-                            <label for="pesquisaFornecedores" class="form-label">Pesquisar</label>
-                            <input type="search" class="form-control" id="pesquisaFornecedores"
+                            <label for="pesquisaFornecedoresDT" class="form-label">Pesquisar</label>
+                            <input type="search" class="form-control" id="pesquisaFornecedoresDT"
                                 placeholder="Nome, NIF, email ou telefone">
                         </div>
 
                         <div class="col-md-4 col-lg-3">
-                            <label for="filtroTipoFornecedor" class="form-label">Tipo</label>
-                            <select class="form-select" id="filtroTipoFornecedor">
+                            <label for="filtroTipoFornecedorDT" class="form-label">Tipo</label>
+                            <select class="form-select" id="filtroTipoFornecedorDT">
                                 <option value="">Todos</option>
-                                <option value="Fabricante">Fabricante</option>
-                                <option value="Distribuidor / fornecedor comercial">Distribuidor / fornecedor comercial</option>
-                                <option value="Prestador de assistência técnica">Prestador de assistência técnica</option>
-                                <option value="Fornecedor de consumíveis e acessórios">Fornecedor de consumíveis e acessórios</option>
+                                <?php foreach ($tiposFornecedores as $tipo): ?>
+                                    <option value="<?php echo htmlspecialchars($tipo->nome); ?>">
+                                        <?php echo htmlspecialchars($tipo->nome); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="col-md-4 col-lg-2">
-                            <label for="filtroEstadoFornecedor" class="form-label">Estado</label>
-                            <select class="form-select" id="filtroEstadoFornecedor">
+                            <label for="filtroEstadoFornecedorDT" class="form-label">Estado</label>
+                            <select class="form-select" id="filtroEstadoFornecedorDT">
                                 <option value="">Todos</option>
                                 <option value="Ativo">Ativo</option>
                                 <option value="Inativo">Inativo</option>
@@ -93,8 +229,8 @@ include __DIR__ . '/../../includes/nav.php';
                         </div>
 
                         <div class="col-md-4 col-lg-2">
-                            <label for="filtroContratoFornecedor" class="form-label">Contrato</label>
-                            <select class="form-select" id="filtroContratoFornecedor">
+                            <label for="filtroContratoFornecedorDT" class="form-label">Contrato</label>
+                            <select class="form-select" id="filtroContratoFornecedorDT">
                                 <option value="">Todos</option>
                                 <option value="Sim">Sim</option>
                                 <option value="Não">Não</option>
@@ -108,7 +244,7 @@ include __DIR__ . '/../../includes/nav.php';
             <section class="mb-4">
                 <div class="card p-3">
                     <div class="table-responsive">
-                        <table class="table table-dashboard table-hover align-middle mb-0" id="tabelaFornecedores">
+                        <table class="table table-dashboard table-hover align-middle mb-0 tabela-datatable" id="tabelaFornecedores">
                             <thead>
                                 <tr>
                                     <th>Nome</th>
@@ -123,95 +259,42 @@ include __DIR__ . '/../../includes/nav.php';
                             </thead>
 
                             <tbody>
-                                <tr>
-                                    <td>Philips Healthcare Portugal</td>
-                                    <td>501234567</td>
-                                    <td>Fabricante</td>
-                                    <td>suporte@philips.pt</td>
-                                    <td>+351 211 234 567</td>
-                                    <td>Sim</td>
-                                    <td><span class="badge badge-ativo">Ativo</span></td>
-                                    <td class="text-center">
-                                        <a href="fornecedor-detalhes.php" class="btn btn-sm btn-outline-primary"
-                                            data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </a>
+                                <?php foreach ($fornecedores as $fornecedor): ?>
+                                    <?php $classeEstado = $fornecedor->estado === 'Ativo' ? 'badge-ativo' : 'badge-inativo'; ?>
 
-                                        <a href="fornecedor-editar.php" class="btn btn-sm btn-outline-secondary"
-                                            data-bs-toggle="tooltip" data-bs-title="Editar">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </a>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($fornecedor->nome); ?></td>
+                                        <td><?php echo htmlspecialchars($fornecedor->nif); ?></td>
+                                        <td><?php echo htmlspecialchars($fornecedor->tipo); ?></td>
+                                        <td><?php echo htmlspecialchars($fornecedor->email); ?></td>
+                                        <td><?php echo htmlspecialchars($fornecedor->telefone); ?></td>
+                                        <td><?php echo htmlspecialchars($fornecedor->contrato); ?></td>
+                                        <td>
+                                            <span class="badge <?php echo $classeEstado; ?>">
+                                                <?php echo htmlspecialchars($fornecedor->estado); ?>
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="fornecedor-detalhes.php?id=<?php echo htmlspecialchars($fornecedor->id); ?>"
+                                                class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
+                                                data-bs-title="Ver detalhes">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
 
-                                        <a href="fornecedor-eliminar.php" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="tooltip" data-bs-title="Eliminar">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                            <a href="fornecedor-editar.php?id=<?php echo htmlspecialchars($fornecedor->id); ?>"
+                                                class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
+                                                data-bs-title="Editar">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
 
-                                <tr>
-                                    <td>Dräger Portugal</td>
-                                    <td>502345678</td>
-                                    <td>Distribuidor / fornecedor comercial</td>
-                                    <td>geral@draeger.pt</td>
-                                    <td>+351 214 123 000</td>
-                                    <td>Sim</td>
-                                    <td><span class="badge badge-ativo">Ativo</span></td>
-                                    <td class="text-center">
-                                        <a href="fornecedor-detalhes.php" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </a>
-                                        <a href="fornecedor-editar.php" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </a>
-                                        <a href="fornecedor-eliminar.php" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-
-
-                                <tr>
-                                    <td>MedRepair Norte</td>
-                                    <td>503456789</td>
-                                    <td>Prestador de assistência técnica</td>
-                                    <td>assistencia@medrepair.pt</td>
-                                    <td>+351 221 900 300</td>
-                                    <td>Sim</td>
-                                    <td><span class="badge badge-ativo">Ativo</span></td>
-                                    <td class="text-center">
-                                        <a href="fornecedor-detalhes.php" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </a>
-                                        <a href="fornecedor-editar.php" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </a>
-                                        <a href="fornecedor-eliminar.php" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>ForneConsumíveis SA</td>
-                                    <td>504567890</td>
-                                    <td>Fornecedor de consumíveis e acessórios</td>
-                                    <td>encomendas@forneconsumiveis.pt</td>
-                                    <td>+351 225 300 400</td>
-                                    <td>Não</td>
-                                    <td><span class="badge badge-ativo">Ativo</span></td>
-                                    <td class="text-center">
-                                        <a href="fornecedor-detalhes.php" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </a>
-                                        <a href="fornecedor-editar.php" class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Editar">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </a>
-                                        <a href="fornecedor-eliminar.php" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                            <a href="fornecedor-eliminar.php?id=<?php echo htmlspecialchars($fornecedor->id); ?>"
+                                                class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip"
+                                                data-bs-title="Eliminar">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>

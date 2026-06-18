@@ -32,7 +32,7 @@ $(document).ready(function () {
         ],
         dom:
             't' +
-            '<"equipamentos-datatable-footer d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3"ip>',
+            '<"datatable-footer d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3"ip>',
         language: {
             decimal: '',
             emptyTable: 'Sem equipamentos registados.',
