@@ -23,7 +23,7 @@ $(document).ready(function () {
         pagingType: 'simple_numbers',
         ordering: true,
         autoWidth: false,
-        order: [[0, 'asc']],
+        order: [],
         columnDefs: [
             {
                 orderable: false,
@@ -74,6 +74,9 @@ JS;
 require_once __DIR__ . '/../../includes/basedados.php';
 
 $equipamentos = [];
+$categorias = [];
+$estados = [];
+$localizacoes = [];
 $erroBD = '';
 
 $indicadores = [
@@ -90,12 +93,38 @@ if ($ligacao === null) {
 } else {
     try {
         $sqlEquipamentos = "
-            SELECT *
-            FROM vw_equipamentos_listagem
-            ORDER BY codigo
+            SELECT
+                e.id,
+                e.codigo,
+                e.designacao,
+                c.nome AS categoria,
+                e.marca,
+                e.modelo,
+                e.numero_serie,
+                l.nome AS localizacao,
+                ee.nome AS estado,
+                g.data_fim AS fim_garantia
+            FROM equipamentos e
+            INNER JOIN categorias_equipamento c ON c.id = e.categoria_id
+            INNER JOIN estados_equipamento ee ON ee.id = e.estado_id
+            INNER JOIN localizacoes l ON l.id = e.localizacao_id
+            LEFT JOIN garantias g ON g.equipamento_id = e.id
+            ORDER BY e.codigo ASC
         ";
 
         $equipamentos = $ligacao->query($sqlEquipamentos)->fetchAll();
+
+        $categorias = $ligacao
+            ->query('SELECT nome FROM categorias_equipamento ORDER BY nome')
+            ->fetchAll();
+
+        $estados = $ligacao
+            ->query('SELECT nome FROM estados_equipamento ORDER BY nome')
+            ->fetchAll();
+
+        $localizacoes = $ligacao
+            ->query('SELECT nome FROM localizacoes ORDER BY nome')
+            ->fetchAll();
 
         $sqlIndicadores = "
             SELECT
@@ -140,6 +169,17 @@ include __DIR__ . '/../../includes/nav.php';
                     <i class="fa-solid fa-plus me-1"></i> Novo equipamento
                 </a>
             </div>
+
+            <?php if (isset($_GET['sucesso'])): ?>
+                <div class="alert alert-success d-flex align-items-start gap-2" role="alert">
+                    <i class="fa-solid fa-circle-check mt-1"></i>
+
+                    <div>
+                        <strong class="d-block">Equipamento registado</strong>
+                        <span>O equipamento foi guardado com sucesso.</span>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <?php if ($erroBD !== ''): ?>
                 <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
@@ -207,11 +247,12 @@ include __DIR__ . '/../../includes/nav.php';
                             <label for="filtroCategoriaEquipamentosDT" class="form-label">Categoria</label>
                             <select class="form-select" id="filtroCategoriaEquipamentosDT">
                                 <option value="">Todas</option>
-                                <option value="Monitorização">Monitorização</option>
-                                <option value="Suporte de Vida">Suporte de Vida</option>
-                                <option value="Terapia">Terapia</option>
-                                <option value="Diagnóstico">Diagnóstico</option>
-                                <option value="Laboratório">Laboratório</option>
+
+                                <?php foreach ($categorias as $categoria): ?>
+                                    <option value="<?php echo htmlspecialchars($categoria->nome); ?>">
+                                        <?php echo htmlspecialchars($categoria->nome); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
@@ -219,11 +260,12 @@ include __DIR__ . '/../../includes/nav.php';
                             <label for="filtroEstadoEquipamentosDT" class="form-label">Estado</label>
                             <select class="form-select" id="filtroEstadoEquipamentosDT">
                                 <option value="">Todos</option>
-                                <option value="Ativo">Ativo</option>
-                                <option value="Em Manutenção">Em Manutenção</option>
-                                <option value="Inativo">Inativo</option>
-                                <option value="Em Calibração">Em Calibração</option>
-                                <option value="Abatido">Abatido</option>
+
+                                <?php foreach ($estados as $estado): ?>
+                                    <option value="<?php echo htmlspecialchars($estado->nome); ?>">
+                                        <?php echo htmlspecialchars($estado->nome); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
@@ -231,11 +273,12 @@ include __DIR__ . '/../../includes/nav.php';
                             <label for="filtroLocalizacaoEquipamentosDT" class="form-label">Localização</label>
                             <select class="form-select" id="filtroLocalizacaoEquipamentosDT">
                                 <option value="">Todas</option>
-                                <option value="Unidade de Cuidados Intensivos">Unidade de Cuidados Intensivos</option>
-                                <option value="Serviço de Urgência">Serviço de Urgência</option>
-                                <option value="Bloco Operatório Central">Bloco Operatório Central</option>
-                                <option value="Medicina Interna">Medicina Interna</option>
-                                <option value="Consulta Externa">Consulta Externa</option>
+
+                                <?php foreach ($localizacoes as $localizacao): ?>
+                                    <option value="<?php echo htmlspecialchars($localizacao->nome); ?>">
+                                        <?php echo htmlspecialchars($localizacao->nome); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
@@ -246,7 +289,7 @@ include __DIR__ . '/../../includes/nav.php';
             <section class="mb-4">
                 <div class="card p-3">
                     <div class="table-responsive">
-                        <table class="table table-dashboard table-hover align-middle mb-0 tabela-datatable-clean" id="tabelaEquipamentos">
+                        <table class="table table-dashboard table-hover align-middle mb-0 tabela-datatable" id="tabelaEquipamentos">
                             <thead>
                                 <tr>
                                     <th>Código</th>

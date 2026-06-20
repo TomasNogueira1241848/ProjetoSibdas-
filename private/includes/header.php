@@ -29,6 +29,10 @@ $bodyClass = $bodyClass ?? 'pagina-area-reservada';
 
     <!-- CSS -->
     <link rel="stylesheet" href="<?php echo $assetPath; ?>/css/1241848.css">
+
+    <!-- Flatpickr (calendário gráfico para campos de data) -->
+    <link rel="stylesheet" href="<?php echo $assetPath; ?>/flatpickr/flatpickr.min.css">
+    <script src="<?php echo $assetPath; ?>/flatpickr/flatpickr.js"></script>
 </head>
 
 <body class="<?php echo $bodyClass; ?>">

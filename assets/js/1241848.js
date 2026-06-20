@@ -1,4 +1,3 @@
-/* Inicializa os componentes interativos existentes em cada página */
 document.addEventListener('DOMContentLoaded', function () {
     aplicarConteudosPublicos();
 
@@ -8,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarToastPublic();
 
     inicializarFormulariosSimulados();
-    inicializarValidacaoCampos();
     inicializarGestaoConteudosPublicos();
     inicializarInputsPDFs();
     inicializarBotoesRemoverPDFs();
@@ -22,12 +20,6 @@ document.addEventListener('DOMContentLoaded', function () {
 /* Configuração reutilizável dos formulários */
 function inicializarFormulariosSimulados() {
     const formularios = [
-        {
-            idFormulario: 'formEquipamento',
-            idMensagem: 'mensagemEquipamento',
-            paginaDestino: 'equipamentos.php',
-            validar: true
-        },
         {
             idFormulario: 'formFornecedor',
             idMensagem: 'mensagemFornecedor',
@@ -182,26 +174,6 @@ function validarFormularioHTML(formulario) {
     marcarCamposInvalidos(formulario);
     abrirAbaComCampoInvalido(formulario);
     return false;
-}
-
-
-/* Atualiza visualmente os campos obrigatórios sem marcar opcionais a verde */
-function inicializarValidacaoCampos() {
-    const formularios = document.querySelectorAll('form');
-
-    formularios.forEach(function (formulario) {
-        const campos = formulario.querySelectorAll('input, select, textarea');
-
-        campos.forEach(function (campo) {
-            campo.addEventListener('input', function () {
-                atualizarEstadoCampo(campo);
-            });
-
-            campo.addEventListener('change', function () {
-                atualizarEstadoCampo(campo);
-            });
-        });
-    });
 }
 
 
@@ -910,3 +882,4 @@ function criarGraficoLocalizacao() {
     });
 
 }
+
