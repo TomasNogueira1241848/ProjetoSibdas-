@@ -21,18 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
 function inicializarFormulariosSimulados() {
     const formularios = [
         {
-            idFormulario: 'formFornecedor',
-            idMensagem: 'mensagemFornecedor',
-            paginaDestino: 'fornecedores.php',
-            validar: true
-        },
-        {
-            idFormulario: 'formLocalizacao',
-            idMensagem: 'mensagemLocalizacao',
-            paginaDestino: 'localizacoes.php',
-            validar: true
-        },
-        {
             idFormulario: 'formEliminarEquipamento',
             idMensagem: 'mensagemEliminarEquipamento',
             paginaDestino: 'equipamentos.php',

@@ -51,6 +51,85 @@ document.addEventListener('DOMContentLoaded', function () {
     abas.forEach(function (aba) {
         aba.addEventListener('shown.bs.tab', atualizarBotoes);
     });
+
+    /*
+     * Documentos extra: botao "+" clona o template e o "-" remove o bloco.
+     * Cada bloco recebe um indice proprio (0, 1, 2...) para o PHP os distinguir.
+     */
+    (function () {
+        const botaoAdicionar = document.getElementById('btnAdicionarOutroDocumento');
+        const container = document.getElementById('containerOutrosDocumentos');
+        const template = document.getElementById('templateOutroDocumento');
+        if (!botaoAdicionar || !container || !template) {
+            return;
+        }
+        let indice = 0;
+        botaoAdicionar.addEventListener('click', function () {
+            const html = template.innerHTML.replace(/__IDX__/g, indice);
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = html;
+            const bloco = wrapper.firstElementChild;
+            container.appendChild(bloco);
+            if (typeof flatpickr !== 'undefined') {
+                bloco.querySelectorAll('.flatpickr-data').forEach(function (campo) {
+                    flatpickr(campo, { dateFormat: 'Y-m-d', allowInput: true });
+                });
+            }
+            indice++;
+        });
+        container.addEventListener('click', function (evento) {
+            const botaoRemover = evento.target.closest('.btn-remover-outro-documento');
+            if (botaoRemover) {
+                const bloco = botaoRemover.closest('.bloco-outro-documento');
+                if (bloco) { bloco.remove(); }
+            }
+        });
+    })();
+
+    /*
+     * Contratos extra: igual aos documentos extra.
+     * O botao "+" clona um template e cada bloco recebe um indice proprio.
+     */
+    (function () {
+        const botaoAdicionar = document.getElementById('btnAdicionarOutroContrato');
+        const container = document.getElementById('containerOutrosContratos');
+        const template = document.getElementById('templateOutroContrato');
+
+        if (!botaoAdicionar || !container || !template) {
+            return;
+        }
+
+        let indice = 0;
+
+        botaoAdicionar.addEventListener('click', function () {
+            const html = template.innerHTML.replace(/__IDX__/g, indice);
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = html;
+            const bloco = wrapper.firstElementChild;
+
+            container.appendChild(bloco);
+
+            if (typeof flatpickr !== 'undefined') {
+                bloco.querySelectorAll('.flatpickr-data').forEach(function (campo) {
+                    flatpickr(campo, { dateFormat: 'Y-m-d', allowInput: true });
+                });
+            }
+
+            indice++;
+        });
+
+        container.addEventListener('click', function (evento) {
+            const botaoRemover = evento.target.closest('.btn-remover-outro-contrato');
+
+            if (botaoRemover) {
+                const bloco = botaoRemover.closest('.bloco-outro-contrato');
+
+                if (bloco) {
+                    bloco.remove();
+                }
+            }
+        });
+    })();
  
     atualizarBotoes();
 });
@@ -78,6 +157,12 @@ $estadosContrato = [];
 $contratosExistentes = [];
 $estadosManutencao = [];
 $prioridadesManutencao = [];
+$tiposDocumento = [];
+$tiposContrato = [];
+$proximoCodigoEquipamento = 'EQ-0001';
+$proximoCodigoDocumento = 'DOC-0001';
+$proximoCodigoGarantia = 'GAR-0001';
+$proximoCodigoContrato = 'CON-0001';
 $documentosMinimosObrigatorios = [
     'ManualUtilizador' => 'Manual de utilizador',
     'ManualServico' => 'Manual de serviço',
@@ -182,6 +267,38 @@ function obter_opcoes($ligacao, $sql)
  
     return $ligacao->query($sql)->fetchAll();
 }
+
+/*
+ * Calcula o proximo codigo sequencial (ex: EQ-0006 -> EQ-0007).
+ */
+function proximo_codigo($ligacao, $tabela, $coluna, $prefixo, $largura = 4)
+{
+    $codigoInicial = $prefixo . '-' . str_pad('1', $largura, '0', STR_PAD_LEFT);
+    if ($ligacao === null) {
+        return $codigoInicial;
+    }
+    try {
+        $sql = "SELECT MAX(CAST(SUBSTRING($coluna, " . (strlen($prefixo) + 2) . ") AS UNSIGNED)) AS maximo FROM $tabela WHERE $coluna LIKE :prefixo";
+        $stmt = $ligacao->prepare($sql);
+        $stmt->execute([':prefixo' => $prefixo . '-%']);
+        $maximo = (int) $stmt->fetchColumn();
+    } catch (PDOException $erro) {
+        return $codigoInicial;
+    }
+    return $prefixo . '-' . str_pad((string) ($maximo + 1), $largura, '0', STR_PAD_LEFT);
+}
+/*
+ * Devolve um codigo de documento sequencial com um deslocamento.
+ * Ex: se o proximo for DOC-0016, offset 0 -> DOC-0016, offset 1 -> DOC-0017.
+ */
+function codigo_documento_offset($proximoCodigoDocumento, $offset)
+{
+    if (!preg_match('/^DOC-(\d+)$/', $proximoCodigoDocumento, $m)) {
+        return $proximoCodigoDocumento;
+    }
+    $largura = strlen($m[1]);
+    return 'DOC-' . str_pad((string) ((int) $m[1] + $offset), $largura, '0', STR_PAD_LEFT);
+}
  
  
 function obter_ficheiros_documento($chaveDocumento)
@@ -226,6 +343,8 @@ function validar_documentos_minimos($documentosMinimosObrigatorios, $documentosP
  
         if ($codigo === '') {
             $erros[] = 'O código do documento "' . $nomeDocumento . '" é obrigatório.';
+        } elseif (!preg_match('/^DOC-\d{3,}$/', strtoupper($codigo))) {
+            $erros[] = 'O código do documento "' . $nomeDocumento . '" deve seguir o formato DOC-000.';
         }
  
         if ($titulo === '') {
@@ -246,6 +365,12 @@ function validar_documentos_minimos($documentosMinimosObrigatorios, $documentosP
             $erros[] = 'A validade do documento "' . $nomeDocumento . '" é obrigatória.';
         } elseif (!validar_data_formulario($validade)) {
             $erros[] = 'A validade do documento "' . $nomeDocumento . '" não é válida.';
+        }
+
+        if ($dataDocumento !== '' && $validade !== ''
+            && validar_data_formulario($dataDocumento) && validar_data_formulario($validade)
+            && $validade < $dataDocumento) {
+            $erros[] = 'A validade do documento "' . $nomeDocumento . '" não pode ser anterior à data do documento.';
         }
  
         if ($estado === '') {
@@ -312,7 +437,7 @@ function obter_id_por_nome($ligacao, $tabela, $nome)
  
 function inserir_documentos_minimos($ligacao, $equipamentoId, $documentosMinimosObrigatorios, $documentosPost)
 {
-    $diretorioUploads = __DIR__ . '/../../../assets/uploads/documentos';
+    $diretorioUploads = __DIR__ . '/../../../../assets/uploads/documentos';
  
     if (!is_dir($diretorioUploads) && !mkdir($diretorioUploads, 0775, true)) {
         throw new RuntimeException('Não foi possível criar a pasta para guardar os PDFs.');
@@ -388,6 +513,493 @@ function inserir_documentos_minimos($ligacao, $equipamentoId, $documentosMinimos
 }
  
  
+function obter_ficheiros_documento_extra($indice)
+{
+    if (!isset($_FILES['outrosDocumentos']['name'][$indice]['ficheiros'])) {
+        return [];
+    }
+    $ficheiros = [];
+    $nomes = $_FILES['outrosDocumentos']['name'][$indice]['ficheiros'];
+    foreach ($nomes as $i => $nomeOriginal) {
+        if ($nomeOriginal === '') {
+            continue;
+        }
+        $ficheiros[] = [
+            'name' => $nomeOriginal,
+            'type' => $_FILES['outrosDocumentos']['type'][$indice]['ficheiros'][$i] ?? '',
+            'tmp_name' => $_FILES['outrosDocumentos']['tmp_name'][$indice]['ficheiros'][$i] ?? '',
+            'error' => $_FILES['outrosDocumentos']['error'][$indice]['ficheiros'][$i] ?? UPLOAD_ERR_NO_FILE,
+            'size' => $_FILES['outrosDocumentos']['size'][$indice]['ficheiros'][$i] ?? 0
+        ];
+    }
+    return $ficheiros;
+}
+
+
+function documento_extra_tem_dados($documento)
+{
+    if (!is_array($documento)) {
+        return false;
+    }
+
+    foreach ($documento as $valor) {
+        if (is_array($valor)) {
+            continue;
+        }
+
+        if (trim((string) $valor) !== '') {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function validar_documentos_extra($outrosDocumentos, &$erros, $ligacao = null)
+{
+    if (empty($outrosDocumentos) || !is_array($outrosDocumentos)) {
+        return;
+    }
+
+    foreach ($outrosDocumentos as $indice => $documento) {
+        if (!documento_extra_tem_dados($documento)) {
+            continue;
+        }
+
+        $prefixo = 'Documento opcional #' . ((int) $indice + 1) . ': ';
+        $codigo = strtoupper(trim($documento['codigo'] ?? ''));
+        $titulo = trim($documento['titulo'] ?? '');
+        $tipo = trim($documento['tipo'] ?? '');
+        $area = trim($documento['area'] ?? '');
+        $dataDocumento = trim($documento['data_documento'] ?? '');
+        $validade = trim($documento['validade'] ?? '');
+        $estado = trim($documento['estado'] ?? '');
+        $fornecedor = trim($documento['fornecedor'] ?? '');
+
+        if ($codigo === '') {
+            $erros[] = $prefixo . 'o código é obrigatório.';
+        } elseif (!preg_match('/^DOC-\d{3,}$/', $codigo)) {
+            $erros[] = $prefixo . 'o código deve seguir o formato DOC-000.';
+        }
+
+        if ($titulo === '') {
+            $erros[] = $prefixo . 'o nome do documento é obrigatório.';
+        }
+
+        if ($tipo === '') {
+            $erros[] = $prefixo . 'selecione o tipo de documento.';
+        } elseif ($ligacao !== null && !obter_id_por_nome($ligacao, 'tipos_documento', $tipo)) {
+            $erros[] = $prefixo . 'o tipo de documento não existe na base de dados.';
+        }
+
+        if ($area === '') {
+            $erros[] = $prefixo . 'selecione a área.';
+        } elseif ($ligacao !== null && !obter_id_por_nome($ligacao, 'areas_documento', $area)) {
+            $erros[] = $prefixo . 'a área selecionada não existe na base de dados.';
+        }
+
+        if ($dataDocumento === '') {
+            $erros[] = $prefixo . 'a data do documento é obrigatória.';
+        } elseif (!validar_data_formulario($dataDocumento)) {
+            $erros[] = $prefixo . 'a data do documento não é válida.';
+        }
+
+        if ($validade === '') {
+            $erros[] = $prefixo . 'a validade é obrigatória.';
+        } elseif (!validar_data_formulario($validade)) {
+            $erros[] = $prefixo . 'a validade não é válida.';
+        }
+
+        if ($dataDocumento !== '' && $validade !== ''
+            && validar_data_formulario($dataDocumento) && validar_data_formulario($validade)
+            && $validade < $dataDocumento) {
+            $erros[] = $prefixo . 'a validade não pode ser anterior à data do documento.';
+        }
+
+        if ($estado === '') {
+            $erros[] = $prefixo . 'selecione o estado.';
+        } elseif ($ligacao !== null && !obter_id_por_nome($ligacao, 'estados_documento', $estado)) {
+            $erros[] = $prefixo . 'o estado selecionado não existe na base de dados.';
+        }
+
+        if ($fornecedor !== '' && $fornecedor !== 'Sem fornecedor associado'
+            && $ligacao !== null && !obter_id_por_nome($ligacao, 'fornecedores', $fornecedor)) {
+            $erros[] = $prefixo . 'o fornecedor selecionado não existe na base de dados.';
+        }
+
+        foreach (obter_ficheiros_documento_extra($indice) as $ficheiro) {
+            if (($ficheiro['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+                $erros[] = $prefixo . 'ocorreu um erro ao carregar o PDF "' . ($ficheiro['name'] ?? '') . '".';
+                continue;
+            }
+
+            $extensao = strtolower(pathinfo($ficheiro['name'], PATHINFO_EXTENSION));
+
+            if ($extensao !== 'pdf') {
+                $erros[] = $prefixo . 'o ficheiro "' . $ficheiro['name'] . '" deve estar em formato PDF.';
+            }
+
+            if ((int) ($ficheiro['size'] ?? 0) <= 0) {
+                $erros[] = $prefixo . 'o ficheiro "' . $ficheiro['name'] . '" está vazio.';
+            }
+
+            if ((int) ($ficheiro['size'] ?? 0) > 10 * 1024 * 1024) {
+                $erros[] = $prefixo . 'o ficheiro "' . $ficheiro['name'] . '" não pode ter mais de 10 MB.';
+            }
+        }
+    }
+}
+
+/*
+ * Insere os documentos extra (opcionais) que o utilizador adicionou.
+ * Cada documento so e gravado se tiver pelo menos codigo e titulo preenchidos.
+ * Os PDFs sao opcionais. Devolve o numero de documentos inseridos.
+ */
+function inserir_documentos_extra($ligacao, $equipamentoId, $outrosDocumentos)
+{
+    if (empty($outrosDocumentos) || !is_array($outrosDocumentos)) {
+        return 0;
+    }
+
+    $diretorioUploads = __DIR__ . '/../../../../assets/uploads/documentos';
+    if (!is_dir($diretorioUploads) && !mkdir($diretorioUploads, 0775, true)) {
+        throw new RuntimeException('Nao foi possivel criar a pasta para guardar os PDFs.');
+    }
+
+    $stmtDocumento = $ligacao->prepare("
+        INSERT INTO documentos (codigo, titulo, tipo_documento_id, area_documento_id, equipamento_id, fornecedor_id, data_documento, validade, estado_documento_id, obrigatorio)
+        VALUES (:codigo, :titulo, :tipo_documento_id, :area_documento_id, :equipamento_id, :fornecedor_id, :data_documento, :validade, :estado_documento_id, 0)
+    ");
+    $stmtFicheiro = $ligacao->prepare("
+        INSERT INTO ficheiros_pdf (nome_original, nome_guardado, caminho_ficheiro, tipo_mime, tamanho_bytes, carregado_por)
+        VALUES (:nome_original, :nome_guardado, :caminho_ficheiro, :tipo_mime, :tamanho_bytes, :carregado_por)
+    ");
+    $stmtDocumentoFicheiro = $ligacao->prepare("
+        INSERT INTO documento_ficheiros (documento_id, ficheiro_id) VALUES (:documento_id, :ficheiro_id)
+    ");
+
+    $utilizadorId = $_SESSION['utilizador']['id'] ?? null;
+    $utilizadorId = is_numeric($utilizadorId) ? (int) $utilizadorId : null;
+    $inseridos = 0;
+
+    foreach ($outrosDocumentos as $indice => $documento) {
+        if (!is_array($documento)) {
+            continue;
+        }
+        $codigo = strtoupper(trim($documento['codigo'] ?? ''));
+        $titulo = trim($documento['titulo'] ?? '');
+
+        // Ignora blocos vazios (o utilizador adicionou mas nao preencheu).
+        if ($codigo === '' && $titulo === '') {
+            continue;
+        }
+
+        $tipoDocumentoId = obter_id_por_nome($ligacao, 'tipos_documento', trim($documento['tipo'] ?? ''));
+        $areaDocumentoId = obter_id_por_nome($ligacao, 'areas_documento', trim($documento['area'] ?? ''));
+        $estadoDocumentoId = obter_id_por_nome($ligacao, 'estados_documento', trim($documento['estado'] ?? ''));
+
+        $fornecedorNome = trim($documento['fornecedor'] ?? '');
+        $fornecedorId = null;
+        if ($fornecedorNome !== '' && $fornecedorNome !== 'Sem fornecedor associado') {
+            $fornecedorId = obter_id_por_nome($ligacao, 'fornecedores', $fornecedorNome);
+        }
+
+        $stmtDocumento->execute([
+            ':codigo' => $codigo,
+            ':titulo' => $titulo,
+            ':tipo_documento_id' => $tipoDocumentoId ?: null,
+            ':area_documento_id' => $areaDocumentoId ?: null,
+            ':equipamento_id' => $equipamentoId,
+            ':fornecedor_id' => $fornecedorId,
+            ':data_documento' => trim($documento['data_documento'] ?? '') ?: null,
+            ':validade' => trim($documento['validade'] ?? '') ?: null,
+            ':estado_documento_id' => $estadoDocumentoId ?: null
+        ]);
+        $documentoId = $ligacao->lastInsertId();
+        $inseridos++;
+
+        foreach (obter_ficheiros_documento_extra($indice) as $ficheiro) {
+            if (($ficheiro['error'] ?? 4) !== 0) {
+                continue;
+            }
+            $nomeGuardado = uniqid('pdf_', true) . '.pdf';
+            $destino = $diretorioUploads . '/' . $nomeGuardado;
+            if (!move_uploaded_file($ficheiro['tmp_name'], $destino)) {
+                continue;
+            }
+            $stmtFicheiro->execute([
+                ':nome_original' => $ficheiro['name'],
+                ':nome_guardado' => $nomeGuardado,
+                ':caminho_ficheiro' => 'assets/uploads/documentos/' . $nomeGuardado,
+                ':tipo_mime' => 'application/pdf',
+                ':tamanho_bytes' => $ficheiro['size'],
+                ':carregado_por' => $utilizadorId
+            ]);
+            $stmtDocumentoFicheiro->execute([
+                ':documento_id' => $documentoId,
+                ':ficheiro_id' => $ligacao->lastInsertId()
+            ]);
+        }
+    }
+
+    return $inseridos;
+}
+
+
+
+function obter_ficheiros_contrato_extra($indice)
+{
+    if (!isset($_FILES['outrosContratos']['name'][$indice]['ficheiros'])) {
+        return [];
+    }
+
+    $ficheiros = [];
+    $nomes = $_FILES['outrosContratos']['name'][$indice]['ficheiros'];
+
+    foreach ($nomes as $i => $nomeOriginal) {
+        if ($nomeOriginal === '') {
+            continue;
+        }
+
+        $ficheiros[] = [
+            'name' => $nomeOriginal,
+            'type' => $_FILES['outrosContratos']['type'][$indice]['ficheiros'][$i] ?? '',
+            'tmp_name' => $_FILES['outrosContratos']['tmp_name'][$indice]['ficheiros'][$i] ?? '',
+            'error' => $_FILES['outrosContratos']['error'][$indice]['ficheiros'][$i] ?? UPLOAD_ERR_NO_FILE,
+            'size' => $_FILES['outrosContratos']['size'][$indice]['ficheiros'][$i] ?? 0
+        ];
+    }
+
+    return $ficheiros;
+}
+
+function contrato_extra_tem_dados($contrato)
+{
+    if (!is_array($contrato)) {
+        return false;
+    }
+
+    foreach ($contrato as $valor) {
+        if (is_array($valor)) {
+            continue;
+        }
+
+        if (trim((string) $valor) !== '') {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function validar_contratos_extra($outrosContratos, &$erros, $ligacao = null)
+{
+    if (empty($outrosContratos) || !is_array($outrosContratos)) {
+        return;
+    }
+
+    foreach ($outrosContratos as $indice => $contrato) {
+        if (!contrato_extra_tem_dados($contrato)) {
+            continue;
+        }
+
+        $prefixo = 'Contrato opcional #' . ((int) $indice + 1) . ': ';
+
+        $codigo = strtoupper(trim($contrato['codigo'] ?? ''));
+        $designacao = trim($contrato['designacao'] ?? '');
+        $tipo = trim($contrato['tipo'] ?? '');
+        $fornecedor = trim($contrato['fornecedor'] ?? '');
+        $dataInicio = trim($contrato['data_inicio'] ?? '');
+        $dataFim = trim($contrato['data_fim'] ?? '');
+        $valorAnual = trim($contrato['valor_anual'] ?? '');
+        $renovacao = trim($contrato['renovacao_automatica'] ?? '');
+        $estado = trim($contrato['estado'] ?? '');
+
+        if ($codigo === '') {
+            $erros[] = $prefixo . 'o código é obrigatório.';
+        }
+
+        if ($designacao === '') {
+            $erros[] = $prefixo . 'a designação é obrigatória.';
+        }
+
+        if ($tipo === '') {
+            $erros[] = $prefixo . 'selecione o tipo de contrato.';
+        } elseif ($ligacao !== null && !obter_id_por_nome($ligacao, 'tipos_contrato', $tipo)) {
+            $erros[] = $prefixo . 'o tipo de contrato não existe na base de dados.';
+        }
+
+        if ($fornecedor === '') {
+            $erros[] = $prefixo . 'selecione o fornecedor.';
+        } elseif ($ligacao !== null && !obter_id_por_nome($ligacao, 'fornecedores', $fornecedor)) {
+            $erros[] = $prefixo . 'o fornecedor não existe na base de dados.';
+        }
+
+        if ($dataInicio === '') {
+            $erros[] = $prefixo . 'a data de início é obrigatória.';
+        } elseif (!validar_data_formulario($dataInicio)) {
+            $erros[] = $prefixo . 'a data de início não é válida.';
+        }
+
+        if ($dataFim === '') {
+            $erros[] = $prefixo . 'a data de fim é obrigatória.';
+        } elseif (!validar_data_formulario($dataFim)) {
+            $erros[] = $prefixo . 'a data de fim não é válida.';
+        }
+
+        if ($dataInicio !== '' && $dataFim !== '' && validar_data_formulario($dataInicio) && validar_data_formulario($dataFim) && $dataFim < $dataInicio) {
+            $erros[] = $prefixo . 'a data de fim não pode ser anterior à data de início.';
+        }
+
+        if ($valorAnual === '') {
+            $erros[] = $prefixo . 'o valor anual é obrigatório.';
+        } elseif (!is_numeric($valorAnual) || (float) $valorAnual < 0) {
+            $erros[] = $prefixo . 'o valor anual deve ser um número igual ou superior a zero.';
+        }
+
+        if ($renovacao === '') {
+            $erros[] = $prefixo . 'indique se existe renovação automática.';
+        }
+
+        if ($estado === '') {
+            $erros[] = $prefixo . 'selecione o estado.';
+        } elseif ($ligacao !== null && !obter_id_por_nome($ligacao, 'estados_contrato', $estado)) {
+            $erros[] = $prefixo . 'o estado selecionado não existe na base de dados.';
+        }
+
+        foreach (obter_ficheiros_contrato_extra($indice) as $ficheiro) {
+            if (($ficheiro['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+                $erros[] = $prefixo . 'ocorreu um erro ao carregar o PDF "' . ($ficheiro['name'] ?? '') . '".';
+                continue;
+            }
+
+            $extensao = strtolower(pathinfo($ficheiro['name'], PATHINFO_EXTENSION));
+
+            if ($extensao !== 'pdf') {
+                $erros[] = $prefixo . 'o ficheiro "' . $ficheiro['name'] . '" deve estar em formato PDF.';
+            }
+
+            if ((int) ($ficheiro['size'] ?? 0) <= 0) {
+                $erros[] = $prefixo . 'o ficheiro "' . $ficheiro['name'] . '" está vazio.';
+            }
+
+            if ((int) ($ficheiro['size'] ?? 0) > 10 * 1024 * 1024) {
+                $erros[] = $prefixo . 'o ficheiro "' . $ficheiro['name'] . '" não pode ter mais de 10 MB.';
+            }
+        }
+    }
+}
+
+function inserir_contratos_extra($ligacao, $equipamentoId, $outrosContratos)
+{
+    if (empty($outrosContratos) || !is_array($outrosContratos)) {
+        return 0;
+    }
+
+    $stmtContrato = $ligacao->prepare("
+        INSERT INTO contratos (
+            codigo,
+            designacao,
+            tipo_contrato_id,
+            fornecedor_id,
+            data_inicio,
+            data_fim,
+            valor_anual,
+            renovacao_automatica,
+            estado_contrato_id,
+            observacoes
+        ) VALUES (
+            :codigo,
+            :designacao,
+            :tipo_contrato_id,
+            :fornecedor_id,
+            :data_inicio,
+            :data_fim,
+            :valor_anual,
+            :renovacao_automatica,
+            :estado_contrato_id,
+            :observacoes
+        )
+    ");
+
+    $stmtLigacao = $ligacao->prepare("
+        INSERT INTO contrato_equipamentos (
+            contrato_id,
+            equipamento_id
+        ) VALUES (
+            :contrato_id,
+            :equipamento_id
+        )
+    ");
+
+    $inseridos = 0;
+
+    foreach ($outrosContratos as $indice => $contrato) {
+        if (!contrato_extra_tem_dados($contrato)) {
+            continue;
+        }
+
+        $tipoContratoId = obter_id_por_nome($ligacao, 'tipos_contrato', trim($contrato['tipo'] ?? ''));
+        $fornecedorId = obter_id_por_nome($ligacao, 'fornecedores', trim($contrato['fornecedor'] ?? ''));
+        $estadoContratoId = obter_id_por_nome($ligacao, 'estados_contrato', trim($contrato['estado'] ?? ''));
+
+        if (!$tipoContratoId || !$fornecedorId || !$estadoContratoId) {
+            throw new RuntimeException('Não foi possível associar corretamente o contrato opcional #' . ((int) $indice + 1) . ' às tabelas auxiliares.');
+        }
+
+        $observacoes = trim($contrato['observacoes'] ?? '');
+        $detalhes = [];
+
+        if (trim($contrato['associado'] ?? '') !== '') {
+            $detalhes[] = 'Associado a: ' . trim($contrato['associado']);
+        }
+
+        if (trim($contrato['responsavel'] ?? '') !== '') {
+            $detalhes[] = 'Responsável: ' . trim($contrato['responsavel']);
+        }
+
+        if (trim($contrato['periodicidade'] ?? '') !== '') {
+            $detalhes[] = 'Periodicidade: ' . trim($contrato['periodicidade']);
+        }
+
+        if ($observacoes !== '') {
+            $detalhes[] = 'Observações: ' . $observacoes;
+        }
+
+        $stmtContrato->execute([
+            ':codigo' => strtoupper(trim($contrato['codigo'])),
+            ':designacao' => trim($contrato['designacao']),
+            ':tipo_contrato_id' => $tipoContratoId,
+            ':fornecedor_id' => $fornecedorId,
+            ':data_inicio' => trim($contrato['data_inicio']),
+            ':data_fim' => trim($contrato['data_fim']),
+            ':valor_anual' => trim($contrato['valor_anual']),
+            ':renovacao_automatica' => (trim($contrato['renovacao_automatica'] ?? '') === 'Sim') ? 1 : 0,
+            ':estado_contrato_id' => $estadoContratoId,
+            ':observacoes' => implode("
+", $detalhes)
+        ]);
+
+        $contratoId = $ligacao->lastInsertId();
+
+        $stmtLigacao->execute([
+            ':contrato_id' => $contratoId,
+            ':equipamento_id' => $equipamentoId
+        ]);
+
+        $ficheiros = obter_ficheiros_contrato_extra($indice);
+
+        if (!empty($ficheiros)) {
+            $ficheiroIds = guardar_ficheiros_pdf($ligacao, $ficheiros);
+            ligar_ficheiros($ligacao, 'contrato_ficheiros', 'contrato_id', $contratoId, $ficheiroIds);
+        }
+
+        $inseridos++;
+    }
+
+    return $inseridos;
+}
+
 function obter_ficheiros_grupo($grupo)
 {
     if (!isset($_FILES[$grupo]['name']['ficheiros'])) {
@@ -462,6 +1074,10 @@ function validar_garantia($garantia, &$erros)
         }
     }
  
+    if (trim($garantia['codigo'] ?? '') !== '' && !preg_match('/^GAR-\d{3,}$/', strtoupper(trim($garantia['codigo'])))) {
+        $erros[] = 'O código da garantia deve seguir o formato GAR-000.';
+    }
+
     if (!empty($garantia['data_inicio']) && !validar_data_formulario($garantia['data_inicio'])) {
         $erros[] = 'A data de início da garantia não é válida.';
     }
@@ -499,6 +1115,10 @@ function validar_contrato_manutencao($contrato, &$erros)
         }
     }
  
+    if (trim($contrato['codigo'] ?? '') !== '' && !preg_match('/^CON-\d{3,}$/', strtoupper(trim($contrato['codigo'])))) {
+        $erros[] = 'O código do contrato de manutenção deve seguir o formato CON-000.';
+    }
+
     if (!empty($contrato['data_inicio']) && !validar_data_formulario($contrato['data_inicio'])) {
         $erros[] = 'A data de início do contrato de manutenção não é válida.';
     }
@@ -544,11 +1164,17 @@ function validar_manutencao($manutencao, &$erros)
     if (!empty($manutencao['proxima_manutencao']) && !validar_data_formulario($manutencao['proxima_manutencao'])) {
         $erros[] = 'A data da próxima manutenção não é válida.';
     }
+
+    if (!empty($manutencao['ultima_manutencao']) && !empty($manutencao['proxima_manutencao']) &&
+        validar_data_formulario($manutencao['ultima_manutencao']) && validar_data_formulario($manutencao['proxima_manutencao']) &&
+        $manutencao['proxima_manutencao'] < $manutencao['ultima_manutencao']) {
+        $erros[] = 'A data da próxima manutenção não pode ser anterior à da última manutenção.';
+    }
 }
  
 function guardar_ficheiros_pdf($ligacao, $ficheiros)
 {
-    $diretorioUploads = __DIR__ . '/../../../assets/uploads/documentos';
+    $diretorioUploads = __DIR__ . '/../../../../assets/uploads/documentos';
  
     if (!is_dir($diretorioUploads) && !mkdir($diretorioUploads, 0775, true)) {
         throw new RuntimeException('Não foi possível criar a pasta para guardar os PDFs.');
@@ -746,7 +1372,7 @@ if ($ligacao === null) {
              INNER JOIN tipos_fornecedor tf ON tf.id = f.tipo_fornecedor_id
              ORDER BY f.nome'
         );
-        $localizacoes = obter_opcoes($ligacao, 'SELECT id, codigo, nome FROM localizacoes ORDER BY codigo');
+        $localizacoes = obter_opcoes($ligacao, 'SELECT id, codigo, nome, numero_andares FROM localizacoes ORDER BY codigo');
         $equipamentosPai = obter_opcoes($ligacao, 'SELECT id, codigo, designacao FROM equipamentos ORDER BY codigo');
  
         /* Listas de valores controlados (lookups) carregadas da base de dados */
@@ -757,6 +1383,14 @@ if ($ligacao === null) {
         $contratosExistentes = obter_opcoes($ligacao, 'SELECT id, codigo, designacao FROM contratos ORDER BY codigo');
         $estadosManutencao = obter_opcoes($ligacao, 'SELECT id, nome FROM estados_manutencao ORDER BY id');
         $prioridadesManutencao = obter_opcoes($ligacao, 'SELECT id, nome FROM prioridades_manutencao ORDER BY id');
+        $tiposDocumento = obter_opcoes($ligacao, 'SELECT id, nome FROM tipos_documento ORDER BY nome');
+        $tiposContrato = obter_opcoes($ligacao, 'SELECT id, nome FROM tipos_contrato ORDER BY nome');
+
+        /* Proximos codigos sequenciais (so para pre-preencher quando o formulario abre vazio) */
+        $proximoCodigoEquipamento = proximo_codigo($ligacao, 'equipamentos', 'codigo', 'EQ', 4);
+        $proximoCodigoDocumento = proximo_codigo($ligacao, 'documentos', 'codigo', 'DOC', 4);
+        $proximoCodigoGarantia = proximo_codigo($ligacao, 'garantias', 'codigo', 'GAR', 4);
+        $proximoCodigoContrato = proximo_codigo($ligacao, 'contratos', 'codigo', 'CON', 4);
     } catch (PDOException $erro) {
         $erroSistema = 'Ocorreu um erro ao carregar os dados do formulário.';
     }
@@ -775,6 +1409,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
     if ($valores['codigo_equipamento'] === '') {
         $erros[] = 'O código interno é obrigatório.';
+    } elseif (!preg_match('/^EQ-\d{3,}$/', $valores['codigo_equipamento'])) {
+        $erros[] = 'O código interno deve seguir o formato EQ-0000 (ex: EQ-0001).';
     }
  
     if ($valores['designacao_equipamento'] === '') {
@@ -795,6 +1431,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
     if ($valores['numero_serie_equipamento'] === '') {
         $erros[] = 'O número de série é obrigatório.';
+    } elseif (!preg_match('/^SN-\d{4}$/', $valores['numero_serie_equipamento'])) {
+        $erros[] = 'O número de série deve seguir o formato SN-1234.';
     }
  
     if ($valores['estado_id'] === '') {
@@ -859,6 +1497,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
     if ($valores['piso'] === '' || !is_numeric($valores['piso'])) {
         $erros[] = 'O número do andar é obrigatório e deve ser numérico.';
+    } elseif ((int) $valores['piso'] < -1) {
+        $erros[] = 'O número do andar não pode ser inferior a -1.';
+    } elseif ($ligacao !== null) {
+        $localizacaoSelecionada = null;
+
+        foreach ($localizacoes as $localizacao) {
+            if ((string) $localizacao->id === (string) $valores['localizacao_id']) {
+                $localizacaoSelecionada = $localizacao;
+                break;
+            }
+        }
+
+        if ($valores['localizacao_id'] !== '' && $localizacaoSelecionada === null) {
+            $erros[] = 'A localização selecionada não existe na base de dados.';
+        } elseif ($localizacaoSelecionada !== null && (int) $valores['piso'] > (int) $localizacaoSelecionada->numero_andares) {
+            $erros[] = 'O número do andar não pode ser superior ao número de andares da localização selecionada (' . (int) $localizacaoSelecionada->numero_andares . ').';
+        }
     }
  
     if ($valores['sala'] === '') {
@@ -876,6 +1531,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     validar_garantia($garantiaPost, $erros);
     validar_contrato_manutencao($contratoManutencaoPost, $erros);
     validar_manutencao($manutencaoPost, $erros);
+
+    /*
+     * Coerencia das datas com a data de aquisicao do equipamento:
+     * nada relacionado com o equipamento pode comecar antes de ele ser adquirido.
+     */
+    $dataAquisicao = $valores['data_aquisicao'];
+    if (validar_data_formulario($dataAquisicao)) {
+        if (!empty($garantiaPost['data_inicio']) && validar_data_formulario($garantiaPost['data_inicio'])
+            && $garantiaPost['data_inicio'] < $dataAquisicao) {
+            $erros[] = 'A garantia nao pode comecar antes da data de aquisicao do equipamento.';
+        }
+        if (!empty($contratoManutencaoPost['data_inicio']) && validar_data_formulario($contratoManutencaoPost['data_inicio'])
+            && $contratoManutencaoPost['data_inicio'] < $dataAquisicao) {
+            $erros[] = 'O contrato de manutencao nao pode comecar antes da data de aquisicao do equipamento.';
+        }
+        if (!empty($manutencaoPost['ultima_manutencao']) && validar_data_formulario($manutencaoPost['ultima_manutencao'])
+            && $manutencaoPost['ultima_manutencao'] < $dataAquisicao) {
+            $erros[] = 'A ultima manutencao nao pode ser anterior a data de aquisicao do equipamento.';
+        }
+
+        foreach (($_POST['outrosContratos'] ?? []) as $indiceContratoExtra => $contratoExtra) {
+            if (!is_array($contratoExtra) || !contrato_extra_tem_dados($contratoExtra)) {
+                continue;
+            }
+
+            if (!empty($contratoExtra['data_inicio']) && validar_data_formulario($contratoExtra['data_inicio'])
+                && $contratoExtra['data_inicio'] < $dataAquisicao) {
+                $erros[] = 'Contrato opcional #' . ((int) $indiceContratoExtra + 1) . ': a data de início não pode ser anterior à data de aquisição do equipamento.';
+            }
+        }
+    }
  
     if ($ligacao !== null) {
         validar_opcoes_bd($ligacao, $erros, $garantiaPost, $contratoManutencaoPost, $manutencaoPost);
@@ -883,6 +1569,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
     $documentosPost = $_POST['documentosMinimos'] ?? [];
     validar_documentos_minimos($documentosMinimosObrigatorios, $documentosPost, $erros);
+
+    $outrosDocumentosPost = $_POST['outrosDocumentos'] ?? [];
+    validar_documentos_extra($outrosDocumentosPost, $erros, $ligacao);
+
+    $outrosContratosPost = $_POST['outrosContratos'] ?? [];
+    validar_contratos_extra($outrosContratosPost, $erros, $ligacao);
  
     if (empty($erros) && $ligacao !== null) {
         try {
@@ -1044,6 +1736,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
  
             inserir_documentos_minimos($ligacao, $equipamentoId, $documentosMinimosObrigatorios, $documentosPost);
+            inserir_documentos_extra($ligacao, $equipamentoId, $outrosDocumentosPost);
+            inserir_contratos_extra($ligacao, $equipamentoId, $outrosContratosPost);
  
             $contratoManutencaoId = inserir_contrato_manutencao($ligacao, $equipamentoId, $contratoManutencaoPost);
             inserir_garantia($ligacao, $equipamentoId, $garantiaPost, $contratoManutencaoId);
@@ -1180,8 +1874,8 @@ include __DIR__ . '/../../includes/nav.php';
                                     </div>
                                     <div class="col-md-4">
                                         <label for="codigoEquipamento" class="form-label">Código </label>
-                                        <input type="text" class="form-control" id="codigoEquipamento" name="codigo_equipamento"
-                                            value="<?php echo valor_formulario('codigo_equipamento', $valores); ?>">
+                                        <input type="text" class="form-control" id="codigoEquipamento" name="codigo_equipamento" placeholder="Ex: EQ-0001"
+                                            value="<?php echo htmlspecialchars($valores['codigo_equipamento'] !== '' ? $valores['codigo_equipamento'] : $proximoCodigoEquipamento); ?>">
                                     </div>
  
                                     <div class="col-md-8">
@@ -1217,7 +1911,7 @@ include __DIR__ . '/../../includes/nav.php';
                                     <div class="col-md-4">
                                         <label for="numeroSerieEquipamento" class="form-label">N.º de série </label>
                                         <input type="text" class="form-control" id="numeroSerieEquipamento" name="numero_serie_equipamento"
-                                            value="<?php echo valor_formulario('numero_serie_equipamento', $valores); ?>" placeholder="Ex: SN-12345">
+                                            value="<?php echo valor_formulario('numero_serie_equipamento', $valores); ?>" placeholder="Ex: SN-1234">
                                     </div>
  
                                     <div class="col-md-4">
@@ -1485,7 +2179,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-3">
                                                     <label for="codigoDocumentoManualUtilizadorEquipamento" class="form-label">Código</label>
                                                     <input type="text" class="form-control" id="codigoDocumentoManualUtilizadorEquipamento"
-                                                        name="documentosMinimos[ManualUtilizador][codigo]">
+                                                        name="documentosMinimos[ManualUtilizador][codigo]" value="<?php echo htmlspecialchars(!empty($_POST['documentosMinimos']['ManualUtilizador']['codigo']) ? $_POST['documentosMinimos']['ManualUtilizador']['codigo'] : codigo_documento_offset($proximoCodigoDocumento, 0)); ?>">
                                                 </div>
  
                                                 <div class="col-md-5">
@@ -1563,7 +2257,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                     name="documentosMinimos[ManualUtilizador][ficheiros][]"
                                                     accept="application/pdf,.pdf" multiple
                                                     data-lista="listaManualUtilizadorEquipamento">
-                                                <div class="form-text">Pode selecionar um ou mais PDFs deste documento.</div>
+                                                
                                                 <div class="pdf-lista mt-3" id="listaManualUtilizadorEquipamento">
                                                     <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
                                                 </div>
@@ -1587,7 +2281,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-3">
                                                     <label for="codigoDocumentoManualServicoEquipamento" class="form-label">Código</label>
                                                     <input type="text" class="form-control" id="codigoDocumentoManualServicoEquipamento"
-                                                        name="documentosMinimos[ManualServico][codigo]">
+                                                        name="documentosMinimos[ManualServico][codigo]" value="<?php echo htmlspecialchars(!empty($_POST['documentosMinimos']['ManualServico']['codigo']) ? $_POST['documentosMinimos']['ManualServico']['codigo'] : codigo_documento_offset($proximoCodigoDocumento, 1)); ?>">
                                                 </div>
  
                                                 <div class="col-md-5">
@@ -1665,7 +2359,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                     name="documentosMinimos[ManualServico][ficheiros][]"
                                                     accept="application/pdf,.pdf" multiple
                                                     data-lista="listaManualServicoEquipamento">
-                                                <div class="form-text">Pode selecionar um ou mais PDFs deste documento.</div>
+                                                
                                                 <div class="pdf-lista mt-3" id="listaManualServicoEquipamento">
                                                     <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
                                                 </div>
@@ -1689,7 +2383,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-3">
                                                     <label for="codigoDocumentoCertificadoCalibracaoEquipamento" class="form-label">Código</label>
                                                     <input type="text" class="form-control" id="codigoDocumentoCertificadoCalibracaoEquipamento"
-                                                        name="documentosMinimos[CertificadoCalibracao][codigo]">
+                                                        name="documentosMinimos[CertificadoCalibracao][codigo]" value="<?php echo htmlspecialchars(!empty($_POST['documentosMinimos']['CertificadoCalibracao']['codigo']) ? $_POST['documentosMinimos']['CertificadoCalibracao']['codigo'] : codigo_documento_offset($proximoCodigoDocumento, 2)); ?>">
                                                 </div>
  
                                                 <div class="col-md-5">
@@ -1767,7 +2461,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                     name="documentosMinimos[CertificadoCalibracao][ficheiros][]"
                                                     accept="application/pdf,.pdf" multiple
                                                     data-lista="listaCertificadoCalibracaoEquipamento">
-                                                <div class="form-text">Pode selecionar um ou mais PDFs deste documento.</div>
+                                                
                                                 <div class="pdf-lista mt-3" id="listaCertificadoCalibracaoEquipamento">
                                                     <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
                                                 </div>
@@ -1791,7 +2485,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-3">
                                                     <label for="codigoDocumentoFaturaGuiaAquisicaoEquipamento" class="form-label">Código</label>
                                                     <input type="text" class="form-control" id="codigoDocumentoFaturaGuiaAquisicaoEquipamento"
-                                                        name="documentosMinimos[FaturaGuiaAquisicao][codigo]">
+                                                        name="documentosMinimos[FaturaGuiaAquisicao][codigo]" value="<?php echo htmlspecialchars(!empty($_POST['documentosMinimos']['FaturaGuiaAquisicao']['codigo']) ? $_POST['documentosMinimos']['FaturaGuiaAquisicao']['codigo'] : codigo_documento_offset($proximoCodigoDocumento, 3)); ?>">
                                                 </div>
  
                                                 <div class="col-md-5">
@@ -1869,7 +2563,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                     name="documentosMinimos[FaturaGuiaAquisicao][ficheiros][]"
                                                     accept="application/pdf,.pdf" multiple
                                                     data-lista="listaFaturaGuiaAquisicaoEquipamento">
-                                                <div class="form-text">Pode selecionar um ou mais PDFs deste documento.</div>
+                                                
                                                 <div class="pdf-lista mt-3" id="listaFaturaGuiaAquisicaoEquipamento">
                                                     <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
                                                 </div>
@@ -1893,7 +2587,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-3">
                                                     <label for="codigoDocumentoDeclaracaoConformidadeEquipamento" class="form-label">Código</label>
                                                     <input type="text" class="form-control" id="codigoDocumentoDeclaracaoConformidadeEquipamento"
-                                                        name="documentosMinimos[DeclaracaoConformidade][codigo]">
+                                                        name="documentosMinimos[DeclaracaoConformidade][codigo]" value="<?php echo htmlspecialchars(!empty($_POST['documentosMinimos']['DeclaracaoConformidade']['codigo']) ? $_POST['documentosMinimos']['DeclaracaoConformidade']['codigo'] : codigo_documento_offset($proximoCodigoDocumento, 4)); ?>">
                                                 </div>
  
                                                 <div class="col-md-5">
@@ -1971,7 +2665,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                     name="documentosMinimos[DeclaracaoConformidade][ficheiros][]"
                                                     accept="application/pdf,.pdf" multiple
                                                     data-lista="listaDeclaracaoConformidadeEquipamento">
-                                                <div class="form-text">Pode selecionar um ou mais PDFs deste documento.</div>
+                                                
                                                 <div class="pdf-lista mt-3" id="listaDeclaracaoConformidadeEquipamento">
                                                     <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
                                                 </div>
@@ -1995,7 +2689,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-3">
                                                     <label for="codigoDocumentoRelatorioTecnicoEquipamento" class="form-label">Código</label>
                                                     <input type="text" class="form-control" id="codigoDocumentoRelatorioTecnicoEquipamento"
-                                                        name="documentosMinimos[RelatorioTecnico][codigo]">
+                                                        name="documentosMinimos[RelatorioTecnico][codigo]" value="<?php echo htmlspecialchars(!empty($_POST['documentosMinimos']['RelatorioTecnico']['codigo']) ? $_POST['documentosMinimos']['RelatorioTecnico']['codigo'] : codigo_documento_offset($proximoCodigoDocumento, 5)); ?>">
                                                 </div>
  
                                                 <div class="col-md-5">
@@ -2073,7 +2767,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                     name="documentosMinimos[RelatorioTecnico][ficheiros][]"
                                                     accept="application/pdf,.pdf" multiple
                                                     data-lista="listaRelatorioTecnicoEquipamento">
-                                                <div class="form-text">Pode selecionar um ou mais PDFs deste documento.</div>
+                                                
                                                 <div class="pdf-lista mt-3" id="listaRelatorioTecnicoEquipamento">
                                                     <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
                                                 </div>
@@ -2085,96 +2779,85 @@ include __DIR__ . '/../../includes/nav.php';
                                         <hr class="my-2">
                                         <h6 class="fw-bold mb-1">Outros documentos</h6>
                                         <p class="text-muted small mb-0">
-                                            Área opcional para ficheiros adicionais, como ficha técnica, imagens técnicas ou outros anexos.
+                                            Área opcional. Pode adicionar vários documentos com o botão abaixo.
                                         </p>
                                     </div>
- 
-                                    <div class="col-md-3">
-                                        <label for="codigoOutroDocumentoEquipamento" class="form-label">Código</label>
-                                        <input type="text" class="form-control" id="codigoOutroDocumentoEquipamento"
-                                            name="outrosDocumentos[codigo]">
-                                    </div>
- 
-                                    <div class="col-md-3">
-                                        <label for="tipoOutroDocumentoEquipamento" class="form-label">Tipo de documento</label>
-                                        <select class="form-select" id="tipoOutroDocumentoEquipamento" name="outrosDocumentos[tipo]">
-                                            <option value="">Selecionar</option>
-                                            <option value="Ficha técnica">Ficha técnica</option>
-                                            <option value="Registo de manutenção">Registo de manutenção</option>
-                                            <option value="Relatório de intervenção">Relatório de intervenção</option>
-                                            <option value="Outro">Outro</option>
-                                        </select>
-                                    </div>
- 
-                                    <div class="col-md-6">
-                                        <label for="tituloOutroDocumentoEquipamento" class="form-label">Nome do documento</label>
-                                        <input type="text" class="form-control" id="tituloOutroDocumentoEquipamento"
-                                            name="outrosDocumentos[titulo]">
-                                    </div>
- 
-                                    <div class="col-md-3">
-                                        <label for="dataOutroDocumentoEquipamento" class="form-label">Data do documento</label>
-                                        <input type="text" class="form-control flatpickr-data" id="dataOutroDocumentoEquipamento"
-                                            name="outrosDocumentos[data_documento]">
-                                    </div>
- 
-                                    <div class="col-md-3">
-                                        <label for="validadeOutroDocumentoEquipamento" class="form-label">Validade</label>
-                                        <input type="text" class="form-control flatpickr-data" id="validadeOutroDocumentoEquipamento"
-                                            name="outrosDocumentos[validade]">
-                                    </div>
- 
-                                    <div class="col-md-3">
-                                        <label for="areaOutroDocumentoEquipamento" class="form-label">Área</label>
-                                        <select class="form-select" id="areaOutroDocumentoEquipamento" name="outrosDocumentos[area]">
-                                                <?php echo options_lista_nome($areasDocumento); ?>
-                                        </select>
-                                    </div>
- 
-                                    <div class="col-md-3">
-                                        <label for="estadoOutroDocumentoEquipamento" class="form-label">Estado</label>
-                                        <select class="form-select" id="estadoOutroDocumentoEquipamento" name="outrosDocumentos[estado]">
-                                            <?php echo options_lista_nome($estadosDocumento); ?>
-                                        </select>
-                                    </div>
- 
-                                    <div class="col-md-6">
-                                        <label for="fornecedorOutroDocumentoEquipamento" class="form-label">Fornecedor associado</label>
-                                        <select class="form-select" id="fornecedorOutroDocumentoEquipamento" name="outrosDocumentos[fornecedor]">
-                                            <?php echo options_fornecedores_por_nome($fornecedores, true); ?>
-                                        </select>
-                                    </div>
- 
-                                    <div class="col-md-6">
-                                        <label for="responsavelOutroDocumentoEquipamento" class="form-label">Responsável</label>
-                                        <input type="text" class="form-control" id="responsavelOutroDocumentoEquipamento"
-                                            name="outrosDocumentos[responsavel]">
-                                    </div>
- 
+
                                     <div class="col-12">
-                                        <label for="observacoesOutroDocumentoEquipamento" class="form-label">Observações</label>
-                                        <textarea class="form-control" id="observacoesOutroDocumentoEquipamento"
-                                            name="outrosDocumentos[observacoes]" rows="2"></textarea>
+                                        <div id="containerOutrosDocumentos"></div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="btnAdicionarOutroDocumento">
+                                            <i class="fa-solid fa-plus me-1"></i> Adicionar outro documento
+                                        </button>
                                     </div>
- 
-                                    <div class="col-12">
-                                        <div class="pdf-upload-card">
-                                            <label for="ficheirosOutrosDocumentosEquipamento" class="form-label fw-semibold">
-                                                <i class="fa-solid fa-file-pdf me-1 text-danger"></i> PDFs dos outros documentos
-                                            </label>
-                                            <input type="file" class="form-control input-pdf-multiplo"
-                                                id="ficheirosOutrosDocumentosEquipamento"
-                                                name="outrosDocumentos[ficheiros][]" accept="application/pdf,.pdf" multiple
-                                                data-lista="listaOutrosDocumentosEquipamento" data-removivel="true">
-                                            <div class="form-text">Pode selecionar vários PDFs opcionais e remover antes de guardar.</div>
-                                            <div class="pdf-lista mt-3" id="listaOutrosDocumentosEquipamento">
-                                                <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
+
+                                    <template id="templateOutroDocumento">
+                                        <div class="row g-3 border rounded p-3 mb-3 bloco-outro-documento">
+                                            <div class="col-12 d-flex justify-content-between align-items-center">
+                                                <span class="fw-semibold">Documento adicional</span>
+                                                <button type="button" class="btn btn-outline-danger btn-sm btn-remover-outro-documento">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Código</label>
+                                                <input type="text" class="form-control" name="outrosDocumentos[__IDX__][codigo]">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Tipo de documento</label>
+                                                <select class="form-select" name="outrosDocumentos[__IDX__][tipo]">
+                                                    <?php echo options_lista_nome($tiposDocumento); ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Nome do documento</label>
+                                                <input type="text" class="form-control" name="outrosDocumentos[__IDX__][titulo]">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Data do documento</label>
+                                                <input type="text" class="form-control flatpickr-data" name="outrosDocumentos[__IDX__][data_documento]">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Validade</label>
+                                                <input type="text" class="form-control flatpickr-data" name="outrosDocumentos[__IDX__][validade]">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Área</label>
+                                                <select class="form-select" name="outrosDocumentos[__IDX__][area]">
+                                                    <?php echo options_lista_nome($areasDocumento); ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Estado</label>
+                                                <select class="form-select" name="outrosDocumentos[__IDX__][estado]">
+                                                    <?php echo options_lista_nome($estadosDocumento); ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Fornecedor associado</label>
+                                                <select class="form-select" name="outrosDocumentos[__IDX__][fornecedor]">
+                                                    <?php echo options_fornecedores_por_nome($fornecedores, true); ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Responsável</label>
+                                                <input type="text" class="form-control" name="outrosDocumentos[__IDX__][responsavel]">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Observações</label>
+                                                <textarea class="form-control" name="outrosDocumentos[__IDX__][observacoes]" rows="2"></textarea>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="fa-solid fa-file-pdf me-1 text-danger"></i> PDFs deste documento
+                                                </label>
+                                                <input type="file" class="form-control" name="outrosDocumentos[__IDX__][ficheiros][]" accept="application/pdf,.pdf" multiple>
                                             </div>
                                         </div>
-                                    </div>
+                                    </template>
                                 </div>
                             </div>
- 
+
+
                             <!-- GARANTIA E CONTRATO -->
                             <div class="tab-pane fade" id="aba-garantia" role="tabpanel">
                                 <div class="row g-3">
@@ -2201,7 +2884,7 @@ include __DIR__ . '/../../includes/nav.php';
                                             <div class="row g-3">
                                                 <div class="col-md-3">
                                                     <label for="codigoGarantiaEquipamento" class="form-label">Código da garantia</label>
-                                                    <input type="text" class="form-control" id="codigoGarantiaEquipamento" name="garantia[codigo]" value="">
+                                                    <input type="text" class="form-control" id="codigoGarantiaEquipamento" name="garantia[codigo]" value="<?php echo htmlspecialchars(!empty($_POST['garantia']['codigo']) ? $_POST['garantia']['codigo'] : $proximoCodigoGarantia); ?>">
                                                 </div>
  
                                                 <div class="col-md-5">
@@ -2223,7 +2906,7 @@ include __DIR__ . '/../../includes/nav.php';
  
                                                 <div class="col-md-4">
                                                     <label for="equipamentoAssociadoGarantia" class="form-label">Equipamento associado</label>
-                                                    <input type="text" class="form-control" id="equipamentoAssociadoGarantia" value="">
+                                                    <input type="text" class="form-control" id="equipamentoAssociadoGarantia" value="Equipamento atual" readonly>
                                                 </div>
  
                                                 <div class="col-md-4">
@@ -2277,7 +2960,6 @@ include __DIR__ . '/../../includes/nav.php';
                                                     <input type="file" class="form-control input-pdf-multiplo" id="ficheirosGarantiaEquipamento"
                                                         name="garantia[ficheiros][]" accept="application/pdf,.pdf" multiple
                                                         data-lista="listaFicheirosGarantiaEquipamento" data-removivel="true">
-                                                    <div class="form-text">Pode selecionar vários PDFs da garantia.</div>
                                                     <div class="pdf-lista mt-3" id="listaFicheirosGarantiaEquipamento">
                                                         <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
                                                     </div>
@@ -2302,7 +2984,7 @@ include __DIR__ . '/../../includes/nav.php';
                                             <div class="row g-3">
                                                 <div class="col-md-3">
                                                     <label for="codigoContratoManutencaoEquipamento" class="form-label">Código do contrato</label>
-                                                    <input type="text" class="form-control" id="codigoContratoManutencaoEquipamento" name="contratoManutencao[codigo]" value="">
+                                                    <input type="text" class="form-control" id="codigoContratoManutencaoEquipamento" name="contratoManutencao[codigo]" value="<?php echo htmlspecialchars(!empty($_POST['contratoManutencao']['codigo']) ? $_POST['contratoManutencao']['codigo'] : $proximoCodigoContrato); ?>">
                                                 </div>
  
                                                 <div class="col-md-5">
@@ -2324,7 +3006,7 @@ include __DIR__ . '/../../includes/nav.php';
  
                                                 <div class="col-md-4">
                                                     <label for="associadoContratoManutencaoEquipamento" class="form-label">Associado a</label>
-                                                    <input type="text" class="form-control" id="associadoContratoManutencaoEquipamento" value="">
+                                                    <input type="text" class="form-control" id="associadoContratoManutencaoEquipamento" value="Equipamento atual" readonly>
                                                 </div>
  
                                                 <div class="col-md-4">
@@ -2370,7 +3052,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-3">
                                                     <label for="estadoContratoManutencaoEquipamento" class="form-label">Estado</label>
                                                     <select class="form-select" id="estadoContratoManutencaoEquipamento" name="contratoManutencao[estado]">
-                                                        <?php echo options_lista_nome($estadosGarantia); ?>
+                                                        <?php echo options_lista_nome($estadosContrato); ?>
                                                     </select>
                                                 </div>
  
@@ -2386,7 +3068,6 @@ include __DIR__ . '/../../includes/nav.php';
                                                     <input type="file" class="form-control input-pdf-multiplo" id="ficheirosContratoManutencaoEquipamento"
                                                         name="contratoManutencao[ficheiros][]" accept="application/pdf,.pdf" multiple
                                                         data-lista="listaFicheirosContratoManutencaoEquipamento" data-removivel="true">
-                                                    <div class="form-text">Pode selecionar vários PDFs do contrato de manutenção.</div>
                                                     <div class="pdf-lista mt-3" id="listaFicheirosContratoManutencaoEquipamento">
                                                         <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
                                                     </div>
@@ -2396,111 +3077,120 @@ include __DIR__ . '/../../includes/nav.php';
                                     </div>
  
                                     <div class="col-12">
-                                        <div class="pdf-upload-card">
-                                            <h6 class="fw-bold mb-1">
-                                                <i class="fa-solid fa-folder-plus me-1 text-primary"></i> Outros contratos
-                                            </h6>
-                                            <p class="text-muted small mb-3">Área opcional para seguros, assistência técnica ou outros contratos.</p>
- 
-                                            <div class="row g-3">
-                                                <div class="col-md-3">
-                                                    <label for="codigoOutroContratoEquipamento" class="form-label">Código</label>
-                                                    <input type="text" class="form-control" id="codigoOutroContratoEquipamento" name="outrosContratos[codigo]">
-                                                </div>
- 
-                                                <div class="col-md-3">
-                                                    <label for="tipoOutroContratoEquipamento" class="form-label">Tipo de contrato</label>
-                                                    <select class="form-select" id="tipoOutroContratoEquipamento" name="outrosContratos[tipo]">
-                                                        <option value="">Selecionar</option>
-                                                        <option value="Seguro">Seguro</option>
-                                                        <option value="Assistência Técnica">Assistência Técnica</option>
-                                                        <option value="Aluguer">Aluguer</option>
-                                                        <option value="Outro">Outro</option>
-                                                    </select>
-                                                </div>
- 
-                                                <div class="col-md-6">
-                                                    <label for="designacaoOutroContratoEquipamento" class="form-label">Designação</label>
-                                                    <input type="text" class="form-control" id="designacaoOutroContratoEquipamento" name="outrosContratos[designacao]">
-                                                </div>
- 
-                                                <div class="col-md-4">
-                                                    <label for="fornecedorOutroContratoEquipamento" class="form-label">Entidade responsável / fornecedor</label>
-                                                    <select class="form-select" id="fornecedorOutroContratoEquipamento" name="outrosContratos[fornecedor]">
-                                                        <?php echo options_fornecedores_por_nome($fornecedores, false); ?>
-                                                    </select>
-                                                </div>
- 
-                                                <div class="col-md-4">
-                                                    <label for="associadoOutroContratoEquipamento" class="form-label">Associado a</label>
-                                                    <input type="text" class="form-control" id="associadoOutroContratoEquipamento" name="outrosContratos[associado]">
-                                                </div>
- 
-                                                <div class="col-md-4">
-                                                    <label for="responsavelOutroContratoEquipamento" class="form-label">Responsável</label>
-                                                    <input type="text" class="form-control" id="responsavelOutroContratoEquipamento" name="outrosContratos[responsavel]">
-                                                </div>
- 
-                                                <div class="col-md-3">
-                                                    <label for="dataInicioOutroContratoEquipamento" class="form-label">Data de início</label>
-                                                    <input type="text" class="form-control flatpickr-data" id="dataInicioOutroContratoEquipamento" name="outrosContratos[data_inicio]">
-                                                </div>
- 
-                                                <div class="col-md-3">
-                                                    <label for="dataFimOutroContratoEquipamento" class="form-label">Data de fim</label>
-                                                    <input type="text" class="form-control flatpickr-data" id="dataFimOutroContratoEquipamento" name="outrosContratos[data_fim]">
-                                                </div>
- 
-                                                <div class="col-md-3">
-                                                    <label for="valorAnualOutroContratoEquipamento" class="form-label">Valor anual (€)</label>
-                                                    <input type="number" class="form-control" id="valorAnualOutroContratoEquipamento" name="outrosContratos[valor_anual]" min="0" step="0.01">
-                                                </div>
- 
-                                                <div class="col-md-3">
-                                                    <label for="periodicidadeOutroContratoEquipamento" class="form-label">Periodicidade</label>
-                                                    <input type="text" class="form-control" id="periodicidadeOutroContratoEquipamento" name="outrosContratos[periodicidade]">
-                                                </div>
- 
-                                                <div class="col-md-3">
-                                                    <label for="renovacaoOutroContratoEquipamento" class="form-label">Renovação automática</label>
-                                                    <select class="form-select" id="renovacaoOutroContratoEquipamento" name="outrosContratos[renovacao_automatica]">
-                                                        <option value="">Selecionar</option>
-                                                        <option value="Não">Não</option>
-                                                        <option value="Sim">Sim</option>
-                                                    </select>
-                                                </div>
- 
-                                                <div class="col-md-3">
-                                                    <label for="estadoOutroContratoEquipamento" class="form-label">Estado</label>
-                                                    <select class="form-select" id="estadoOutroContratoEquipamento" name="outrosContratos[estado]">
-                                                        <option value="">Selecionar</option>
-                                                        <option value="Ativo">Ativo</option>
-                                                        <option value="A expirar">A expirar</option>
-                                                        <option value="Expirado">Expirado</option>
-                                                        <option value="Cancelado">Cancelado</option>
-                                                    </select>
-                                                </div>
- 
-                                                <div class="col-12">
-                                                    <label for="observacoesOutroContratoEquipamento" class="form-label">Observações</label>
-                                                    <textarea class="form-control" id="observacoesOutroContratoEquipamento" name="outrosContratos[observacoes]" rows="2"></textarea>
-                                                </div>
- 
-                                                <div class="col-12">
-                                                    <label for="ficheirosOutrosContratosEquipamento" class="form-label fw-semibold">
-                                                        <i class="fa-solid fa-file-pdf me-1 text-danger"></i> PDFs dos outros contratos
-                                                    </label>
-                                                    <input type="file" class="form-control input-pdf-multiplo" id="ficheirosOutrosContratosEquipamento"
-                                                        name="outrosContratos[ficheiros][]" accept="application/pdf,.pdf" multiple
-                                                        data-lista="listaFicheirosOutrosContratosEquipamento" data-removivel="true">
-                                                    <div class="form-text">Pode selecionar vários PDFs opcionais.</div>
-                                                    <div class="pdf-lista mt-3" id="listaFicheirosOutrosContratosEquipamento">
-                                                        <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
-                                                    </div>
-                                                </div>
+                                        <hr class="my-2">
+                                        <h6 class="fw-bold mb-1">
+                                            <i class="fa-solid fa-folder-plus me-1 text-primary"></i> Outros contratos
+                                        </h6>
+                                        <p class="text-muted small mb-0">
+                                            Área opcional. Pode adicionar vários contratos com o botão abaixo.
+                                        </p>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div id="containerOutrosContratos"></div>
+                                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="btnAdicionarOutroContrato">
+                                            <i class="fa-solid fa-plus me-1"></i> Adicionar outro contrato
+                                        </button>
+                                    </div>
+
+                                    <template id="templateOutroContrato">
+                                        <div class="row g-3 border rounded p-3 mb-3 bloco-outro-contrato">
+                                            <div class="col-12 d-flex justify-content-between align-items-center">
+                                                <span class="fw-semibold">Contrato adicional</span>
+                                                <button type="button" class="btn btn-outline-danger btn-sm btn-remover-outro-contrato">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label">Código</label>
+                                                <input type="text" class="form-control" name="outrosContratos[__IDX__][codigo]">
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label">Tipo de contrato</label>
+                                                <select class="form-select" name="outrosContratos[__IDX__][tipo]">
+                                                    <?php echo options_lista_nome($tiposContrato); ?>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label">Designação</label>
+                                                <input type="text" class="form-control" name="outrosContratos[__IDX__][designacao]">
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label class="form-label">Entidade responsável / fornecedor</label>
+                                                <select class="form-select" name="outrosContratos[__IDX__][fornecedor]">
+                                                    <?php echo options_fornecedores_por_nome($fornecedores, false); ?>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label class="form-label">Associado a</label>
+                                                <input type="text" class="form-control" name="outrosContratos[__IDX__][associado]" value="Equipamento atual" readonly>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label class="form-label">Responsável</label>
+                                                <input type="text" class="form-control" name="outrosContratos[__IDX__][responsavel]">
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label">Data de início</label>
+                                                <input type="text" class="form-control flatpickr-data" name="outrosContratos[__IDX__][data_inicio]">
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label">Data de fim</label>
+                                                <input type="text" class="form-control flatpickr-data" name="outrosContratos[__IDX__][data_fim]">
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label">Valor anual (€)</label>
+                                                <input type="number" class="form-control" name="outrosContratos[__IDX__][valor_anual]" min="0" step="0.01">
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label">Periodicidade</label>
+                                                <select class="form-select" name="outrosContratos[__IDX__][periodicidade]">
+                                                    <option value="" selected>Selecionar</option>
+                                                    <option value="Mensal">Mensal</option>
+                                                    <option value="Trimestral">Trimestral</option>
+                                                    <option value="Semestral">Semestral</option>
+                                                    <option value="Anual">Anual</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label">Renovação automática</label>
+                                                <select class="form-select" name="outrosContratos[__IDX__][renovacao_automatica]">
+                                                    <option value="">Selecionar</option>
+                                                    <option value="Não">Não</option>
+                                                    <option value="Sim">Sim</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label">Estado</label>
+                                                <select class="form-select" name="outrosContratos[__IDX__][estado]">
+                                                    <?php echo options_lista_nome($estadosContrato); ?>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label class="form-label">Observações</label>
+                                                <textarea class="form-control" name="outrosContratos[__IDX__][observacoes]" rows="2"></textarea>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold">
+                                                    <i class="fa-solid fa-file-pdf me-1 text-danger"></i> PDFs deste contrato
+                                                </label>
+                                                <input type="file" class="form-control" name="outrosContratos[__IDX__][ficheiros][]" accept="application/pdf,.pdf" multiple>
                                             </div>
                                         </div>
-                                    </div>
+                                    </template>
                                 </div>
                             </div>
  
@@ -2534,8 +3224,13 @@ include __DIR__ . '/../../includes/nav.php';
                                     <div class="col-md-4">
                                         <label for="periodicidadeManutencaoEquipamento"
                                             class="form-label">Periodicidade</label>
-                                        <input type="text" class="form-control" id="periodicidadeManutencaoEquipamento" name="manutencao[periodicidade]"
-                                            placeholder="Ex: Anual">
+                                        <select class="form-select" id="periodicidadeManutencaoEquipamento" name="manutencao[periodicidade]">
+                                                        <option value="" selected>Selecionar</option>
+                                                        <option value="Mensal">Mensal</option>
+                                                        <option value="Trimestral">Trimestral</option>
+                                                        <option value="Semestral">Semestral</option>
+                                                        <option value="Anual">Anual</option>
+                                                    </select>
                                     </div>
  
                                     <div class="col-md-4">

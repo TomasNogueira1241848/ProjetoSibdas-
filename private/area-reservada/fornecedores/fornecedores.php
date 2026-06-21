@@ -154,6 +154,16 @@ include __DIR__ . '/../../includes/nav.php';
                 </a>
             </div>
 
+            <?php if (isset($_GET['sucesso']) && $_GET['sucesso'] == '1'): ?>
+                <div class="alert alert-success d-flex align-items-start gap-2" role="alert">
+                    <i class="fa-solid fa-circle-check mt-1"></i>
+                    <div>
+                        <strong class="d-block">Fornecedor adicionado</strong>
+                        <span>O fornecedor foi adicionado com sucesso.</span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <?php if ($erroBD !== ''): ?>
                 <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
                     <i class="fa-solid fa-circle-exclamation mt-1"></i>

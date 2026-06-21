@@ -170,13 +170,13 @@ include __DIR__ . '/../../includes/nav.php';
                 </a>
             </div>
 
-            <?php if (isset($_GET['sucesso'])): ?>
+            <?php if (isset($_GET['sucesso']) && $_GET['sucesso'] == '1'): ?>
                 <div class="alert alert-success d-flex align-items-start gap-2" role="alert">
                     <i class="fa-solid fa-circle-check mt-1"></i>
 
                     <div>
-                        <strong class="d-block">Equipamento registado</strong>
-                        <span>O equipamento foi guardado com sucesso.</span>
+                        <strong class="d-block">Equipamento adicionado</strong>
+                        <span>O equipamento foi adicionado com sucesso.</span>
                     </div>
                 </div>
             <?php endif; ?>
