@@ -6,8 +6,12 @@ document.addEventListener('DOMContentLoaded', function () {
     inicializarTooltips();
     inicializarToastPublic();
 
-    inicializarFormulariosSimulados();
     inicializarGestaoConteudosPublicos();
+
+    inicializarNavegacaoAbasEquipamento();
+    preencherFormularioEquipamentoEditar();
+    inicializarBlocosDinamicosEquipamento();
+
     inicializarInputsPDFs();
     inicializarBotoesRemoverPDFs();
     inicializarCamposCondicionaisEquipamento();
@@ -15,58 +19,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     inicializarGraficosDashboard();
 });
-
-
-/* Configuração reutilizável dos formulários */
-function inicializarFormulariosSimulados() {
-    const formularios = [
-        {
-            idFormulario: 'formEliminarEquipamento',
-            idMensagem: 'mensagemEliminarEquipamento',
-            paginaDestino: 'equipamentos.php',
-            validar: false
-        },
-        {
-            idFormulario: 'formEliminarFornecedor',
-            idMensagem: 'mensagemEliminarFornecedor',
-            paginaDestino: 'fornecedores.php',
-            validar: false
-        },
-        {
-            idFormulario: 'formEliminarLocalizacao',
-            idMensagem: 'mensagemEliminarLocalizacao',
-            paginaDestino: 'localizacoes.php',
-            validar: false
-        },
-        {
-            idFormulario: 'formEliminarDocumento',
-            idMensagem: 'mensagemEliminarDocumento',
-            paginaDestino: 'documentacao.php',
-            validar: false
-        },
-        {
-            idFormulario: 'formEliminarContrato',
-            idMensagem: 'mensagemEliminarContrato',
-            paginaDestino: 'contratos.php',
-            validar: false
-        },
-        {
-            idFormulario: 'formEliminarGarantia',
-            idMensagem: 'mensagemEliminarGarantia',
-            paginaDestino: 'contratos.php',
-            validar: false
-        }
-    ];
-
-    formularios.forEach(function (formulario) {
-        inicializarFormularioSimulado(
-            formulario.idFormulario,
-            formulario.idMensagem,
-            formulario.paginaDestino,
-            formulario.validar
-        );
-    });
-}
 
 
 /* Validação do formulário de contacto da área pública */
@@ -117,31 +69,6 @@ function inicializarToastPublic() {
         const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
         toast.show();
     }
-}
-
-
-/* Validação reutilizável para formulários simulados */
-function inicializarFormularioSimulado(idFormulario, idMensagem, paginaDestino, validarFormulario) {
-    const formulario = document.getElementById(idFormulario);
-    const mensagem = document.getElementById(idMensagem);
-
-    if (!formulario) return;
-
-    formulario.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        if (validarFormulario && !validarFormularioHTML(formulario)) return;
-
-        limparValidacaoManual(formulario);
-
-        if (mensagem) {
-            mensagem.classList.remove('d-none');
-        }
-
-        setTimeout(function () {
-            window.location.href = paginaDestino;
-        }, 1200);
-    });
 }
 
 
@@ -240,6 +167,187 @@ function focarCampo(campo) {
 }
 
 
+/* Controla as abas do formulário de equipamento: Anterior, Seguinte e Guardar */
+function inicializarNavegacaoAbasEquipamento() {
+    const abas = Array.from(document.querySelectorAll('#abasEquipamento button[data-bs-toggle="tab"]'));
+    const botaoAnterior = document.getElementById('btnAbaAnteriorEquipamento');
+    const botaoSeguinte = document.getElementById('btnAbaSeguinteEquipamento');
+    const botaoGuardar = document.getElementById('btnGuardarEquipamento');
+
+    if (!abas.length || !botaoAnterior || !botaoSeguinte || !botaoGuardar || typeof bootstrap === 'undefined') {
+        return;
+    }
+
+    function obterIndiceAtual() {
+        return abas.findIndex(function (aba) {
+            return aba.classList.contains('active');
+        });
+    }
+
+    function mostrarAba(indice) {
+        if (indice < 0 || indice >= abas.length) return;
+
+        const aba = new bootstrap.Tab(abas[indice]);
+        aba.show();
+    }
+
+    function atualizarBotoes() {
+        const indice = obterIndiceAtual();
+        const primeiraAba = indice <= 0;
+        const ultimaAba = indice === abas.length - 1;
+
+        botaoAnterior.classList.toggle('d-none', primeiraAba);
+        botaoSeguinte.classList.toggle('d-none', ultimaAba);
+        botaoGuardar.classList.toggle('d-none', !ultimaAba);
+    }
+
+    botaoAnterior.addEventListener('click', function () {
+        mostrarAba(obterIndiceAtual() - 1);
+    });
+
+    botaoSeguinte.addEventListener('click', function () {
+        mostrarAba(obterIndiceAtual() + 1);
+    });
+
+    abas.forEach(function (aba) {
+        aba.addEventListener('shown.bs.tab', atualizarBotoes);
+    });
+
+    atualizarBotoes();
+}
+
+
+/* Inicializa blocos dinâmicos de documentos e contratos opcionais do equipamento */
+function inicializarBlocosDinamicosEquipamento() {
+    inicializarBlocoDinamico({
+        botao: 'btnAdicionarOutroDocumento',
+        container: 'containerOutrosDocumentos',
+        template: 'templateOutroDocumento',
+        remover: '.btn-remover-outro-documento',
+        bloco: '.bloco-outro-documento'
+    });
+
+    inicializarBlocoDinamico({
+        botao: 'btnAdicionarOutroContrato',
+        container: 'containerOutrosContratos',
+        template: 'templateOutroContrato',
+        remover: '.btn-remover-outro-contrato',
+        bloco: '.bloco-outro-contrato'
+    });
+}
+
+
+/* Clona templates HTML e prepara calendários/PDFs dos blocos criados */
+function inicializarBlocoDinamico(configuracao) {
+    const botaoAdicionar = document.getElementById(configuracao.botao);
+    const container = document.getElementById(configuracao.container);
+    const template = document.getElementById(configuracao.template);
+
+    if (!botaoAdicionar || !container || !template) return;
+
+    let indice = parseInt(container.dataset.proximoIndice || '0', 10);
+
+    if (Number.isNaN(indice)) {
+        indice = 0;
+    }
+
+    botaoAdicionar.addEventListener('click', function () {
+        const html = template.innerHTML.replace(/__IDX__/g, indice);
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = html.trim();
+
+        const bloco = wrapper.firstElementChild;
+        if (!bloco) return;
+
+        container.appendChild(bloco);
+
+        if (typeof flatpickr !== 'undefined') {
+            bloco.querySelectorAll('.flatpickr-data').forEach(function (campo) {
+                flatpickr(campo, { dateFormat: 'Y-m-d', allowInput: true });
+            });
+        }
+
+        bloco.querySelectorAll('.input-pdf-multiplo').forEach(function (input) {
+            inicializarInputPDF(input);
+        });
+
+        indice++;
+        container.dataset.proximoIndice = String(indice);
+    });
+
+    container.addEventListener('click', function (evento) {
+        const botaoRemover = evento.target.closest(configuracao.remover);
+
+        if (!botaoRemover) return;
+
+        const bloco = botaoRemover.closest(configuracao.bloco);
+
+        if (bloco) {
+            bloco.remove();
+        }
+    });
+}
+
+
+/* Preenche campos do editar equipamento quando a página disponibiliza dados em window.dadosFormularioEquipamentoEditar */
+function preencherFormularioEquipamentoEditar() {
+    const formulario = document.getElementById('formEquipamento');
+    const dados = window.dadosFormularioEquipamentoEditar || {};
+
+    if (!formulario || !Object.keys(dados).length) return;
+
+    formulario.querySelectorAll('input[name], select[name], textarea[name]').forEach(function (campo) {
+        if (campo.type === 'file') return;
+
+        const valor = obterValorPorNomeFormulario(dados, campo.name);
+
+        if (valor === undefined || valor === null) return;
+
+        if (campo.type === 'checkbox') {
+            campo.checked = Array.isArray(valor)
+                ? valor.map(String).includes(String(campo.value))
+                : String(valor) === String(campo.value);
+            return;
+        }
+
+        if (campo.type === 'radio') {
+            campo.checked = String(valor) === String(campo.value);
+            return;
+        }
+
+        if (Array.isArray(valor)) return;
+
+        campo.value = valor;
+    });
+}
+
+
+/* Permite ler nomes como documentosMinimos[ManualUtilizador][responsavel] dentro de um objeto JS */
+function obterValorPorNomeFormulario(objeto, nomeCampo) {
+    const partes = [];
+
+    nomeCampo.replace(/([^\[\]]+)|\[([^\]]*)\]/g, function (_, simples, composto) {
+        partes.push(simples !== undefined ? simples : composto);
+    });
+
+    let atual = objeto;
+
+    for (let i = 0; i < partes.length; i++) {
+        const parte = partes[i];
+
+        if (parte === '') return atual;
+
+        if (atual === undefined || atual === null || typeof atual !== 'object' || !(parte in atual)) {
+            return undefined;
+        }
+
+        atual = atual[parte];
+    }
+
+    return atual;
+}
+
+
 /* Inicializa campos condicionais dos formulários de equipamentos */
 function inicializarCamposCondicionaisEquipamento() {
     configurarCampoCondicional({
@@ -299,12 +407,21 @@ function inicializarInputsPDFs() {
     const inputsPDF = document.querySelectorAll('.input-pdf-multiplo');
 
     inputsPDF.forEach(function (input) {
-        atualizarListaPDFs(input);
+        inicializarInputPDF(input);
+    });
+}
 
-        input.addEventListener('change', function () {
-            atualizarListaPDFs(input);
-            atualizarEstadoCampo(input);
-        });
+
+/* Inicializa um input PDF individual, incluindo os que são criados dinamicamente */
+function inicializarInputPDF(input) {
+    if (!input || input.dataset.pdfInicializado === '1') return;
+
+    input.dataset.pdfInicializado = '1';
+    atualizarListaPDFs(input);
+
+    input.addEventListener('change', function () {
+        atualizarListaPDFs(input);
+        atualizarEstadoCampo(input);
     });
 }
 
@@ -870,4 +987,3 @@ function criarGraficoLocalizacao() {
     });
 
 }
-

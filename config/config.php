@@ -13,3 +13,8 @@ define('MYSQL_DATABASE', 'medinfo_solutions');
 define('MYSQL_USERNAME', 'medinfo_user');
 define('MYSQL_PASSWORD', 'medinfo123');
 define('MYSQL_CHARSET', 'utf8mb4');
+
+/* Segurança - Encriptação com OpenSSL */
+define('OPENSSL_METHOD', 'AES-256-CBC');
+define('OPENSSL_KEY', 'H0SDRQzIGqclX2kbYBk9xspdn9U5f3Wa');
+define('OPENSSL_IV', 'BzKAbjuREsHgnw56');

@@ -71,7 +71,10 @@ $(document).ready(function () {
 });
 JS;
 
+require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
+
+redirect_if_not_logged();
 
 $equipamentos = [];
 $categorias = [];
@@ -177,6 +180,17 @@ include __DIR__ . '/../../includes/nav.php';
                     <div>
                         <strong class="d-block">Equipamento adicionado</strong>
                         <span>O equipamento foi adicionado com sucesso.</span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($_GET['editado']) && $_GET['editado'] == '1'): ?>
+                <div class="alert alert-success d-flex align-items-start gap-2" role="alert">
+                    <i class="fa-solid fa-circle-check mt-1"></i>
+
+                    <div>
+                        <strong class="d-block">Equipamento atualizado</strong>
+                        <span>O equipamento foi atualizado com sucesso.</span>
                     </div>
                 </div>
             <?php endif; ?>
@@ -345,7 +359,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <a href="equipamento-editar.php?id=<?php echo htmlspecialchars($equipamento->id); ?>"
+                                            <a href="equipamento-editar.php?id_equipamento=<?php echo urlencode(aes_encrypt($equipamento->id)); ?>"
                                                 class="btn btn-sm btn-outline-secondary"
                                                 data-bs-toggle="tooltip"
                                                 data-bs-title="Editar">

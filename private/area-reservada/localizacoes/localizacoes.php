@@ -65,6 +65,7 @@ $(document).ready(function () {
 });
 JS;
 
+require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
 
 $localizacoes = [];
@@ -173,6 +174,17 @@ include __DIR__ . '/../../includes/nav.php';
                     <div>
                         <strong class="d-block">Localização adicionada</strong>
                         <span>A localização foi adicionada com sucesso.</span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+
+            <?php if (isset($_GET['editado']) && $_GET['editado'] == '1'): ?>
+                <div class="alert alert-success d-flex align-items-start gap-2" role="alert">
+                    <i class="fa-solid fa-circle-check mt-1"></i>
+                    <div>
+                        <strong class="d-block">Localização atualizada</strong>
+                        <span>A localização foi atualizada com sucesso.</span>
                     </div>
                 </div>
             <?php endif; ?>
@@ -306,7 +318,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <a href="localizacao-editar.php?id=<?php echo htmlspecialchars($localizacao->id); ?>"
+                                            <a href="localizacao-editar.php?id_localizacao=<?php echo urlencode(aes_encrypt($localizacao->id)); ?>"
                                                 class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
                                                 data-bs-title="Editar">
                                                 <i class="fa-solid fa-pen"></i>

@@ -4,136 +4,7 @@ $assetPath = '../../../assets';
 $areaPath = '../';
 $activeMenu = 'equipamentos';
  
-$pageScript = <<<'JS'
-document.addEventListener('DOMContentLoaded', function () {
-    const abas = Array.from(document.querySelectorAll('#abasEquipamento button[data-bs-toggle="tab"]'));
-    const botaoAnterior = document.getElementById('btnAbaAnteriorEquipamento');
-    const botaoSeguinte = document.getElementById('btnAbaSeguinteEquipamento');
-    const botaoGuardar = document.getElementById('btnGuardarEquipamento');
- 
-    if (!abas.length || !botaoAnterior || !botaoSeguinte || !botaoGuardar || typeof bootstrap === 'undefined') {
-        return;
-    }
- 
-    function obterIndiceAtual() {
-        return abas.findIndex(function (aba) {
-            return aba.classList.contains('active');
-        });
-    }
- 
-    function mostrarAba(indice) {
-        if (indice < 0 || indice >= abas.length) {
-            return;
-        }
- 
-        const aba = new bootstrap.Tab(abas[indice]);
-        aba.show();
-    }
- 
-    function atualizarBotoes() {
-        const indice = obterIndiceAtual();
-        const primeiraAba = indice <= 0;
-        const ultimaAba = indice === abas.length - 1;
- 
-        botaoAnterior.classList.toggle('d-none', primeiraAba);
-        botaoSeguinte.classList.toggle('d-none', ultimaAba);
-        botaoGuardar.classList.toggle('d-none', !ultimaAba);
-    }
- 
-    botaoAnterior.addEventListener('click', function () {
-        mostrarAba(obterIndiceAtual() - 1);
-    });
- 
-    botaoSeguinte.addEventListener('click', function () {
-        mostrarAba(obterIndiceAtual() + 1);
-    });
- 
-    abas.forEach(function (aba) {
-        aba.addEventListener('shown.bs.tab', atualizarBotoes);
-    });
-
-    /*
-     * Documentos extra: botao "+" clona o template e o "-" remove o bloco.
-     * Cada bloco recebe um indice proprio (0, 1, 2...) para o PHP os distinguir.
-     */
-    (function () {
-        const botaoAdicionar = document.getElementById('btnAdicionarOutroDocumento');
-        const container = document.getElementById('containerOutrosDocumentos');
-        const template = document.getElementById('templateOutroDocumento');
-        if (!botaoAdicionar || !container || !template) {
-            return;
-        }
-        let indice = 0;
-        botaoAdicionar.addEventListener('click', function () {
-            const html = template.innerHTML.replace(/__IDX__/g, indice);
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = html;
-            const bloco = wrapper.firstElementChild;
-            container.appendChild(bloco);
-            if (typeof flatpickr !== 'undefined') {
-                bloco.querySelectorAll('.flatpickr-data').forEach(function (campo) {
-                    flatpickr(campo, { dateFormat: 'Y-m-d', allowInput: true });
-                });
-            }
-            indice++;
-        });
-        container.addEventListener('click', function (evento) {
-            const botaoRemover = evento.target.closest('.btn-remover-outro-documento');
-            if (botaoRemover) {
-                const bloco = botaoRemover.closest('.bloco-outro-documento');
-                if (bloco) { bloco.remove(); }
-            }
-        });
-    })();
-
-    /*
-     * Contratos extra: igual aos documentos extra.
-     * O botao "+" clona um template e cada bloco recebe um indice proprio.
-     */
-    (function () {
-        const botaoAdicionar = document.getElementById('btnAdicionarOutroContrato');
-        const container = document.getElementById('containerOutrosContratos');
-        const template = document.getElementById('templateOutroContrato');
-
-        if (!botaoAdicionar || !container || !template) {
-            return;
-        }
-
-        let indice = 0;
-
-        botaoAdicionar.addEventListener('click', function () {
-            const html = template.innerHTML.replace(/__IDX__/g, indice);
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = html;
-            const bloco = wrapper.firstElementChild;
-
-            container.appendChild(bloco);
-
-            if (typeof flatpickr !== 'undefined') {
-                bloco.querySelectorAll('.flatpickr-data').forEach(function (campo) {
-                    flatpickr(campo, { dateFormat: 'Y-m-d', allowInput: true });
-                });
-            }
-
-            indice++;
-        });
-
-        container.addEventListener('click', function (evento) {
-            const botaoRemover = evento.target.closest('.btn-remover-outro-contrato');
-
-            if (botaoRemover) {
-                const bloco = botaoRemover.closest('.bloco-outro-contrato');
-
-                if (bloco) {
-                    bloco.remove();
-                }
-            }
-        });
-    })();
- 
-    atualizarBotoes();
-});
-JS;
+$pageScript = '';
  
 require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
@@ -216,17 +87,18 @@ function selected_formulario($valor, $valorAtual)
  * Assim, qualquer fornecedor criado na área de fornecedores aparece automaticamente
  * em todos os seletores do formulário de equipamento.
  */
-function options_fornecedores_por_nome($fornecedores, $incluirSemFornecedor = false)
+function options_fornecedores_por_nome($fornecedores, $incluirSemFornecedor = false, $selecionado = '')
 {
-    $html = '<option value="" selected>Selecionar</option>';
+    $html = '<option value="" ' . selected_formulario('', $selecionado) . '>Selecionar</option>';
  
     if ($incluirSemFornecedor) {
-        $html .= '<option value="Sem fornecedor associado">Sem fornecedor associado</option>';
+        $html .= '<option value="Sem fornecedor associado" ' . selected_formulario('Sem fornecedor associado', $selecionado) . '>Sem fornecedor associado</option>';
     }
  
     foreach ($fornecedores as $fornecedor) {
-        $nome = htmlspecialchars($fornecedor->nome);
-        $html .= '<option value="' . $nome . '">' . $nome . '</option>';
+        $nomeOriginal = $fornecedor->nome;
+        $nome = htmlspecialchars($nomeOriginal);
+        $html .= '<option value="' . $nome . '" ' . selected_formulario($nomeOriginal, $selecionado) . '>' . $nome . '</option>';
     }
  
     return $html;
@@ -236,13 +108,14 @@ function options_fornecedores_por_nome($fornecedores, $incluirSemFornecedor = fa
  * Gera <option> a partir de uma lista de lookup carregada da base de dados.
  * Usa o NOME como value (o processamento resolve depois o id pelo nome).
  */
-function options_lista_nome($lista)
+function options_lista_nome($lista, $selecionado = '')
 {
-    $html = '<option value="" selected>Selecionar</option>';
+    $html = '<option value="" ' . selected_formulario('', $selecionado) . '>Selecionar</option>';
  
     foreach ($lista as $item) {
-        $nome = htmlspecialchars($item->nome);
-        $html .= '<option value="' . $nome . '">' . $nome . '</option>';
+        $nomeOriginal = $item->nome;
+        $nome = htmlspecialchars($nomeOriginal);
+        $html .= '<option value="' . $nome . '" ' . selected_formulario($nomeOriginal, $selecionado) . '>' . $nome . '</option>';
     }
  
     return $html;
@@ -366,12 +239,6 @@ function validar_documentos_minimos($documentosMinimosObrigatorios, $documentosP
         } elseif (!validar_data_formulario($validade)) {
             $erros[] = 'A validade do documento "' . $nomeDocumento . '" não é válida.';
         }
-
-        if ($dataDocumento !== '' && $validade !== ''
-            && validar_data_formulario($dataDocumento) && validar_data_formulario($validade)
-            && $validade < $dataDocumento) {
-            $erros[] = 'A validade do documento "' . $nomeDocumento . '" não pode ser anterior à data do documento.';
-        }
  
         if ($estado === '') {
             $erros[] = 'Selecione o estado do documento "' . $nomeDocumento . '".';
@@ -409,6 +276,100 @@ function validar_documentos_minimos($documentosMinimosObrigatorios, $documentosP
     }
 }
  
+
+function extrair_detalhe_observacoes($texto, $rotulo)
+{
+    $texto = (string) ($texto ?? '');
+    $rotulo = (string) $rotulo;
+
+    foreach (preg_split('/\R/u', $texto) as $linha) {
+        $linha = trim($linha);
+        if (stripos($linha, $rotulo . ':') === 0) {
+            return trim(substr($linha, strlen($rotulo) + 1));
+        }
+    }
+
+    return '';
+}
+
+function extrair_observacoes_livres($texto)
+{
+    $texto = trim((string) ($texto ?? ''));
+    if ($texto === '') {
+        return '';
+    }
+
+    $linhasLivres = [];
+    foreach (preg_split('/\R/u', $texto) as $linha) {
+        $linha = trim($linha);
+        if ($linha === '') {
+            continue;
+        }
+
+        if (stripos($linha, 'Responsável:') === 0 || stripos($linha, 'Responsavel:') === 0 || stripos($linha, 'Associado a:') === 0 || stripos($linha, 'Periodicidade:') === 0) {
+            continue;
+        }
+
+        if (stripos($linha, 'Observações:') === 0) {
+            $linhasLivres[] = trim(substr($linha, strlen('Observações:')));
+            continue;
+        }
+
+        if (stripos($linha, 'Observacoes:') === 0) {
+            $linhasLivres[] = trim(substr($linha, strlen('Observacoes:')));
+            continue;
+        }
+
+        $linhasLivres[] = $linha;
+    }
+
+    return trim(implode("\n", array_filter($linhasLivres, static function ($linha) {
+        return trim((string) $linha) !== '';
+    })));
+}
+
+function preparar_observacoes_com_detalhes($observacoes, array $detalhes = [])
+{
+    $linhas = [];
+
+    foreach ($detalhes as $rotulo => $valor) {
+        $valor = trim((string) ($valor ?? ''));
+        if ($valor !== '') {
+            $linhas[] = $rotulo . ': ' . $valor;
+        }
+    }
+
+    $observacoes = trim((string) ($observacoes ?? ''));
+    if ($observacoes !== '') {
+        $linhas[] = 'Observações: ' . $observacoes;
+    }
+
+    return implode("\n", $linhas);
+}
+
+function preparar_observacoes_documento($documento)
+{
+    return preparar_observacoes_com_detalhes($documento['observacoes'] ?? '', [
+        'Responsável' => $documento['responsavel'] ?? ''
+    ]);
+}
+
+function preparar_observacoes_garantia($garantia)
+{
+    return preparar_observacoes_com_detalhes($garantia['observacoes'] ?? '', [
+        'Responsável' => $garantia['responsavel'] ?? ''
+    ]);
+}
+
+function preparar_observacoes_contrato($contrato)
+{
+    return preparar_observacoes_com_detalhes($contrato['observacoes'] ?? '', [
+        'Associado a' => $contrato['associado'] ?? 'Equipamento atual',
+        'Responsável' => $contrato['responsavel'] ?? '',
+        'Periodicidade' => $contrato['periodicidade'] ?? ''
+    ]);
+}
+
 function obter_id_por_nome($ligacao, $tabela, $nome)
 {
     $tabelasPermitidas = [
@@ -437,13 +398,13 @@ function obter_id_por_nome($ligacao, $tabela, $nome)
  
 function inserir_documentos_minimos($ligacao, $equipamentoId, $documentosMinimosObrigatorios, $documentosPost)
 {
-    $diretorioUploads = __DIR__ . '/../../../../assets/uploads/documentos';
+    $diretorioUploads = __DIR__ . '/../../../assets/uploads/documentos';
  
     if (!is_dir($diretorioUploads) && !mkdir($diretorioUploads, 0775, true)) {
         throw new RuntimeException('Não foi possível criar a pasta para guardar os PDFs.');
     }
  
-    $stmtDocumento = $ligacao->prepare("\n        INSERT INTO documentos (\n            codigo,\n            titulo,\n            tipo_documento_id,\n            area_documento_id,\n            equipamento_id,\n            fornecedor_id,\n            data_documento,\n            validade,\n            estado_documento_id,\n            obrigatorio\n        ) VALUES (\n            :codigo,\n            :titulo,\n            :tipo_documento_id,\n            :area_documento_id,\n            :equipamento_id,\n            :fornecedor_id,\n            :data_documento,\n            :validade,\n            :estado_documento_id,\n            1\n        )\n    ");
+    $stmtDocumento = $ligacao->prepare("\n        INSERT INTO documentos (\n            codigo,\n            titulo,\n            tipo_documento_id,\n            area_documento_id,\n            equipamento_id,\n            fornecedor_id,\n            responsavel,\n            data_documento,\n            validade,\n            estado_documento_id,\n            obrigatorio,\n            observacoes\n        ) VALUES (\n            :codigo,\n            :titulo,\n            :tipo_documento_id,\n            :area_documento_id,\n            :equipamento_id,\n            :fornecedor_id,\n            :responsavel,\n            :data_documento,\n            :validade,\n            :estado_documento_id,\n            1,\n            :observacoes\n        )\n    ");
  
     $stmtFicheiro = $ligacao->prepare("\n        INSERT INTO ficheiros_pdf (\n            nome_original,\n            nome_guardado,\n            caminho_ficheiro,\n            tipo_mime,\n            tamanho_bytes,\n            carregado_por\n        ) VALUES (\n            :nome_original,\n            :nome_guardado,\n            :caminho_ficheiro,\n            :tipo_mime,\n            :tamanho_bytes,\n            :carregado_por\n        )\n    ");
  
@@ -477,9 +438,11 @@ function inserir_documentos_minimos($ligacao, $equipamentoId, $documentosMinimos
             ':area_documento_id' => $areaDocumentoId,
             ':equipamento_id' => $equipamentoId,
             ':fornecedor_id' => $fornecedorId,
+            ':responsavel' => trim((string) ($documento['responsavel'] ?? '')),
             ':data_documento' => trim($documento['data_documento']),
             ':validade' => trim($documento['validade']),
-            ':estado_documento_id' => $estadoDocumentoId
+            ':estado_documento_id' => $estadoDocumentoId,
+            ':observacoes' => preparar_observacoes_documento($documento)
         ]);
  
         $documentoId = $ligacao->lastInsertId();
@@ -535,121 +498,6 @@ function obter_ficheiros_documento_extra($indice)
     return $ficheiros;
 }
 
-
-function documento_extra_tem_dados($documento)
-{
-    if (!is_array($documento)) {
-        return false;
-    }
-
-    foreach ($documento as $valor) {
-        if (is_array($valor)) {
-            continue;
-        }
-
-        if (trim((string) $valor) !== '') {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-function validar_documentos_extra($outrosDocumentos, &$erros, $ligacao = null)
-{
-    if (empty($outrosDocumentos) || !is_array($outrosDocumentos)) {
-        return;
-    }
-
-    foreach ($outrosDocumentos as $indice => $documento) {
-        if (!documento_extra_tem_dados($documento)) {
-            continue;
-        }
-
-        $prefixo = 'Documento opcional #' . ((int) $indice + 1) . ': ';
-        $codigo = strtoupper(trim($documento['codigo'] ?? ''));
-        $titulo = trim($documento['titulo'] ?? '');
-        $tipo = trim($documento['tipo'] ?? '');
-        $area = trim($documento['area'] ?? '');
-        $dataDocumento = trim($documento['data_documento'] ?? '');
-        $validade = trim($documento['validade'] ?? '');
-        $estado = trim($documento['estado'] ?? '');
-        $fornecedor = trim($documento['fornecedor'] ?? '');
-
-        if ($codigo === '') {
-            $erros[] = $prefixo . 'o código é obrigatório.';
-        } elseif (!preg_match('/^DOC-\d{3,}$/', $codigo)) {
-            $erros[] = $prefixo . 'o código deve seguir o formato DOC-000.';
-        }
-
-        if ($titulo === '') {
-            $erros[] = $prefixo . 'o nome do documento é obrigatório.';
-        }
-
-        if ($tipo === '') {
-            $erros[] = $prefixo . 'selecione o tipo de documento.';
-        } elseif ($ligacao !== null && !obter_id_por_nome($ligacao, 'tipos_documento', $tipo)) {
-            $erros[] = $prefixo . 'o tipo de documento não existe na base de dados.';
-        }
-
-        if ($area === '') {
-            $erros[] = $prefixo . 'selecione a área.';
-        } elseif ($ligacao !== null && !obter_id_por_nome($ligacao, 'areas_documento', $area)) {
-            $erros[] = $prefixo . 'a área selecionada não existe na base de dados.';
-        }
-
-        if ($dataDocumento === '') {
-            $erros[] = $prefixo . 'a data do documento é obrigatória.';
-        } elseif (!validar_data_formulario($dataDocumento)) {
-            $erros[] = $prefixo . 'a data do documento não é válida.';
-        }
-
-        if ($validade === '') {
-            $erros[] = $prefixo . 'a validade é obrigatória.';
-        } elseif (!validar_data_formulario($validade)) {
-            $erros[] = $prefixo . 'a validade não é válida.';
-        }
-
-        if ($dataDocumento !== '' && $validade !== ''
-            && validar_data_formulario($dataDocumento) && validar_data_formulario($validade)
-            && $validade < $dataDocumento) {
-            $erros[] = $prefixo . 'a validade não pode ser anterior à data do documento.';
-        }
-
-        if ($estado === '') {
-            $erros[] = $prefixo . 'selecione o estado.';
-        } elseif ($ligacao !== null && !obter_id_por_nome($ligacao, 'estados_documento', $estado)) {
-            $erros[] = $prefixo . 'o estado selecionado não existe na base de dados.';
-        }
-
-        if ($fornecedor !== '' && $fornecedor !== 'Sem fornecedor associado'
-            && $ligacao !== null && !obter_id_por_nome($ligacao, 'fornecedores', $fornecedor)) {
-            $erros[] = $prefixo . 'o fornecedor selecionado não existe na base de dados.';
-        }
-
-        foreach (obter_ficheiros_documento_extra($indice) as $ficheiro) {
-            if (($ficheiro['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-                $erros[] = $prefixo . 'ocorreu um erro ao carregar o PDF "' . ($ficheiro['name'] ?? '') . '".';
-                continue;
-            }
-
-            $extensao = strtolower(pathinfo($ficheiro['name'], PATHINFO_EXTENSION));
-
-            if ($extensao !== 'pdf') {
-                $erros[] = $prefixo . 'o ficheiro "' . $ficheiro['name'] . '" deve estar em formato PDF.';
-            }
-
-            if ((int) ($ficheiro['size'] ?? 0) <= 0) {
-                $erros[] = $prefixo . 'o ficheiro "' . $ficheiro['name'] . '" está vazio.';
-            }
-
-            if ((int) ($ficheiro['size'] ?? 0) > 10 * 1024 * 1024) {
-                $erros[] = $prefixo . 'o ficheiro "' . $ficheiro['name'] . '" não pode ter mais de 10 MB.';
-            }
-        }
-    }
-}
-
 /*
  * Insere os documentos extra (opcionais) que o utilizador adicionou.
  * Cada documento so e gravado se tiver pelo menos codigo e titulo preenchidos.
@@ -661,14 +509,14 @@ function inserir_documentos_extra($ligacao, $equipamentoId, $outrosDocumentos)
         return 0;
     }
 
-    $diretorioUploads = __DIR__ . '/../../../../assets/uploads/documentos';
+    $diretorioUploads = __DIR__ . '/../../../assets/uploads/documentos';
     if (!is_dir($diretorioUploads) && !mkdir($diretorioUploads, 0775, true)) {
         throw new RuntimeException('Nao foi possivel criar a pasta para guardar os PDFs.');
     }
 
     $stmtDocumento = $ligacao->prepare("
-        INSERT INTO documentos (codigo, titulo, tipo_documento_id, area_documento_id, equipamento_id, fornecedor_id, data_documento, validade, estado_documento_id, obrigatorio)
-        VALUES (:codigo, :titulo, :tipo_documento_id, :area_documento_id, :equipamento_id, :fornecedor_id, :data_documento, :validade, :estado_documento_id, 0)
+        INSERT INTO documentos (codigo, titulo, tipo_documento_id, area_documento_id, equipamento_id, fornecedor_id, responsavel, data_documento, validade, estado_documento_id, obrigatorio, observacoes)
+        VALUES (:codigo, :titulo, :tipo_documento_id, :area_documento_id, :equipamento_id, :fornecedor_id, :responsavel, :data_documento, :validade, :estado_documento_id, 0, :observacoes)
     ");
     $stmtFicheiro = $ligacao->prepare("
         INSERT INTO ficheiros_pdf (nome_original, nome_guardado, caminho_ficheiro, tipo_mime, tamanho_bytes, carregado_por)
@@ -711,9 +559,11 @@ function inserir_documentos_extra($ligacao, $equipamentoId, $outrosDocumentos)
             ':area_documento_id' => $areaDocumentoId ?: null,
             ':equipamento_id' => $equipamentoId,
             ':fornecedor_id' => $fornecedorId,
+            ':responsavel' => trim((string) ($documento['responsavel'] ?? '')),
             ':data_documento' => trim($documento['data_documento'] ?? '') ?: null,
             ':validade' => trim($documento['validade'] ?? '') ?: null,
-            ':estado_documento_id' => $estadoDocumentoId ?: null
+            ':estado_documento_id' => $estadoDocumentoId ?: null,
+            ':observacoes' => preparar_observacoes_documento($documento)
         ]);
         $documentoId = $ligacao->lastInsertId();
         $inseridos++;
@@ -902,9 +752,11 @@ function inserir_contratos_extra($ligacao, $equipamentoId, $outrosContratos)
             designacao,
             tipo_contrato_id,
             fornecedor_id,
+            responsavel,
             data_inicio,
             data_fim,
             valor_anual,
+            periodicidade,
             renovacao_automatica,
             estado_contrato_id,
             observacoes
@@ -913,9 +765,11 @@ function inserir_contratos_extra($ligacao, $equipamentoId, $outrosContratos)
             :designacao,
             :tipo_contrato_id,
             :fornecedor_id,
+            :responsavel,
             :data_inicio,
             :data_fim,
             :valor_anual,
+            :periodicidade,
             :renovacao_automatica,
             :estado_contrato_id,
             :observacoes
@@ -971,9 +825,11 @@ function inserir_contratos_extra($ligacao, $equipamentoId, $outrosContratos)
             ':designacao' => trim($contrato['designacao']),
             ':tipo_contrato_id' => $tipoContratoId,
             ':fornecedor_id' => $fornecedorId,
+            ':responsavel' => trim((string) ($contrato['responsavel'] ?? '')),
             ':data_inicio' => trim($contrato['data_inicio']),
             ':data_fim' => trim($contrato['data_fim']),
             ':valor_anual' => trim($contrato['valor_anual']),
+            ':periodicidade' => trim((string) ($contrato['periodicidade'] ?? '')),
             ':renovacao_automatica' => (trim($contrato['renovacao_automatica'] ?? '') === 'Sim') ? 1 : 0,
             ':estado_contrato_id' => $estadoContratoId,
             ':observacoes' => implode("
@@ -1174,7 +1030,7 @@ function validar_manutencao($manutencao, &$erros)
  
 function guardar_ficheiros_pdf($ligacao, $ficheiros)
 {
-    $diretorioUploads = __DIR__ . '/../../../../assets/uploads/documentos';
+    $diretorioUploads = __DIR__ . '/../../../assets/uploads/documentos';
  
     if (!is_dir($diretorioUploads) && !mkdir($diretorioUploads, 0775, true)) {
         throw new RuntimeException('Não foi possível criar a pasta para guardar os PDFs.');
@@ -1241,19 +1097,21 @@ function inserir_contrato_manutencao($ligacao, $equipamentoId, $contrato)
         throw new RuntimeException('Não foi possível associar corretamente o contrato de manutenção às tabelas auxiliares.');
     }
  
-    $stmt = $ligacao->prepare("\n        INSERT INTO contratos (\n            codigo,\n            designacao,\n            tipo_contrato_id,\n            fornecedor_id,\n            data_inicio,\n            data_fim,\n            valor_anual,\n            renovacao_automatica,\n            estado_contrato_id,\n            observacoes\n        ) VALUES (\n            :codigo,\n            :designacao,\n            :tipo_contrato_id,\n            :fornecedor_id,\n            :data_inicio,\n            :data_fim,\n            :valor_anual,\n            :renovacao_automatica,\n            :estado_contrato_id,\n            :observacoes\n        )\n    ");
+    $stmt = $ligacao->prepare("\n        INSERT INTO contratos (\n            codigo,\n            designacao,\n            tipo_contrato_id,\n            fornecedor_id,\n            responsavel,\n            data_inicio,\n            data_fim,\n            valor_anual,\n            periodicidade,\n            renovacao_automatica,\n            estado_contrato_id,\n            observacoes\n        ) VALUES (\n            :codigo,\n            :designacao,\n            :tipo_contrato_id,\n            :fornecedor_id,\n            :responsavel,\n            :data_inicio,\n            :data_fim,\n            :valor_anual,\n            :periodicidade,\n            :renovacao_automatica,\n            :estado_contrato_id,\n            :observacoes\n        )\n    ");
  
     $stmt->execute([
         ':codigo' => strtoupper(trim($contrato['codigo'])),
         ':designacao' => trim($contrato['designacao']),
         ':tipo_contrato_id' => $tipoContratoId,
         ':fornecedor_id' => $fornecedorId,
+        ':responsavel' => trim((string) ($contrato['responsavel'] ?? '')),
         ':data_inicio' => trim($contrato['data_inicio']),
         ':data_fim' => trim($contrato['data_fim']),
         ':valor_anual' => trim($contrato['valor_anual']),
+        ':periodicidade' => trim((string) ($contrato['periodicidade'] ?? '')),
         ':renovacao_automatica' => ($contrato['renovacao_automatica'] ?? '') === 'Sim' ? 1 : 0,
         ':estado_contrato_id' => $estadoContratoId,
-        ':observacoes' => trim($contrato['observacoes'])
+        ':observacoes' => preparar_observacoes_contrato($contrato)
     ]);
  
     $contratoId = $ligacao->lastInsertId();
@@ -1280,19 +1138,20 @@ function inserir_garantia($ligacao, $equipamentoId, $garantia, $contratoId = nul
         throw new RuntimeException('Não foi possível associar corretamente a garantia às tabelas auxiliares.');
     }
  
-    $stmt = $ligacao->prepare("\n        INSERT INTO garantias (\n            codigo,\n            designacao,\n            equipamento_id,\n            fornecedor_id,\n            contrato_id,\n            data_inicio,\n            data_fim,\n            estado_garantia_id,\n            cobertura,\n            observacoes\n        ) VALUES (\n            :codigo,\n            :designacao,\n            :equipamento_id,\n            :fornecedor_id,\n            :contrato_id,\n            :data_inicio,\n            :data_fim,\n            :estado_garantia_id,\n            :cobertura,\n            :observacoes\n        )\n    ");
+    $stmt = $ligacao->prepare("\n        INSERT INTO garantias (\n            codigo,\n            designacao,\n            equipamento_id,\n            fornecedor_id,\n            responsavel,\n            contrato_id,\n            data_inicio,\n            data_fim,\n            estado_garantia_id,\n            cobertura,\n            observacoes\n        ) VALUES (\n            :codigo,\n            :designacao,\n            :equipamento_id,\n            :fornecedor_id,\n            :responsavel,\n            :contrato_id,\n            :data_inicio,\n            :data_fim,\n            :estado_garantia_id,\n            :cobertura,\n            :observacoes\n        )\n    ");
  
     $stmt->execute([
         ':codigo' => strtoupper(trim($garantia['codigo'])),
         ':designacao' => trim($garantia['designacao']),
         ':equipamento_id' => $equipamentoId,
         ':fornecedor_id' => $fornecedorId,
+        ':responsavel' => trim((string) ($garantia['responsavel'] ?? '')),
         ':contrato_id' => $contratoId,
         ':data_inicio' => trim($garantia['data_inicio']),
         ':data_fim' => trim($garantia['data_fim']),
         ':estado_garantia_id' => $estadoGarantiaId,
         ':cobertura' => trim($garantia['cobertura']),
-        ':observacoes' => trim($garantia['observacoes'])
+        ':observacoes' => preparar_observacoes_garantia($garantia)
     ]);
  
     $garantiaId = $ligacao->lastInsertId();
@@ -1398,7 +1257,7 @@ if ($ligacao === null) {
  
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($valores as $campo => $valorDefeito) {
-        $valores[$campo] = trim($_POST[$campo] ?? $valorDefeito);
+        $valores[$campo] = trim((string) ($_POST[$campo] ?? $valorDefeito ?? ''));
     }
  
     /* Normalização dos dados principais */
@@ -1431,8 +1290,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
     if ($valores['numero_serie_equipamento'] === '') {
         $erros[] = 'O número de série é obrigatório.';
-    } elseif (!preg_match('/^SN-\d{4}$/', $valores['numero_serie_equipamento'])) {
-        $erros[] = 'O número de série deve seguir o formato SN-1234.';
     }
  
     if ($valores['estado_id'] === '') {
@@ -1569,9 +1426,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
     $documentosPost = $_POST['documentosMinimos'] ?? [];
     validar_documentos_minimos($documentosMinimosObrigatorios, $documentosPost, $erros);
-
-    $outrosDocumentosPost = $_POST['outrosDocumentos'] ?? [];
-    validar_documentos_extra($outrosDocumentosPost, $erros, $ligacao);
 
     $outrosContratosPost = $_POST['outrosContratos'] ?? [];
     validar_contratos_extra($outrosContratosPost, $erros, $ligacao);
@@ -1736,7 +1590,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
  
             inserir_documentos_minimos($ligacao, $equipamentoId, $documentosMinimosObrigatorios, $documentosPost);
-            inserir_documentos_extra($ligacao, $equipamentoId, $outrosDocumentosPost);
+            inserir_documentos_extra($ligacao, $equipamentoId, $_POST['outrosDocumentos'] ?? []);
             inserir_contratos_extra($ligacao, $equipamentoId, $outrosContratosPost);
  
             $contratoManutencaoId = inserir_contrato_manutencao($ligacao, $equipamentoId, $contratoManutencaoPost);
@@ -1911,7 +1765,7 @@ include __DIR__ . '/../../includes/nav.php';
                                     <div class="col-md-4">
                                         <label for="numeroSerieEquipamento" class="form-label">N.º de série </label>
                                         <input type="text" class="form-control" id="numeroSerieEquipamento" name="numero_serie_equipamento"
-                                            value="<?php echo valor_formulario('numero_serie_equipamento', $valores); ?>" placeholder="Ex: SN-1234">
+                                            value="<?php echo valor_formulario('numero_serie_equipamento', $valores); ?>" placeholder="Ex: SN-1234, ABC123 ou outro">
                                     </div>
  
                                     <div class="col-md-4">
@@ -2225,7 +2079,8 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-4">
                                                     <label for="responsavelDocumentoManualUtilizadorEquipamento" class="form-label">Responsável</label>
                                                     <input type="text" class="form-control" id="responsavelDocumentoManualUtilizadorEquipamento"
-                                                       >
+                                                       
+                                                        name="documentosMinimos[ManualUtilizador][responsavel]">
                                                 </div>
  
                                                 <div class="col-md-4">
@@ -2244,7 +2099,8 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-12">
                                                     <label for="observacoesDocumentoManualUtilizadorEquipamento" class="form-label">Observações</label>
                                                     <textarea class="form-control" id="observacoesDocumentoManualUtilizadorEquipamento"
-                                                        rows="2"></textarea>
+                                                        rows="2"
+                                                        name="documentosMinimos[ManualUtilizador][observacoes]"></textarea>
                                                 </div>
                                             </div>
  
@@ -2327,7 +2183,8 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-4">
                                                     <label for="responsavelDocumentoManualServicoEquipamento" class="form-label">Responsável</label>
                                                     <input type="text" class="form-control" id="responsavelDocumentoManualServicoEquipamento"
-                                                       >
+                                                       
+                                                        name="documentosMinimos[ManualServico][responsavel]">
                                                 </div>
  
                                                 <div class="col-md-4">
@@ -2346,7 +2203,8 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-12">
                                                     <label for="observacoesDocumentoManualServicoEquipamento" class="form-label">Observações</label>
                                                     <textarea class="form-control" id="observacoesDocumentoManualServicoEquipamento"
-                                                        rows="2"></textarea>
+                                                        rows="2"
+                                                        name="documentosMinimos[ManualServico][observacoes]"></textarea>
                                                 </div>
                                             </div>
  
@@ -2429,7 +2287,8 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-4">
                                                     <label for="responsavelDocumentoCertificadoCalibracaoEquipamento" class="form-label">Responsável</label>
                                                     <input type="text" class="form-control" id="responsavelDocumentoCertificadoCalibracaoEquipamento"
-                                                       >
+                                                       
+                                                        name="documentosMinimos[CertificadoCalibracao][responsavel]">
                                                 </div>
  
                                                 <div class="col-md-4">
@@ -2448,7 +2307,8 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-12">
                                                     <label for="observacoesDocumentoCertificadoCalibracaoEquipamento" class="form-label">Observações</label>
                                                     <textarea class="form-control" id="observacoesDocumentoCertificadoCalibracaoEquipamento"
-                                                        rows="2"></textarea>
+                                                        rows="2"
+                                                        name="documentosMinimos[CertificadoCalibracao][observacoes]"></textarea>
                                                 </div>
                                             </div>
  
@@ -2531,7 +2391,8 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-4">
                                                     <label for="responsavelDocumentoFaturaGuiaAquisicaoEquipamento" class="form-label">Responsável</label>
                                                     <input type="text" class="form-control" id="responsavelDocumentoFaturaGuiaAquisicaoEquipamento"
-                                                       >
+                                                       
+                                                        name="documentosMinimos[FaturaGuiaAquisicao][responsavel]">
                                                 </div>
  
                                                 <div class="col-md-4">
@@ -2550,7 +2411,8 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-12">
                                                     <label for="observacoesDocumentoFaturaGuiaAquisicaoEquipamento" class="form-label">Observações</label>
                                                     <textarea class="form-control" id="observacoesDocumentoFaturaGuiaAquisicaoEquipamento"
-                                                        rows="2"></textarea>
+                                                        rows="2"
+                                                        name="documentosMinimos[FaturaGuiaAquisicao][observacoes]"></textarea>
                                                 </div>
                                             </div>
  
@@ -2633,7 +2495,8 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-4">
                                                     <label for="responsavelDocumentoDeclaracaoConformidadeEquipamento" class="form-label">Responsável</label>
                                                     <input type="text" class="form-control" id="responsavelDocumentoDeclaracaoConformidadeEquipamento"
-                                                       >
+                                                       
+                                                        name="documentosMinimos[DeclaracaoConformidade][responsavel]">
                                                 </div>
  
                                                 <div class="col-md-4">
@@ -2652,7 +2515,8 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-12">
                                                     <label for="observacoesDocumentoDeclaracaoConformidadeEquipamento" class="form-label">Observações</label>
                                                     <textarea class="form-control" id="observacoesDocumentoDeclaracaoConformidadeEquipamento"
-                                                        rows="2"></textarea>
+                                                        rows="2"
+                                                        name="documentosMinimos[DeclaracaoConformidade][observacoes]"></textarea>
                                                 </div>
                                             </div>
  
@@ -2735,7 +2599,8 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-md-4">
                                                     <label for="responsavelDocumentoRelatorioTecnicoEquipamento" class="form-label">Responsável</label>
                                                     <input type="text" class="form-control" id="responsavelDocumentoRelatorioTecnicoEquipamento"
-                                                       >
+                                                       
+                                                        name="documentosMinimos[RelatorioTecnico][responsavel]">
                                                 </div>
  
                                                 <div class="col-md-4">
@@ -2754,7 +2619,8 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <div class="col-12">
                                                     <label for="observacoesDocumentoRelatorioTecnicoEquipamento" class="form-label">Observações</label>
                                                     <textarea class="form-control" id="observacoesDocumentoRelatorioTecnicoEquipamento"
-                                                        rows="2"></textarea>
+                                                        rows="2"
+                                                        name="documentosMinimos[RelatorioTecnico][observacoes]"></textarea>
                                                 </div>
                                             </div>
  
@@ -2911,7 +2777,7 @@ include __DIR__ . '/../../includes/nav.php';
  
                                                 <div class="col-md-4">
                                                     <label for="responsavelGarantiaEquipamento" class="form-label">Responsável</label>
-                                                    <input type="text" class="form-control" id="responsavelGarantiaEquipamento" value="">
+                                                    <input type="text" class="form-control" id="responsavelGarantiaEquipamento" name="garantia[responsavel]" value="">
                                                 </div>
  
                                                 <div class="col-md-3">
@@ -3011,7 +2877,7 @@ include __DIR__ . '/../../includes/nav.php';
  
                                                 <div class="col-md-4">
                                                     <label for="responsavelContratoManutencaoEquipamento" class="form-label">Responsável</label>
-                                                    <input type="text" class="form-control" id="responsavelContratoManutencaoEquipamento" value="">
+                                                    <input type="text" class="form-control" id="responsavelContratoManutencaoEquipamento" name="contratoManutencao[responsavel]" value="">
                                                 </div>
  
                                                 <div class="col-md-3">
@@ -3031,7 +2897,7 @@ include __DIR__ . '/../../includes/nav.php';
  
                                                 <div class="col-md-3">
                                                     <label for="periodicidadeContratoManutencaoEquipamento" class="form-label">Periodicidade</label>
-                                                    <select class="form-select" id="periodicidadeContratoManutencaoEquipamento" >
+                                                    <select class="form-select" id="periodicidadeContratoManutencaoEquipamento" name="contratoManutencao[periodicidade]" >
                                                         <option value="" selected>Selecionar</option>
                                                         <option value="Mensal">Mensal</option>
                                                         <option value="Trimestral">Trimestral</option>

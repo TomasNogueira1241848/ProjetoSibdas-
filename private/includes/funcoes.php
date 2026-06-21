@@ -38,3 +38,37 @@ function logout_and_redirect($redirect_to = '/public/login/login.php')
     header('Location: ' . BASE_URL . $redirect_to);
     exit;
 }
+
+/* Encripta IDs para enviar por GET */
+function aes_encrypt($value)
+{
+    return bin2hex(openssl_encrypt(
+        (string) $value,
+        OPENSSL_METHOD,
+        OPENSSL_KEY,
+        OPENSSL_RAW_DATA,
+        OPENSSL_IV
+    ));
+}
+
+/* Desencripta IDs recebidos por GET */
+function aes_decrypt($value)
+{
+    if (!is_string($value) || strlen($value) % 2 !== 0) {
+        return false;
+    }
+
+    $binario = hex2bin($value);
+
+    if ($binario === false) {
+        return false;
+    }
+
+    return openssl_decrypt(
+        $binario,
+        OPENSSL_METHOD,
+        OPENSSL_KEY,
+        OPENSSL_RAW_DATA,
+        OPENSSL_IV
+    );
+}
