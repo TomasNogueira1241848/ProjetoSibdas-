@@ -15,61 +15,6 @@ $extraScripts = [
     $assetPath . '/bootstrap/dataTables.bootstrap5.min.js'
 ];
 
-$pageScript = <<<'JS'
-$(document).ready(function () {
-    const opcoesDataTable = {
-        pageLength: 5,
-        lengthChange: false,
-        pagingType: 'simple_numbers',
-        ordering: true,
-        autoWidth: false,
-        order: [[0, 'asc']],
-        columnDefs: [
-            {
-                orderable: false,
-                targets: -1
-            }
-        ],
-        dom: 't' + '<"datatable-footer d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3"ip>',
-        language: {
-            decimal: '',
-            emptyTable: 'Sem registos.',
-            info: 'A mostrar _START_ a _END_ de _TOTAL_ registos',
-            infoEmpty: 'Sem registos para mostrar',
-            infoFiltered: '(filtrado de _MAX_ registos)',
-            loadingRecords: 'A carregar...',
-            processing: 'A processar...',
-            zeroRecords: 'Nenhum registo encontrado.',
-            paginate: {
-                next: 'Seguinte',
-                previous: 'Anterior'
-            },
-            aria: {
-                sortAscending: ': ordenar de forma crescente',
-                sortDescending: ': ordenar de forma decrescente'
-            }
-        }
-    };
-
-    const tabelaGarantias = $('#tabelaGarantias').DataTable(opcoesDataTable);
-    const tabelaContratos = $('#tabelaContratos').DataTable(opcoesDataTable);
-
-    function aplicarFiltrosContratosGarantias() {
-        const pesquisa = $('#pesquisaContratosDT').val();
-        const tipo = $('#filtroTipoContratoDT').val();
-        const fornecedor = $('#filtroFornecedorContratoDT').val();
-        const estado = $('#filtroEstadoContratoDT').val();
-
-        tabelaGarantias.search(pesquisa).column(2).search(tipo).column(4).search(fornecedor).column(7).search(estado).draw();
-        tabelaContratos.search(pesquisa).column(2).search(tipo).column(4).search(fornecedor).column(7).search(estado).draw();
-    }
-
-    $('#pesquisaContratosDT').on('input', aplicarFiltrosContratosGarantias);
-    $('#filtroTipoContratoDT').on('change', aplicarFiltrosContratosGarantias);
-    $('#filtroFornecedorContratoDT').on('change', aplicarFiltrosContratosGarantias);
-    $('#filtroEstadoContratoDT').on('change', aplicarFiltrosContratosGarantias);
-});
-JS;
 
 require_once __DIR__ . '/../../includes/basedados.php';
 

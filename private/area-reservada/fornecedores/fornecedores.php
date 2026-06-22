@@ -15,59 +15,6 @@ $extraScripts = [
     $assetPath . '/bootstrap/dataTables.bootstrap5.min.js'
 ];
 
-$pageScript = <<<'JS'
-$(document).ready(function () {
-    const tabelaFornecedores = $('#tabelaFornecedores').DataTable({
-        pageLength: 5,
-        lengthChange: false,
-        pagingType: 'simple_numbers',
-        ordering: true,
-        autoWidth: false,
-        order: [[0, 'asc']],
-        columnDefs: [
-            {
-                orderable: false,
-                targets: -1
-            }
-        ],
-        dom: 't' + '<"datatable-footer d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3"ip>',
-        language: {
-            decimal: '',
-            emptyTable: 'Sem fornecedores registados.',
-            info: 'A mostrar _START_ a _END_ de _TOTAL_ fornecedores',
-            infoEmpty: 'Sem fornecedores para mostrar',
-            infoFiltered: '(filtrado de _MAX_ fornecedores)',
-            loadingRecords: 'A carregar...',
-            processing: 'A processar...',
-            zeroRecords: 'Nenhum fornecedor encontrado.',
-            paginate: {
-                next: 'Seguinte',
-                previous: 'Anterior'
-            },
-            aria: {
-                sortAscending: ': ordenar de forma crescente',
-                sortDescending: ': ordenar de forma decrescente'
-            }
-        }
-    });
-
-    $('#pesquisaFornecedoresDT').on('input', function () {
-        tabelaFornecedores.search(this.value).draw();
-    });
-
-    $('#filtroTipoFornecedorDT').on('change', function () {
-        tabelaFornecedores.column(2).search(this.value).draw();
-    });
-
-    $('#filtroContratoFornecedorDT').on('change', function () {
-        tabelaFornecedores.column(5).search(this.value).draw();
-    });
-
-    $('#filtroEstadoFornecedorDT').on('change', function () {
-        tabelaFornecedores.column(6).search(this.value).draw();
-    });
-});
-JS;
 
 require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';

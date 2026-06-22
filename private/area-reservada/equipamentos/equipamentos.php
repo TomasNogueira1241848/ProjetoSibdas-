@@ -15,61 +15,6 @@ $extraScripts = [
     $assetPath . '/bootstrap/dataTables.bootstrap5.min.js'
 ];
 
-$pageScript = <<<'JS'
-$(document).ready(function () {
-    const tabelaEquipamentos = $('#tabelaEquipamentos').DataTable({
-        pageLength: 5,
-        lengthChange: false,
-        pagingType: 'simple_numbers',
-        ordering: true,
-        autoWidth: false,
-        order: [],
-        columnDefs: [
-            {
-                orderable: false,
-                targets: -1
-            }
-        ],
-        dom:
-            't' +
-            '<"datatable-footer d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3"ip>',
-        language: {
-            decimal: '',
-            emptyTable: 'Sem equipamentos registados.',
-            info: 'A mostrar _START_ a _END_ de _TOTAL_ equipamentos',
-            infoEmpty: 'Sem equipamentos para mostrar',
-            infoFiltered: '(filtrado de _MAX_ equipamentos)',
-            loadingRecords: 'A carregar...',
-            processing: 'A processar...',
-            zeroRecords: 'Nenhum equipamento encontrado.',
-            paginate: {
-                next: 'Seguinte',
-                previous: 'Anterior'
-            },
-            aria: {
-                sortAscending: ': ordenar de forma crescente',
-                sortDescending: ': ordenar de forma decrescente'
-            }
-        }
-    });
-
-    $('#pesquisaEquipamentosDT').on('input', function () {
-        tabelaEquipamentos.search(this.value).draw();
-    });
-
-    $('#filtroCategoriaEquipamentosDT').on('change', function () {
-        tabelaEquipamentos.column(2).search(this.value).draw();
-    });
-
-    $('#filtroLocalizacaoEquipamentosDT').on('change', function () {
-        tabelaEquipamentos.column(6).search(this.value).draw();
-    });
-
-    $('#filtroEstadoEquipamentosDT').on('change', function () {
-        tabelaEquipamentos.column(7).search(this.value).draw();
-    });
-});
-JS;
 
 require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
@@ -86,7 +31,7 @@ $indicadores = [
     'total' => 0,
     'ativos' => 0,
     'manutencao' => 0,
-    'inativos' => 0
+    'abatidos' => 0
 ];
 
 $ligacao = ligar_base_dados();
@@ -134,7 +79,7 @@ if ($ligacao === null) {
                 COUNT(*) AS total,
                 SUM(CASE WHEN ee.nome = 'Ativo' THEN 1 ELSE 0 END) AS ativos,
                 SUM(CASE WHEN ee.nome = 'Em Manutenção' THEN 1 ELSE 0 END) AS manutencao,
-                SUM(CASE WHEN ee.nome = 'Inativo' THEN 1 ELSE 0 END) AS inativos
+                SUM(CASE WHEN ee.nome = 'Abatido' THEN 1 ELSE 0 END) AS abatidos
             FROM equipamentos e
             INNER JOIN estados_equipamento ee ON ee.id = e.estado_id
         ";
@@ -195,6 +140,28 @@ include __DIR__ . '/../../includes/nav.php';
                 </div>
             <?php endif; ?>
 
+            <?php if (((isset($_GET['abatido']) && $_GET['abatido'] == '1') || (isset($_GET['eliminado']) && $_GET['eliminado'] == '1'))): ?>
+                <div class="alert alert-success d-flex align-items-start gap-2" role="alert">
+                    <i class="fa-solid fa-circle-check mt-1"></i>
+
+                    <div>
+                        <strong class="d-block">Equipamento abatido</strong>
+                        <span>O equipamento foi colocado como abatido com sucesso.</span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($_GET['erro_eliminar']) && $_GET['erro_eliminar'] == '1'): ?>
+                <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
+                    <i class="fa-solid fa-circle-exclamation mt-1"></i>
+
+                    <div>
+                        <strong class="d-block">Não foi possível abater</strong>
+                        <span>Verifique se o equipamento existe e se existe o estado Abatido na base de dados.</span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <?php if ($erroBD !== ''): ?>
                 <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
                     <i class="fa-solid fa-circle-exclamation mt-1"></i>
@@ -238,9 +205,9 @@ include __DIR__ . '/../../includes/nav.php';
 
                     <div class="col-6 col-md-3">
                         <div class="card card-dashboard border-secondary-dashboard p-3 h-100">
-                            <p class="text-muted small mb-1">Inativos</p>
+                            <p class="text-muted small mb-1">Abatidos</p>
                             <h4 class="fw-bold mb-0">
-                                <?php echo htmlspecialchars($indicadores['inativos'] ?? 0); ?>
+                                <?php echo htmlspecialchars($indicadores['abatidos'] ?? 0); ?>
                             </h4>
                         </div>
                     </div>
@@ -322,11 +289,13 @@ include __DIR__ . '/../../includes/nav.php';
                             <tbody>
                                 <?php foreach ($equipamentos as $equipamento): ?>
                                     <?php
+                                    $estadoNormalizado = strtolower((string) $equipamento->estado);
+                                    $equipamentoAbatido = $estadoNormalizado === 'abatido';
                                     $classeEstado = 'badge-inativo';
 
-                                    if ($equipamento->estado === 'Ativo') {
+                                    if ($estadoNormalizado === 'ativo') {
                                         $classeEstado = 'badge-ativo';
-                                    } elseif ($equipamento->estado === 'Em Manutenção') {
+                                    } elseif ($estadoNormalizado === 'em manutenção' || $estadoNormalizado === 'em manutencao') {
                                         $classeEstado = 'badge-manutencao';
                                     }
                                     ?>
@@ -352,26 +321,32 @@ include __DIR__ . '/../../includes/nav.php';
                                             <?php endif; ?>
                                         </td>
                                         <td class="text-center">
-                                            <a href="equipamento-detalhes.php?id=<?php echo htmlspecialchars($equipamento->id); ?>"
+                                            <a href="equipamento-detalhes.php?id_equipamento=<?php echo urlencode(aes_encrypt($equipamento->id)); ?>"
                                                 class="btn btn-sm btn-outline-primary"
                                                 data-bs-toggle="tooltip"
                                                 data-bs-title="Ver detalhes">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <a href="equipamento-editar.php?id_equipamento=<?php echo urlencode(aes_encrypt($equipamento->id)); ?>"
-                                                class="btn btn-sm btn-outline-secondary"
-                                                data-bs-toggle="tooltip"
-                                                data-bs-title="Editar">
-                                                <i class="fa-solid fa-pen"></i>
-                                            </a>
+                                            <?php if (!$equipamentoAbatido): ?>
+                                                <a href="equipamento-editar.php?id_equipamento=<?php echo urlencode(aes_encrypt($equipamento->id)); ?>"
+                                                    class="btn btn-sm btn-outline-secondary"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-title="Editar">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </a>
 
-                                            <a href="equipamento-eliminar.php?id=<?php echo htmlspecialchars($equipamento->id); ?>"
-                                                class="btn btn-sm btn-outline-danger"
-                                                data-bs-toggle="tooltip"
-                                                data-bs-title="Eliminar">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </a>
+                                                <a href="equipamento-eliminar.php?id_equipamento=<?php echo urlencode(aes_encrypt($equipamento->id)); ?>"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-title="Abater">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </a>
+                                            <?php else: ?>
+                                                <span class="badge text-bg-secondary" data-bs-toggle="tooltip" data-bs-title="Equipamento já abatido. Só é possível consultar os detalhes.">
+                                                    Sem ações
+                                                </span>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

@@ -15,59 +15,6 @@ $extraScripts = [
     $assetPath . '/bootstrap/dataTables.bootstrap5.min.js'
 ];
 
-$pageScript = <<<'JS'
-$(document).ready(function () {
-    const tabelaDocumentacao = $('#tabelaDocumentacao').DataTable({
-        pageLength: 5,
-        lengthChange: false,
-        pagingType: 'simple_numbers',
-        ordering: true,
-        autoWidth: false,
-        order: [[0, 'asc']],
-        columnDefs: [
-            {
-                orderable: false,
-                targets: -1
-            }
-        ],
-        dom: 't' + '<"datatable-footer d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3"ip>',
-        language: {
-            decimal: '',
-            emptyTable: 'Sem documentos registados.',
-            info: 'A mostrar _START_ a _END_ de _TOTAL_ documentos',
-            infoEmpty: 'Sem documentos para mostrar',
-            infoFiltered: '(filtrado de _MAX_ documentos)',
-            loadingRecords: 'A carregar...',
-            processing: 'A processar...',
-            zeroRecords: 'Nenhum documento encontrado.',
-            paginate: {
-                next: 'Seguinte',
-                previous: 'Anterior'
-            },
-            aria: {
-                sortAscending: ': ordenar de forma crescente',
-                sortDescending: ': ordenar de forma decrescente'
-            }
-        }
-    });
-
-    $('#pesquisaDocumentacaoDT').on('input', function () {
-        tabelaDocumentacao.search(this.value).draw();
-    });
-
-    $('#filtroTipoDocumentoDT').on('change', function () {
-        tabelaDocumentacao.column(2).search(this.value).draw();
-    });
-
-    $('#filtroAreaDocumentoDT').on('change', function () {
-        tabelaDocumentacao.column(3).search(this.value).draw();
-    });
-
-    $('#filtroEstadoDocumentoDT').on('change', function () {
-        tabelaDocumentacao.column(7).search(this.value).draw();
-    });
-});
-JS;
 
 require_once __DIR__ . '/../../includes/basedados.php';
 

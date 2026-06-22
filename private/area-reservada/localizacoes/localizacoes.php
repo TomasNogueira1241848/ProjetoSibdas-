@@ -15,55 +15,6 @@ $extraScripts = [
     $assetPath . '/bootstrap/dataTables.bootstrap5.min.js'
 ];
 
-$pageScript = <<<'JS'
-$(document).ready(function () {
-    const tabelaLocalizacoes = $('#tabelaLocalizacoes').DataTable({
-        pageLength: 5,
-        lengthChange: false,
-        pagingType: 'simple_numbers',
-        ordering: true,
-        autoWidth: false,
-        order: [[0, 'asc']],
-        columnDefs: [
-            {
-                orderable: false,
-                targets: -1
-            }
-        ],
-        dom: 't' + '<"datatable-footer d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3"ip>',
-        language: {
-            decimal: '',
-            emptyTable: 'Sem localizações registadas.',
-            info: 'A mostrar _START_ a _END_ de _TOTAL_ localizações',
-            infoEmpty: 'Sem localizações para mostrar',
-            infoFiltered: '(filtrado de _MAX_ localizações)',
-            loadingRecords: 'A carregar...',
-            processing: 'A processar...',
-            zeroRecords: 'Nenhuma localização encontrada.',
-            paginate: {
-                next: 'Seguinte',
-                previous: 'Anterior'
-            },
-            aria: {
-                sortAscending: ': ordenar de forma crescente',
-                sortDescending: ': ordenar de forma decrescente'
-            }
-        }
-    });
-
-    $('#pesquisaLocalizacoesDT').on('input', function () {
-        tabelaLocalizacoes.search(this.value).draw();
-    });
-
-    $('#filtroTipoLocalizacaoDT').on('change', function () {
-        tabelaLocalizacoes.column(2).search(this.value).draw();
-    });
-
-    $('#filtroEstadoLocalizacaoDT').on('change', function () {
-        tabelaLocalizacoes.column(6).search(this.value).draw();
-    });
-});
-JS;
 
 require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';

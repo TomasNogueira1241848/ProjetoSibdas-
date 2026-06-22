@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     aplicarConteudosPublicos();
 
+    inicializarFlatpickrGlobal();
+    inicializarDataTablesAreaReservada();
+
     inicializarFormularioContacto();
 
     inicializarTooltips();
@@ -987,3 +990,219 @@ function criarGraficoLocalizacao() {
     });
 
 }
+
+/* Ativa o Flatpickr nos campos de data de forma global */
+function inicializarFlatpickrGlobal() {
+    if (typeof flatpickr === 'undefined') return;
+
+    document.querySelectorAll('.flatpickr-data').forEach(function (campo) {
+        if (!campo.getAttribute('placeholder')) {
+            campo.setAttribute('placeholder', 'AAAA-MM-DD');
+        }
+    });
+
+    flatpickr('.flatpickr-data', {
+        dateFormat: 'Y-m-d',
+        allowInput: true
+    });
+}
+
+
+/* Inicializa as DataTables das páginas de listagem da área reservada */
+function inicializarDataTablesAreaReservada() {
+    if (!window.jQuery || !window.jQuery.fn || !window.jQuery.fn.DataTable) return;
+
+    inicializarTabelaEquipamentos();
+    inicializarTabelaFornecedores();
+    inicializarTabelaLocalizacoes();
+    inicializarTabelaDocumentacao();
+    inicializarTabelaContratosGarantias();
+}
+
+
+/* Opções comuns para tabelas DataTables */
+function criarOpcoesDataTable(mensagens, ordemInicial) {
+    return {
+        pageLength: 5,
+        lengthChange: false,
+        pagingType: 'simple_numbers',
+        ordering: true,
+        autoWidth: false,
+        order: ordemInicial || [[0, 'asc']],
+        columnDefs: [
+            {
+                orderable: false,
+                targets: -1
+            }
+        ],
+        dom: 't' + '<"datatable-footer d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3"ip>',
+        language: {
+            decimal: '',
+            emptyTable: mensagens.emptyTable,
+            info: mensagens.info,
+            infoEmpty: mensagens.infoEmpty,
+            infoFiltered: mensagens.infoFiltered,
+            loadingRecords: 'A carregar...',
+            processing: 'A processar...',
+            zeroRecords: mensagens.zeroRecords,
+            paginate: {
+                next: 'Seguinte',
+                previous: 'Anterior'
+            },
+            aria: {
+                sortAscending: ': ordenar de forma crescente',
+                sortDescending: ': ordenar de forma decrescente'
+            }
+        }
+    };
+}
+
+
+/* Liga um input/select a um filtro de coluna de uma DataTable */
+function ligarFiltroDataTable(tabela, seletor, coluna) {
+    const $ = window.jQuery;
+    const elemento = $(seletor);
+
+    if (!elemento.length) return;
+
+    elemento.on('input change', function () {
+        tabela.column(coluna).search(this.value).draw();
+    });
+}
+
+
+/* Listagem de equipamentos */
+function inicializarTabelaEquipamentos() {
+    const $ = window.jQuery;
+    const tabela = $('#tabelaEquipamentos');
+
+    if (!tabela.length || $.fn.dataTable.isDataTable(tabela[0])) return;
+
+    const tabelaEquipamentos = tabela.DataTable(criarOpcoesDataTable({
+        emptyTable: 'Sem equipamentos registados.',
+        info: 'A mostrar _START_ a _END_ de _TOTAL_ equipamentos',
+        infoEmpty: 'Sem equipamentos para mostrar',
+        infoFiltered: '(filtrado de _MAX_ equipamentos)',
+        zeroRecords: 'Nenhum equipamento encontrado.'
+    }, []));
+
+    $('#pesquisaEquipamentosDT').on('input', function () {
+        tabelaEquipamentos.search(this.value).draw();
+    });
+
+    ligarFiltroDataTable(tabelaEquipamentos, '#filtroCategoriaEquipamentosDT', 2);
+    ligarFiltroDataTable(tabelaEquipamentos, '#filtroLocalizacaoEquipamentosDT', 6);
+    ligarFiltroDataTable(tabelaEquipamentos, '#filtroEstadoEquipamentosDT', 7);
+}
+
+
+/* Listagem de fornecedores */
+function inicializarTabelaFornecedores() {
+    const $ = window.jQuery;
+    const tabela = $('#tabelaFornecedores');
+
+    if (!tabela.length || $.fn.dataTable.isDataTable(tabela[0])) return;
+
+    const tabelaFornecedores = tabela.DataTable(criarOpcoesDataTable({
+        emptyTable: 'Sem fornecedores registados.',
+        info: 'A mostrar _START_ a _END_ de _TOTAL_ fornecedores',
+        infoEmpty: 'Sem fornecedores para mostrar',
+        infoFiltered: '(filtrado de _MAX_ fornecedores)',
+        zeroRecords: 'Nenhum fornecedor encontrado.'
+    }));
+
+    $('#pesquisaFornecedoresDT').on('input', function () {
+        tabelaFornecedores.search(this.value).draw();
+    });
+
+    ligarFiltroDataTable(tabelaFornecedores, '#filtroTipoFornecedorDT', 2);
+    ligarFiltroDataTable(tabelaFornecedores, '#filtroContratoFornecedorDT', 5);
+    ligarFiltroDataTable(tabelaFornecedores, '#filtroEstadoFornecedorDT', 6);
+}
+
+
+/* Listagem de localizações */
+function inicializarTabelaLocalizacoes() {
+    const $ = window.jQuery;
+    const tabela = $('#tabelaLocalizacoes');
+
+    if (!tabela.length || $.fn.dataTable.isDataTable(tabela[0])) return;
+
+    const tabelaLocalizacoes = tabela.DataTable(criarOpcoesDataTable({
+        emptyTable: 'Sem localizações registadas.',
+        info: 'A mostrar _START_ a _END_ de _TOTAL_ localizações',
+        infoEmpty: 'Sem localizações para mostrar',
+        infoFiltered: '(filtrado de _MAX_ localizações)',
+        zeroRecords: 'Nenhuma localização encontrada.'
+    }));
+
+    $('#pesquisaLocalizacoesDT').on('input', function () {
+        tabelaLocalizacoes.search(this.value).draw();
+    });
+
+    ligarFiltroDataTable(tabelaLocalizacoes, '#filtroTipoLocalizacaoDT', 2);
+    ligarFiltroDataTable(tabelaLocalizacoes, '#filtroEstadoLocalizacaoDT', 6);
+}
+
+
+/* Listagem de documentação */
+function inicializarTabelaDocumentacao() {
+    const $ = window.jQuery;
+    const tabela = $('#tabelaDocumentacao');
+
+    if (!tabela.length || $.fn.dataTable.isDataTable(tabela[0])) return;
+
+    const tabelaDocumentacao = tabela.DataTable(criarOpcoesDataTable({
+        emptyTable: 'Sem documentos registados.',
+        info: 'A mostrar _START_ a _END_ de _TOTAL_ documentos',
+        infoEmpty: 'Sem documentos para mostrar',
+        infoFiltered: '(filtrado de _MAX_ documentos)',
+        zeroRecords: 'Nenhum documento encontrado.'
+    }));
+
+    $('#pesquisaDocumentacaoDT').on('input', function () {
+        tabelaDocumentacao.search(this.value).draw();
+    });
+
+    ligarFiltroDataTable(tabelaDocumentacao, '#filtroTipoDocumentoDT', 2);
+    ligarFiltroDataTable(tabelaDocumentacao, '#filtroAreaDocumentoDT', 3);
+    ligarFiltroDataTable(tabelaDocumentacao, '#filtroEstadoDocumentoDT', 7);
+}
+
+
+/* Listagem de contratos e garantias */
+function inicializarTabelaContratosGarantias() {
+    const $ = window.jQuery;
+    const tabelaGarantiasEl = $('#tabelaGarantias');
+    const tabelaContratosEl = $('#tabelaContratos');
+
+    if (!tabelaGarantiasEl.length || !tabelaContratosEl.length) return;
+    if ($.fn.dataTable.isDataTable(tabelaGarantiasEl[0]) || $.fn.dataTable.isDataTable(tabelaContratosEl[0])) return;
+
+    const opcoesDataTable = criarOpcoesDataTable({
+        emptyTable: 'Sem registos.',
+        info: 'A mostrar _START_ a _END_ de _TOTAL_ registos',
+        infoEmpty: 'Sem registos para mostrar',
+        infoFiltered: '(filtrado de _MAX_ registos)',
+        zeroRecords: 'Nenhum registo encontrado.'
+    });
+
+    const tabelaGarantias = tabelaGarantiasEl.DataTable(opcoesDataTable);
+    const tabelaContratos = tabelaContratosEl.DataTable(opcoesDataTable);
+
+    function aplicarFiltrosContratosGarantias() {
+        const pesquisa = $('#pesquisaContratosDT').val();
+        const tipo = $('#filtroTipoContratoDT').val();
+        const fornecedor = $('#filtroFornecedorContratoDT').val();
+        const estado = $('#filtroEstadoContratoDT').val();
+
+        tabelaGarantias.search(pesquisa).column(2).search(tipo).column(4).search(fornecedor).column(7).search(estado).draw();
+        tabelaContratos.search(pesquisa).column(2).search(tipo).column(4).search(fornecedor).column(7).search(estado).draw();
+    }
+
+    $('#pesquisaContratosDT').on('input', aplicarFiltrosContratosGarantias);
+    $('#filtroTipoContratoDT').on('change', aplicarFiltrosContratosGarantias);
+    $('#filtroFornecedorContratoDT').on('change', aplicarFiltrosContratosGarantias);
+    $('#filtroEstadoContratoDT').on('change', aplicarFiltrosContratosGarantias);
+}
+

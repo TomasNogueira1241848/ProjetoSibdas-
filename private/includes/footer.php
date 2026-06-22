@@ -9,21 +9,6 @@ $assetPath = $assetPath ?? '../../assets';
 <!-- JS -->
 <script src="<?php echo $assetPath; ?>/js/1241848.js"></script>
  
-<!-- Ativação do Flatpickr em todos os campos de data -->
-<script>
-    if (typeof flatpickr !== 'undefined') {
-        document.querySelectorAll('.flatpickr-data').forEach(function (campo) {
-            if (!campo.getAttribute('placeholder')) {
-                campo.setAttribute('placeholder', 'AAAA-MM-DD');
-            }
-        });
- 
-        flatpickr('.flatpickr-data', {
-            dateFormat: 'Y-m-d',
-            allowInput: true
-        });
-    }
-</script>
  
 <?php if (!empty($extraScripts)): ?>
     <?php foreach ($extraScripts as $script): ?>
