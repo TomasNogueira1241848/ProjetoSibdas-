@@ -139,7 +139,7 @@ include __DIR__ . '/../../includes/nav.php';
                             <div>
                                 <h5 class="fw-bold mb-1">Tem a certeza que pretende abater este equipamento?</h5>
                                 <p class="text-muted mb-0">
-                                    De acordo com a ficha, o equipamento não será apagado definitivamente da base de dados. O estado será alterado para <strong>Abatido</strong>.
+                                   O estado do equipamento será alterado para <strong>Abatido</strong>, contudo estará disponível para visualização dos detalhes e histórico. Esta ação é recomendada para equipamentos que já não estão em uso, mas se pretende manter um registo histórico do equipamento e respetiva documentação associada.
                                 </p>
                             </div>
                         </div>

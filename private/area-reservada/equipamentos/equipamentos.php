@@ -50,12 +50,14 @@ if ($ligacao === null) {
                 e.modelo,
                 e.numero_serie,
                 l.nome AS localizacao,
+                el.nome AS localizacao_estado,
                 ee.nome AS estado,
                 g.data_fim AS fim_garantia
             FROM equipamentos e
             INNER JOIN categorias_equipamento c ON c.id = e.categoria_id
             INNER JOIN estados_equipamento ee ON ee.id = e.estado_id
             INNER JOIN localizacoes l ON l.id = e.localizacao_id
+            INNER JOIN estados_localizacao el ON el.id = l.estado_localizacao_id
             LEFT JOIN garantias g ON g.equipamento_id = e.id
             ORDER BY e.codigo ASC
         ";
@@ -291,6 +293,7 @@ include __DIR__ . '/../../includes/nav.php';
                                     <?php
                                     $estadoNormalizado = strtolower((string) $equipamento->estado);
                                     $equipamentoAbatido = $estadoNormalizado === 'abatido';
+                                    $localizacaoAbatida = in_array(strtolower((string) ($equipamento->localizacao_estado ?? '')), ['inativa', 'abatida'], true);
                                     $classeEstado = 'badge-inativo';
 
                                     if ($estadoNormalizado === 'ativo') {
@@ -307,7 +310,7 @@ include __DIR__ . '/../../includes/nav.php';
                                         <td><?php echo htmlspecialchars($equipamento->marca); ?></td>
                                         <td><?php echo htmlspecialchars($equipamento->modelo); ?></td>
                                         <td><?php echo htmlspecialchars($equipamento->numero_serie); ?></td>
-                                        <td><?php echo htmlspecialchars($equipamento->localizacao); ?></td>
+                                        <td><?php echo htmlspecialchars($equipamento->localizacao); ?><?php if ($localizacaoAbatida): ?><br><span class="badge badge-inativo">Localização abatida</span><?php endif; ?></td>
                                         <td>
                                             <span class="badge <?php echo $classeEstado; ?>">
                                                 <?php echo htmlspecialchars($equipamento->estado); ?>
@@ -340,7 +343,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                     class="btn btn-sm btn-outline-danger"
                                                     data-bs-toggle="tooltip"
                                                     data-bs-title="Abater">
-                                                    <i class="fa-solid fa-trash"></i>
+                                                    <i class="fa-solid fa-box-archive"></i>
                                                 </a>
                                             <?php else: ?>
                                                 <span class="badge text-bg-secondary" data-bs-toggle="tooltip" data-bs-title="Equipamento já abatido. Só é possível consultar os detalhes.">

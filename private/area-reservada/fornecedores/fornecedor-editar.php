@@ -177,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $ligacao !== null && $fornecedor !=
 
     if ($valores['estadoFornecedor'] === '') {
         $erros[] = 'Selecione o estado do fornecedor.';
-    } elseif (!in_array($valores['estadoFornecedor'], ['Ativo', 'Inativo'], true)) {
+    } elseif (!in_array($valores['estadoFornecedor'], ['Ativo', 'Inativo', 'Descontinuado'], true)) {
         $erros[] = 'O estado do fornecedor selecionado não é válido.';
     }
 
@@ -383,6 +383,7 @@ include __DIR__ . '/../../includes/nav.php';
                                     <option value="">Selecionar estado</option>
                                     <option value="Ativo" <?php echo selecionado_fornecedor('Ativo', $valores['estadoFornecedor']); ?>>Ativo</option>
                                     <option value="Inativo" <?php echo selecionado_fornecedor('Inativo', $valores['estadoFornecedor']); ?>>Inativo</option>
+                                    <option value="Descontinuado" <?php echo selecionado_fornecedor('Descontinuado', $valores['estadoFornecedor']); ?>>Descontinuado</option>
                                 </select>
                                 <div class="invalid-feedback">Selecione o estado do fornecedor.</div>
                             </div>

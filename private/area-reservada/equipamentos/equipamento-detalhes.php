@@ -350,6 +350,7 @@ if ($ligacao === null) {
                 fp.observacoes AS fornecedor_principal_observacoes,
                 l.codigo AS localizacao_codigo,
                 l.nome AS localizacao_nome,
+                el.nome AS localizacao_estado,
                 l.edificio AS localizacao_edificio,
                 l.piso_principal AS localizacao_piso_principal,
                 l.numero_andares AS localizacao_numero_andares,
@@ -363,6 +364,7 @@ if ($ligacao === null) {
             INNER JOIN fornecedores fp ON fp.id = e.fornecedor_principal_id
             INNER JOIN tipos_fornecedor tfp ON tfp.id = fp.tipo_fornecedor_id
             INNER JOIN localizacoes l ON l.id = e.localizacao_id
+            INNER JOIN estados_localizacao el ON el.id = l.estado_localizacao_id
             LEFT JOIN equipamentos ep ON ep.id = e.equipamento_pai_id
             WHERE e.id = :id
             LIMIT 1
@@ -587,352 +589,353 @@ include __DIR__ . '/../../includes/nav.php';
                 </div>
             <?php elseif ($equipamento): ?>
 
-            <section class="mb-4">
-                <div class="card p-4">
-                    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
-                        <div>
-                            <h5 class="fw-bold mb-1"><?php echo e($equipamento->designacao); ?></h5>
-                            <p class="text-muted small mb-0">Código: <?php echo e($equipamento->codigo); ?></p>
-                        </div>
+                <section class="mb-4">
+                    <div class="card p-4">
+                        <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                            <div>
+                                <h5 class="fw-bold mb-1"><?php echo e($equipamento->designacao); ?></h5>
+                                <p class="text-muted small mb-0">Código: <?php echo e($equipamento->codigo); ?></p>
+                            </div>
 
-                        <div class="d-flex flex-wrap gap-2 align-items-start">
-                            <?php echo badge_estado($equipamento->estado_nome); ?>
-                            <span class="badge bg-warning text-dark"><?php echo e($equipamento->criticidade_nome); ?></span>
+                            <div class="d-flex flex-wrap gap-2 align-items-start">
+                                <?php echo badge_estado($equipamento->estado_nome); ?>
+                                <span class="badge bg-warning text-dark"><?php echo e($equipamento->criticidade_nome); ?></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <section class="mb-4">
-                <div class="card p-4">
+                <section class="mb-4">
+                    <div class="card p-4">
 
-                    <ul class="nav nav-pills abas-equipamento mb-4" id="abasDetalhesEquipamento" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="detalhes-dados-tab" data-bs-toggle="tab" data-bs-target="#detalhes-dados" type="button" role="tab">
-                                <span class="aba-numero">1</span><span><strong>Dados</strong><small>Informação principal</small></span>
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="detalhes-localizacao-tab" data-bs-toggle="tab" data-bs-target="#detalhes-localizacao" type="button" role="tab">
-                                <span class="aba-numero">2</span><span><strong>Localização</strong><small>Serviço e sala</small></span>
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="detalhes-fornecedor-tab" data-bs-toggle="tab" data-bs-target="#detalhes-fornecedor" type="button" role="tab">
-                                <span class="aba-numero">3</span><span><strong>Fornecedores</strong><small>Principal e associados</small></span>
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="detalhes-documentacao-tab" data-bs-toggle="tab" data-bs-target="#detalhes-documentacao" type="button" role="tab">
-                                <span class="aba-numero">4</span><span><strong>Documentação</strong><small>PDFs técnicos</small></span>
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="detalhes-garantia-tab" data-bs-toggle="tab" data-bs-target="#detalhes-garantia" type="button" role="tab">
-                                <span class="aba-numero">5</span><span><strong>Garantia e contrato</strong><small>Garantias, contratos e PDFs</small></span>
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="detalhes-manutencao-tab" data-bs-toggle="tab" data-bs-target="#detalhes-manutencao" type="button" role="tab">
-                                <span class="aba-numero">6</span><span><strong>Manutenção</strong><small>Preventiva</small></span>
-                            </button>
-                        </li>
-                    </ul>
+                        <ul class="nav nav-pills abas-equipamento mb-4" id="abasDetalhesEquipamento" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="detalhes-dados-tab" data-bs-toggle="tab" data-bs-target="#detalhes-dados" type="button" role="tab">
+                                    <span class="aba-numero">1</span><span><strong>Dados</strong><small>Informação principal</small></span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="detalhes-localizacao-tab" data-bs-toggle="tab" data-bs-target="#detalhes-localizacao" type="button" role="tab">
+                                    <span class="aba-numero">2</span><span><strong>Localização</strong><small>Serviço e sala</small></span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="detalhes-fornecedor-tab" data-bs-toggle="tab" data-bs-target="#detalhes-fornecedor" type="button" role="tab">
+                                    <span class="aba-numero">3</span><span><strong>Fornecedores</strong><small>Principal e associados</small></span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="detalhes-documentacao-tab" data-bs-toggle="tab" data-bs-target="#detalhes-documentacao" type="button" role="tab">
+                                    <span class="aba-numero">4</span><span><strong>Documentação</strong><small>PDFs técnicos</small></span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="detalhes-garantia-tab" data-bs-toggle="tab" data-bs-target="#detalhes-garantia" type="button" role="tab">
+                                    <span class="aba-numero">5</span><span><strong>Garantia e contrato</strong><small>Garantias, contratos e PDFs</small></span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="detalhes-manutencao-tab" data-bs-toggle="tab" data-bs-target="#detalhes-manutencao" type="button" role="tab">
+                                    <span class="aba-numero">6</span><span><strong>Manutenção</strong><small>Preventiva</small></span>
+                                </button>
+                            </li>
+                        </ul>
 
-                    <div class="tab-content">
+                        <div class="tab-content">
 
-                        <div class="tab-pane fade show active" id="detalhes-dados" role="tabpanel">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <h6 class="fw-bold mb-1">Dados do Equipamento</h6>
-                                    <p class="text-muted small mb-0">Consulta da identificação, características e entidades associadas ao equipamento.</p>
+                            <div class="tab-pane fade show active" id="detalhes-dados" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <h6 class="fw-bold mb-1">Dados do Equipamento</h6>
+                                        <p class="text-muted small mb-0">Consulta da identificação, características e entidades associadas ao equipamento.</p>
+                                    </div>
+                                    <?php
+                                    campo_detalhe('Designação', mostrar_valor($equipamento->designacao));
+                                    campo_detalhe('Categoria', mostrar_valor($equipamento->categoria_nome));
+                                    campo_detalhe('Marca', mostrar_valor($equipamento->marca));
+                                    campo_detalhe('Modelo', mostrar_valor($equipamento->modelo));
+                                    campo_detalhe('N.º de série', mostrar_valor($equipamento->numero_serie));
+                                    campo_detalhe('Estado', badge_estado($equipamento->estado_nome));
+                                    campo_detalhe('Data de aquisição', formatar_data($equipamento->data_aquisicao));
+                                    campo_detalhe('Custo de aquisição', formatar_moeda($equipamento->custo_aquisicao));
+                                    campo_detalhe('Ano de fabrico', mostrar_valor($equipamento->ano_fabrico));
+                                    campo_detalhe('Tipo de entrada', mostrar_valor($equipamento->tipo_entrada_nome));
+                                    campo_detalhe('Criticidade', '<span class="badge bg-warning text-dark">' . e($equipamento->criticidade_nome) . '</span>');
+                                    campo_detalhe('Observações', mostrar_valor($equipamento->observacoes), 'col-12');
+                                    ?>
+
+                                    <div class="col-12">
+                                        <hr class="my-2">
+                                        <h6 class="fw-bold mb-3">Relações e consumíveis</h6>
+                                    </div>
+                                    <?php
+                                    campo_detalhe('É componente de outro equipamento?', $equipamento->equipamento_pai_id ? 'Sim' : 'Não');
+                                    $pai = $equipamento->equipamento_pai_id ? e($equipamento->equipamento_pai_codigo . ' — ' . $equipamento->equipamento_pai_designacao) : '<span class="text-muted small">Não aplicável</span>';
+                                    campo_detalhe('Equipamento principal', $pai);
+                                    campo_detalhe('Tem consumíveis?', sim_nao($equipamento->tem_consumiveis));
+                                    campo_detalhe('Consumíveis associados', mostrar_valor($equipamento->consumiveis_descricao), 'col-12');
+                                    ?>
                                 </div>
-                                <?php
-                                campo_detalhe('Designação', mostrar_valor($equipamento->designacao));
-                                campo_detalhe('Categoria', mostrar_valor($equipamento->categoria_nome));
-                                campo_detalhe('Marca', mostrar_valor($equipamento->marca));
-                                campo_detalhe('Modelo', mostrar_valor($equipamento->modelo));
-                                campo_detalhe('N.º de série', mostrar_valor($equipamento->numero_serie));
-                                campo_detalhe('Estado', badge_estado($equipamento->estado_nome));
-                                campo_detalhe('Data de aquisição', formatar_data($equipamento->data_aquisicao));
-                                campo_detalhe('Custo de aquisição', formatar_moeda($equipamento->custo_aquisicao));
-                                campo_detalhe('Ano de fabrico', mostrar_valor($equipamento->ano_fabrico));
-                                campo_detalhe('Tipo de entrada', mostrar_valor($equipamento->tipo_entrada_nome));
-                                campo_detalhe('Criticidade', '<span class="badge bg-warning text-dark">' . e($equipamento->criticidade_nome) . '</span>');
-                                campo_detalhe('Observações', mostrar_valor($equipamento->observacoes), 'col-12');
-                                ?>
-
-                                <div class="col-12">
-                                    <hr class="my-2">
-                                    <h6 class="fw-bold mb-3">Relações e consumíveis</h6>
-                                </div>
-                                <?php
-                                campo_detalhe('É componente de outro equipamento?', $equipamento->equipamento_pai_id ? 'Sim' : 'Não');
-                                $pai = $equipamento->equipamento_pai_id ? e($equipamento->equipamento_pai_codigo . ' — ' . $equipamento->equipamento_pai_designacao) : '<span class="text-muted small">Não aplicável</span>';
-                                campo_detalhe('Equipamento principal', $pai);
-                                campo_detalhe('Tem consumíveis?', sim_nao($equipamento->tem_consumiveis));
-                                campo_detalhe('Consumíveis associados', mostrar_valor($equipamento->consumiveis_descricao), 'col-12');
-                                ?>
                             </div>
-                        </div>
 
-                        <div class="tab-pane fade" id="detalhes-localizacao" role="tabpanel">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <h6 class="fw-bold mb-1">Localização</h6>
-                                    <p class="text-muted small mb-0">Consulta da localização física do equipamento.</p>
+                            <div class="tab-pane fade" id="detalhes-localizacao" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <h6 class="fw-bold mb-1">Localização</h6>
+                                        <p class="text-muted small mb-0">Consulta da localização física do equipamento.</p>
+                                    </div>
+                                    <?php
+                                    campo_detalhe('Código da localização', mostrar_valor($equipamento->localizacao_codigo));
+                                    campo_detalhe('Localização', mostrar_valor($equipamento->localizacao_nome));
+                                    campo_detalhe('Estado da localização', mostrar_valor($equipamento->localizacao_estado));
+                                    campo_detalhe('Edifício', mostrar_valor($equipamento->localizacao_edificio));
+                                    campo_detalhe('Número de andares', mostrar_valor($equipamento->localizacao_numero_andares));
+                                    campo_detalhe('Piso principal', mostrar_valor($equipamento->localizacao_piso_principal));
+                                    campo_detalhe('Serviço / Departamento', mostrar_valor($equipamento->servico));
+                                    campo_detalhe('Piso / Andar', mostrar_valor($equipamento->piso));
+                                    campo_detalhe('Sala / Gabinete', mostrar_valor($equipamento->sala));
+                                    ?>
                                 </div>
-                                <?php
-                                campo_detalhe('Código da localização', mostrar_valor($equipamento->localizacao_codigo));
-                                campo_detalhe('Localização', mostrar_valor($equipamento->localizacao_nome));
-                                campo_detalhe('Edifício', mostrar_valor($equipamento->localizacao_edificio));
-                                campo_detalhe('Número de andares', mostrar_valor($equipamento->localizacao_numero_andares));
-                                campo_detalhe('Piso principal', mostrar_valor($equipamento->localizacao_piso_principal));
-                                campo_detalhe('Serviço / Departamento', mostrar_valor($equipamento->servico));
-                                campo_detalhe('Piso / Andar', mostrar_valor($equipamento->piso));
-                                campo_detalhe('Sala / Gabinete', mostrar_valor($equipamento->sala));
-                                ?>
                             </div>
-                        </div>
 
-                        <div class="tab-pane fade" id="detalhes-fornecedor" role="tabpanel">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <h6 class="fw-bold mb-1">Entidades associadas ao equipamento</h6>
-                                    <p class="text-muted small mb-0">
-                                        Consulta do fornecedor principal, fabricante, prestador de assistência técnica e restantes fornecedores associados.
-                                    </p>
-                                </div>
+                            <div class="tab-pane fade" id="detalhes-fornecedor" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <h6 class="fw-bold mb-1">Entidades associadas ao equipamento</h6>
+                                        <p class="text-muted small mb-0">
+                                            Consulta do fornecedor principal, fabricante, prestador de assistência técnica e restantes fornecedores associados.
+                                        </p>
+                                    </div>
 
-                                <?php
-                                $fabricantePrincipal = primeiro_fornecedor_por_funcao($fornecedoresAssociados, 2);
-                                $prestadorAssistencia = primeiro_fornecedor_por_funcao($fornecedoresAssociados, 4);
-                                $idsCardsPrincipais = array_filter([
-                                    (int) ($fornecedorPrincipal->id ?? 0),
-                                    (int) ($fabricantePrincipal->id ?? 0),
-                                    (int) ($prestadorAssistencia->id ?? 0)
-                                ]);
+                                    <?php
+                                    $fabricantePrincipal = primeiro_fornecedor_por_funcao($fornecedoresAssociados, 2);
+                                    $prestadorAssistencia = primeiro_fornecedor_por_funcao($fornecedoresAssociados, 4);
+                                    $idsCardsPrincipais = array_filter([
+                                        (int) ($fornecedorPrincipal->id ?? 0),
+                                        (int) ($fabricantePrincipal->id ?? 0),
+                                        (int) ($prestadorAssistencia->id ?? 0)
+                                    ]);
 
-                                renderizar_card_fornecedor($fornecedorPrincipal, 'Fornecedor principal');
+                                    renderizar_card_fornecedor($fornecedorPrincipal, 'Fornecedor principal');
 
-                                if ($fabricantePrincipal) {
-                                    renderizar_card_fornecedor($fabricantePrincipal, 'Fabricante principal');
-                                } else {
-                                    echo '<div class="col-md-6 col-xl-4"><div class="alert alert-light border h-100 mb-0"><strong>Fabricante principal</strong><br><span class="text-muted small">Sem fabricante associado.</span></div></div>';
-                                }
-
-                                if ($prestadorAssistencia) {
-                                    renderizar_card_fornecedor($prestadorAssistencia, 'Prestador de assistência técnica principal');
-                                } else {
-                                    echo '<div class="col-md-6 col-xl-4"><div class="alert alert-light border h-100 mb-0"><strong>Prestador de assistência técnica principal</strong><br><span class="text-muted small">Sem prestador de assistência associado.</span></div></div>';
-                                }
-                                ?>
-
-                                <div class="col-12 mt-3">
-                                    <hr class="my-2">
-                                    <h6 class="fw-bold mb-1">Fornecedores associados adicionais</h6>
-                                    <p class="text-muted small mb-0">
-                                        Outros fornecedores, distribuidores comerciais ou entidades de consumíveis associados ao equipamento.
-                                    </p>
-                                </div>
-
-                                <?php
-                                $temFornecedoresAdicionais = false;
-                                foreach ($fornecedoresAssociados as $fornecedorAssociado) {
-                                    $funcaoId = (int) ($fornecedorAssociado->funcao_fornecedor_id ?? 0);
-                                    $fornecedorId = (int) ($fornecedorAssociado->fornecedor_id ?? 0);
-
-                                    if (in_array($funcaoId, [1, 2, 4], true) && in_array($fornecedorId, $idsCardsPrincipais, true)) {
-                                        continue;
+                                    if ($fabricantePrincipal) {
+                                        renderizar_card_fornecedor($fabricantePrincipal, 'Fabricante principal');
+                                    } else {
+                                        echo '<div class="col-md-6 col-xl-4"><div class="alert alert-light border h-100 mb-0"><strong>Fabricante principal</strong><br><span class="text-muted small">Sem fabricante associado.</span></div></div>';
                                     }
 
-                                    $temFornecedoresAdicionais = true;
-                                    renderizar_card_fornecedor(
-                                        normalizar_fornecedor_para_card($fornecedorAssociado, $fornecedorAssociado->funcao_nome ?? null, $fornecedorAssociado->observacoes_associacao ?? null),
-                                        $fornecedorAssociado->fornecedor_nome ?? 'Fornecedor associado'
-                                    );
-                                }
+                                    if ($prestadorAssistencia) {
+                                        renderizar_card_fornecedor($prestadorAssistencia, 'Prestador de assistência técnica principal');
+                                    } else {
+                                        echo '<div class="col-md-6 col-xl-4"><div class="alert alert-light border h-100 mb-0"><strong>Prestador de assistência técnica principal</strong><br><span class="text-muted small">Sem prestador de assistência associado.</span></div></div>';
+                                    }
+                                    ?>
 
-                                if (!$temFornecedoresAdicionais) {
-                                    echo '<div class="col-12"><div class="alert alert-light border mb-0">Sem fornecedores adicionais associados.</div></div>';
-                                }
-                                ?>
-                            </div>
-                        </div>
+                                    <div class="col-12 mt-3">
+                                        <hr class="my-2">
+                                        <h6 class="fw-bold mb-1">Fornecedores associados adicionais</h6>
+                                        <p class="text-muted small mb-0">
+                                            Outros fornecedores, distribuidores comerciais ou entidades de consumíveis associados ao equipamento.
+                                        </p>
+                                    </div>
 
-                        <div class="tab-pane fade" id="detalhes-documentacao" role="tabpanel">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <h6 class="fw-bold mb-1">Documentação</h6>
-                                    <p class="text-muted small mb-0">Consulta dos documentos e PDFs associados ao equipamento.</p>
-                                </div>
+                                    <?php
+                                    $temFornecedoresAdicionais = false;
+                                    foreach ($fornecedoresAssociados as $fornecedorAssociado) {
+                                        $funcaoId = (int) ($fornecedorAssociado->funcao_fornecedor_id ?? 0);
+                                        $fornecedorId = (int) ($fornecedorAssociado->fornecedor_id ?? 0);
 
-                                <div class="col-12">
-                                    <?php if (empty($documentos)): ?>
-                                        <div class="alert alert-light border mb-0">Sem documentos associados.</div>
-                                    <?php else: ?>
-                                        <?php foreach ($documentos as $documento): ?>
-                                            <div class="card border mb-3 p-3">
-                                                <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
-                                                    <div>
-                                                        <h6 class="fw-bold mb-1"><?php echo e($documento->titulo); ?></h6>
-                                                        <p class="text-muted small mb-0"><?php echo e($documento->codigo); ?> · <?php echo e($documento->tipo_documento_nome); ?></p>
-                                                    </div>
-                                                    <div class="d-flex gap-2 align-items-start">
-                                                        <?php if ((int) $documento->obrigatorio === 1): ?>
-                                                            <span class="badge text-bg-primary">Obrigatório</span>
-                                                        <?php else: ?>
-                                                            <span class="badge text-bg-info">Adicional</span>
-                                                        <?php endif; ?>
-                                                        <?php echo badge_estado($documento->estado_documento_nome); ?>
-                                                        <?php if ($equipamentoAbatido): ?>
-                                                            <span class="badge text-bg-warning">Equipamento abatido</span>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </div>
-                                                <div class="row g-3">
-                                                    <?php
-                                                    campo_detalhe('Área', mostrar_valor($documento->area_documento_nome));
-                                                    campo_detalhe('Fornecedor', mostrar_valor($documento->fornecedor_nome));
-                                                    campo_detalhe('Responsável', mostrar_valor($documento->responsavel_documento));
-                                                    campo_detalhe('Data do documento', formatar_data($documento->data_documento));
-                                                    campo_detalhe('Validade', formatar_data($documento->validade));
-                                                    campo_detalhe('Observações', mostrar_valor($documento->observacoes), 'col-12');
-                                                    ?>
-                                                    <div class="col-12">
-                                                        <p class="text-muted small mb-1">PDFs associados</p>
-                                                        <?php renderizar_pdfs($ficheirosDocumentos[(int) $documento->id] ?? []); ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
+                                        if (in_array($funcaoId, [1, 2, 4], true) && in_array($fornecedorId, $idsCardsPrincipais, true)) {
+                                            continue;
+                                        }
+
+                                        $temFornecedoresAdicionais = true;
+                                        renderizar_card_fornecedor(
+                                            normalizar_fornecedor_para_card($fornecedorAssociado, $fornecedorAssociado->funcao_nome ?? null, $fornecedorAssociado->observacoes_associacao ?? null),
+                                            $fornecedorAssociado->fornecedor_nome ?? 'Fornecedor associado'
+                                        );
+                                    }
+
+                                    if (!$temFornecedoresAdicionais) {
+                                        echo '<div class="col-12"><div class="alert alert-light border mb-0">Sem fornecedores adicionais associados.</div></div>';
+                                    }
+                                    ?>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="tab-pane fade" id="detalhes-garantia" role="tabpanel">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <h6 class="fw-bold mb-1">Garantias</h6>
-                                    <p class="text-muted small mb-0">Consulta das garantias associadas ao equipamento.</p>
-                                </div>
+                            <div class="tab-pane fade" id="detalhes-documentacao" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <h6 class="fw-bold mb-1">Documentação</h6>
+                                        <p class="text-muted small mb-0">Consulta dos documentos e PDFs associados ao equipamento.</p>
+                                    </div>
 
-                                <div class="col-12">
-                                    <?php if (empty($garantias)): ?>
-                                        <div class="alert alert-light border mb-0">Sem garantias associadas.</div>
-                                    <?php else: ?>
-                                        <?php foreach ($garantias as $garantia): ?>
-                                            <div class="card border mb-3 p-3">
-                                                <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
-                                                    <div>
-                                                        <h6 class="fw-bold mb-1"><?php echo e($garantia->designacao); ?></h6>
-                                                        <p class="text-muted small mb-0"><?php echo e($garantia->codigo); ?></p>
+                                    <div class="col-12">
+                                        <?php if (empty($documentos)): ?>
+                                            <div class="alert alert-light border mb-0">Sem documentos associados.</div>
+                                        <?php else: ?>
+                                            <?php foreach ($documentos as $documento): ?>
+                                                <div class="card border mb-3 p-3">
+                                                    <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
+                                                        <div>
+                                                            <h6 class="fw-bold mb-1"><?php echo e($documento->titulo); ?></h6>
+                                                            <p class="text-muted small mb-0"><?php echo e($documento->codigo); ?> · <?php echo e($documento->tipo_documento_nome); ?></p>
+                                                        </div>
+                                                        <div class="d-flex gap-2 align-items-start">
+                                                            <?php if ((int) $documento->obrigatorio === 1): ?>
+                                                                <span class="badge text-bg-primary">Obrigatório</span>
+                                                            <?php else: ?>
+                                                                <span class="badge text-bg-info">Adicional</span>
+                                                            <?php endif; ?>
+                                                            <?php echo badge_estado($documento->estado_documento_nome); ?>
+                                                            <?php if ($equipamentoAbatido): ?>
+                                                                <span class="badge text-bg-warning">Equipamento abatido</span>
+                                                            <?php endif; ?>
+                                                        </div>
                                                     </div>
-                                                    <?php echo badge_estado($garantia->estado_garantia_nome); ?>
-                                                </div>
-                                                <div class="row g-3">
-                                                    <?php
-                                                    campo_detalhe('Equipamento associado', 'Equipamento atual');
-                                                    campo_detalhe('Fornecedor', mostrar_valor($garantia->fornecedor_nome));
-                                                    campo_detalhe('Responsável', mostrar_valor($garantia->responsavel_garantia));
-                                                    campo_detalhe('Contrato associado', $garantia->contrato_codigo ? e($garantia->contrato_codigo . ' — ' . $garantia->contrato_designacao) : '<span class="text-muted small">Sem contrato associado</span>');
-                                                    campo_detalhe('Data de início', formatar_data($garantia->data_inicio));
-                                                    campo_detalhe('Data de fim', formatar_data($garantia->data_fim));
-                                                    campo_detalhe('Cobertura', mostrar_valor($garantia->cobertura), 'col-12');
-                                                    campo_detalhe('Observações', mostrar_valor($garantia->observacoes), 'col-12');
-                                                    ?>
-                                                    <div class="col-12">
-                                                        <p class="text-muted small mb-1">PDFs associados</p>
-                                                        <?php renderizar_pdfs($ficheirosGarantias[(int) $garantia->id] ?? []); ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </div>
-
-                                <div class="col-12">
-                                    <hr>
-                                    <h6 class="fw-bold mb-1">Contratos</h6>
-                                    <p class="text-muted small mb-3">Consulta dos contratos de manutenção e contratos adicionais.</p>
-
-                                    <?php if (empty($contratos)): ?>
-                                        <div class="alert alert-light border mb-0">Sem contratos associados.</div>
-                                    <?php else: ?>
-                                        <?php foreach ($contratos as $contrato): ?>
-                                            <div class="card border mb-3 p-3">
-                                                <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
-                                                    <div>
-                                                        <h6 class="fw-bold mb-1"><?php echo e($contrato->designacao); ?></h6>
-                                                        <p class="text-muted small mb-0"><?php echo e($contrato->codigo); ?> · <?php echo e($contrato->tipo_contrato_nome); ?></p>
-                                                    </div>
-                                                    <?php echo badge_estado($contrato->estado_contrato_nome); ?>
-                                                </div>
-                                                <div class="row g-3">
-                                                    <?php
-                                                    campo_detalhe('Associado a', 'Equipamento atual');
-                                                    campo_detalhe('Fornecedor', mostrar_valor($contrato->fornecedor_nome));
-                                                    campo_detalhe('Responsável', mostrar_valor($contrato->responsavel_contrato));
-                                                    campo_detalhe('Data de início', formatar_data($contrato->data_inicio));
-                                                    campo_detalhe('Data de fim', formatar_data($contrato->data_fim));
-                                                    campo_detalhe('Valor anual', formatar_moeda($contrato->valor_anual));
-                                                    campo_detalhe('Periodicidade', mostrar_valor($contrato->periodicidade_contrato));
-                                                    campo_detalhe('Renovação automática', sim_nao($contrato->renovacao_automatica));
-                                                    campo_detalhe('Observações', mostrar_valor($contrato->observacoes), 'col-12');
-                                                    ?>
-                                                    <div class="col-12">
-                                                        <p class="text-muted small mb-1">PDFs associados</p>
-                                                        <?php renderizar_pdfs($ficheirosContratos[(int) $contrato->id] ?? []); ?>
+                                                    <div class="row g-3">
+                                                        <?php
+                                                        campo_detalhe('Área', mostrar_valor($documento->area_documento_nome));
+                                                        campo_detalhe('Fornecedor', mostrar_valor($documento->fornecedor_nome));
+                                                        campo_detalhe('Responsável', mostrar_valor($documento->responsavel_documento));
+                                                        campo_detalhe('Data do documento', formatar_data($documento->data_documento));
+                                                        campo_detalhe('Validade', formatar_data($documento->validade));
+                                                        campo_detalhe('Observações', mostrar_valor($documento->observacoes), 'col-12');
+                                                        ?>
+                                                        <div class="col-12">
+                                                            <p class="text-muted small mb-1">PDFs associados</p>
+                                                            <?php renderizar_pdfs($ficheirosDocumentos[(int) $documento->id] ?? []); ?>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="tab-pane fade" id="detalhes-manutencao" role="tabpanel">
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <h6 class="fw-bold mb-1">Manutenção</h6>
-                                    <p class="text-muted small mb-0">Consulta do plano e histórico de manutenção registado.</p>
-                                </div>
+                            <div class="tab-pane fade" id="detalhes-garantia" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <h6 class="fw-bold mb-1">Garantias</h6>
+                                        <p class="text-muted small mb-0">Consulta das garantias associadas ao equipamento.</p>
+                                    </div>
 
-                                <div class="col-12">
-                                    <?php if (empty($manutencoes)): ?>
-                                        <div class="alert alert-light border mb-0">Sem manutenção registada.</div>
-                                    <?php else: ?>
-                                        <?php foreach ($manutencoes as $manutencao): ?>
-                                            <div class="card border mb-3 p-3">
-                                                <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
-                                                    <div>
-                                                        <h6 class="fw-bold mb-1"><?php echo e($manutencao->tipo_manutencao_nome); ?></h6>
-                                                        <p class="text-muted small mb-0">Registo de manutenção</p>
+                                    <div class="col-12">
+                                        <?php if (empty($garantias)): ?>
+                                            <div class="alert alert-light border mb-0">Sem garantias associadas.</div>
+                                        <?php else: ?>
+                                            <?php foreach ($garantias as $garantia): ?>
+                                                <div class="card border mb-3 p-3">
+                                                    <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
+                                                        <div>
+                                                            <h6 class="fw-bold mb-1"><?php echo e($garantia->designacao); ?></h6>
+                                                            <p class="text-muted small mb-0"><?php echo e($garantia->codigo); ?></p>
+                                                        </div>
+                                                        <?php echo badge_estado($garantia->estado_garantia_nome); ?>
                                                     </div>
-                                                    <?php echo badge_estado($manutencao->estado_manutencao_nome); ?>
+                                                    <div class="row g-3">
+                                                        <?php
+                                                        campo_detalhe('Equipamento associado', 'Equipamento atual');
+                                                        campo_detalhe('Fornecedor', mostrar_valor($garantia->fornecedor_nome));
+                                                        campo_detalhe('Responsável', mostrar_valor($garantia->responsavel_garantia));
+                                                        campo_detalhe('Contrato associado', $garantia->contrato_codigo ? e($garantia->contrato_codigo . ' — ' . $garantia->contrato_designacao) : '<span class="text-muted small">Sem contrato associado</span>');
+                                                        campo_detalhe('Data de início', formatar_data($garantia->data_inicio));
+                                                        campo_detalhe('Data de fim', formatar_data($garantia->data_fim));
+                                                        campo_detalhe('Cobertura', mostrar_valor($garantia->cobertura), 'col-12');
+                                                        campo_detalhe('Observações', mostrar_valor($garantia->observacoes), 'col-12');
+                                                        ?>
+                                                        <div class="col-12">
+                                                            <p class="text-muted small mb-1">PDFs associados</p>
+                                                            <?php renderizar_pdfs($ficheirosGarantias[(int) $garantia->id] ?? []); ?>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="row g-3">
-                                                    <?php
-                                                    campo_detalhe('Última manutenção', formatar_data($manutencao->ultima_manutencao));
-                                                    campo_detalhe('Próxima manutenção', formatar_data($manutencao->proxima_manutencao));
-                                                    campo_detalhe('Periodicidade', mostrar_valor($manutencao->periodicidade));
-                                                    campo_detalhe('Responsável', mostrar_valor($manutencao->responsavel));
-                                                    campo_detalhe('Prioridade', mostrar_valor($manutencao->prioridade_nome));
-                                                    campo_detalhe('Observações', mostrar_valor($manutencao->observacoes), 'col-12');
-                                                    ?>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <hr>
+                                        <h6 class="fw-bold mb-1">Contratos</h6>
+                                        <p class="text-muted small mb-3">Consulta dos contratos de manutenção e contratos adicionais.</p>
+
+                                        <?php if (empty($contratos)): ?>
+                                            <div class="alert alert-light border mb-0">Sem contratos associados.</div>
+                                        <?php else: ?>
+                                            <?php foreach ($contratos as $contrato): ?>
+                                                <div class="card border mb-3 p-3">
+                                                    <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
+                                                        <div>
+                                                            <h6 class="fw-bold mb-1"><?php echo e($contrato->designacao); ?></h6>
+                                                            <p class="text-muted small mb-0"><?php echo e($contrato->codigo); ?> · <?php echo e($contrato->tipo_contrato_nome); ?></p>
+                                                        </div>
+                                                        <?php echo badge_estado($contrato->estado_contrato_nome); ?>
+                                                    </div>
+                                                    <div class="row g-3">
+                                                        <?php
+                                                        campo_detalhe('Associado a', 'Equipamento atual');
+                                                        campo_detalhe('Fornecedor', mostrar_valor($contrato->fornecedor_nome));
+                                                        campo_detalhe('Responsável', mostrar_valor($contrato->responsavel_contrato));
+                                                        campo_detalhe('Data de início', formatar_data($contrato->data_inicio));
+                                                        campo_detalhe('Data de fim', formatar_data($contrato->data_fim));
+                                                        campo_detalhe('Valor anual', formatar_moeda($contrato->valor_anual));
+                                                        campo_detalhe('Periodicidade', mostrar_valor($contrato->periodicidade_contrato));
+                                                        campo_detalhe('Renovação automática', sim_nao($contrato->renovacao_automatica));
+                                                        campo_detalhe('Observações', mostrar_valor($contrato->observacoes), 'col-12');
+                                                        ?>
+                                                        <div class="col-12">
+                                                            <p class="text-muted small mb-1">PDFs associados</p>
+                                                            <?php renderizar_pdfs($ficheirosContratos[(int) $contrato->id] ?? []); ?>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
+                            <div class="tab-pane fade" id="detalhes-manutencao" role="tabpanel">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <h6 class="fw-bold mb-1">Manutenção</h6>
+                                        <p class="text-muted small mb-0">Consulta do plano e histórico de manutenção registado.</p>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <?php if (empty($manutencoes)): ?>
+                                            <div class="alert alert-light border mb-0">Sem manutenção registada.</div>
+                                        <?php else: ?>
+                                            <?php foreach ($manutencoes as $manutencao): ?>
+                                                <div class="card border mb-3 p-3">
+                                                    <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
+                                                        <div>
+                                                            <h6 class="fw-bold mb-1"><?php echo e($manutencao->tipo_manutencao_nome); ?></h6>
+                                                            <p class="text-muted small mb-0">Registo de manutenção</p>
+                                                        </div>
+                                                        <?php echo badge_estado($manutencao->estado_manutencao_nome); ?>
+                                                    </div>
+                                                    <div class="row g-3">
+                                                        <?php
+                                                        campo_detalhe('Última manutenção', formatar_data($manutencao->ultima_manutencao));
+                                                        campo_detalhe('Próxima manutenção', formatar_data($manutencao->proxima_manutencao));
+                                                        campo_detalhe('Periodicidade', mostrar_valor($manutencao->periodicidade));
+                                                        campo_detalhe('Responsável', mostrar_valor($manutencao->responsavel));
+                                                        campo_detalhe('Prioridade', mostrar_valor($manutencao->prioridade_nome));
+                                                        campo_detalhe('Observações', mostrar_valor($manutencao->observacoes), 'col-12');
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
             <?php endif; ?>
 
         </main>

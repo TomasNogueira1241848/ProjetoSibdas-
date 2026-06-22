@@ -1237,8 +1237,11 @@ if ($ligacao === null) {
         /* Listas de valores controlados (lookups) carregadas da base de dados */
         $areasDocumento = obter_opcoes($ligacao, 'SELECT id, nome FROM areas_documento ORDER BY id');
         $estadosDocumento = obter_opcoes($ligacao, 'SELECT id, nome FROM estados_documento ORDER BY id');
-        $estadosGarantia = obter_opcoes($ligacao, 'SELECT id, nome FROM estados_garantia ORDER BY id');
-        $estadosContrato = obter_opcoes($ligacao, 'SELECT id, nome FROM estados_contrato ORDER BY id');
+        $ligacao->exec("INSERT IGNORE INTO estados_garantia (nome) VALUES ('Expirado')");
+        $ligacao->exec("INSERT IGNORE INTO estados_garantia (nome) VALUES ('Cancelado')");
+        $ligacao->exec("INSERT IGNORE INTO estados_contrato (nome) VALUES ('Cancelado')");
+        $estadosGarantia = obter_opcoes($ligacao, "SELECT id, CASE WHEN nome = 'Expirada' THEN 'Expirado' ELSE nome END AS nome FROM estados_garantia WHERE nome <> 'Expirada' ORDER BY id");
+        $estadosContrato = obter_opcoes($ligacao, "SELECT id, nome FROM estados_contrato WHERE nome NOT IN ('Inválido', 'Invalido') ORDER BY id");
         $contratosExistentes = obter_opcoes($ligacao, 'SELECT id, codigo, designacao FROM contratos ORDER BY codigo');
         $estadosManutencao = obter_opcoes($ligacao, 'SELECT id, nome FROM estados_manutencao ORDER BY id');
         $prioridadesManutencao = obter_opcoes($ligacao, 'SELECT id, nome FROM prioridades_manutencao ORDER BY id');

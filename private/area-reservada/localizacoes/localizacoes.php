@@ -241,6 +241,8 @@ include __DIR__ . '/../../includes/nav.php';
                             <tbody>
                                 <?php foreach ($localizacoes as $localizacao): ?>
                                     <?php
+                                    $estadoLocalizacaoNormalizado = mb_strtolower((string) $localizacao->estado);
+                                    $localizacaoAbatida = in_array($estadoLocalizacaoNormalizado, ['inativa', 'abatida'], true);
                                     $classeEstado = 'badge-inativo';
 
                                     if ($localizacao->estado === 'Ativa') {
@@ -263,23 +265,25 @@ include __DIR__ . '/../../includes/nav.php';
                                             </span>
                                         </td>
                                         <td class="text-center">
-                                            <a href="localizacao-detalhes.php?id=<?php echo htmlspecialchars($localizacao->id); ?>"
+                                            <a href="localizacao-detalhes.php?id_localizacao=<?php echo urlencode(aes_encrypt($localizacao->id)); ?>"
                                                 class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
                                                 data-bs-title="Ver detalhes">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <a href="localizacao-editar.php?id_localizacao=<?php echo urlencode(aes_encrypt($localizacao->id)); ?>"
-                                                class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
-                                                data-bs-title="Editar">
-                                                <i class="fa-solid fa-pen"></i>
-                                            </a>
+                                            <?php if (!$localizacaoAbatida): ?>
+                                                <a href="localizacao-editar.php?id_localizacao=<?php echo urlencode(aes_encrypt($localizacao->id)); ?>"
+                                                    class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
+                                                    data-bs-title="Editar">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </a>
 
-                                            <a href="localizacao-eliminar.php?id=<?php echo htmlspecialchars($localizacao->id); ?>"
-                                                class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip"
-                                                data-bs-title="Eliminar">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </a>
+                                                <a href="localizacao-eliminar.php?id_localizacao=<?php echo urlencode(aes_encrypt($localizacao->id)); ?>"
+                                                    class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip"
+                                                    data-bs-title="Abater">
+                                                    <i class="fa-solid fa-box-archive"></i>
+                                                </a>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

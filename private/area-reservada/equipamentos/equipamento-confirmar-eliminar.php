@@ -59,15 +59,66 @@ try {
         exit;
     }
 
+    $ligacao->beginTransaction();
+
     $stmtUpdate = $ligacao->prepare('UPDATE equipamentos SET estado_id = :estado_id WHERE id = :id');
     $stmtUpdate->execute([
         ':estado_id' => (int) $estadoAbatido->id,
         ':id' => $equipamentoId
     ]);
 
+    $ligacao->exec("INSERT IGNORE INTO estados_documento (nome) VALUES ('Inválido')");
+    $stmtEstadoDocumento = $ligacao->prepare("SELECT id FROM estados_documento WHERE nome = 'Inválido' LIMIT 1");
+    $stmtEstadoDocumento->execute();
+    $estadoDocumentoInvalido = $stmtEstadoDocumento->fetch();
+
+    if ($estadoDocumentoInvalido) {
+        $stmtDocs = $ligacao->prepare('UPDATE documentos SET estado_documento_id = :estado WHERE equipamento_id = :equipamento_id');
+        $stmtDocs->execute([
+            ':estado' => (int) $estadoDocumentoInvalido->id,
+            ':equipamento_id' => $equipamentoId
+        ]);
+    }
+
+    $ligacao->exec("INSERT IGNORE INTO estados_garantia (nome) VALUES ('Cancelado')");
+    $stmtEstadoGarantia = $ligacao->prepare("SELECT id FROM estados_garantia WHERE nome = 'Cancelado' LIMIT 1");
+    $stmtEstadoGarantia->execute();
+    $estadoGarantiaCancelado = $stmtEstadoGarantia->fetch();
+
+    if ($estadoGarantiaCancelado) {
+        $stmtGarantias = $ligacao->prepare('UPDATE garantias SET estado_garantia_id = :estado WHERE equipamento_id = :equipamento_id');
+        $stmtGarantias->execute([
+            ':estado' => (int) $estadoGarantiaCancelado->id,
+            ':equipamento_id' => $equipamentoId
+        ]);
+    }
+
+    $ligacao->exec("INSERT IGNORE INTO estados_contrato (nome) VALUES ('Cancelado')");
+    $stmtEstadoContrato = $ligacao->prepare("SELECT id FROM estados_contrato WHERE nome = 'Cancelado' LIMIT 1");
+    $stmtEstadoContrato->execute();
+    $estadoContratoCancelado = $stmtEstadoContrato->fetch();
+
+    if ($estadoContratoCancelado) {
+        $stmtContratos = $ligacao->prepare('
+            UPDATE contratos c
+            INNER JOIN contrato_equipamentos ce ON ce.contrato_id = c.id
+            SET c.estado_contrato_id = :estado
+            WHERE ce.equipamento_id = :equipamento_id
+        ');
+        $stmtContratos->execute([
+            ':estado' => (int) $estadoContratoCancelado->id,
+            ':equipamento_id' => $equipamentoId
+        ]);
+    }
+
+    $ligacao->commit();
+
     header('Location: equipamentos.php?abatido=1');
     exit;
-} catch (PDOException $erro) {
+} catch (Throwable $erro) {
+    if (isset($ligacao) && $ligacao instanceof PDO && $ligacao->inTransaction()) {
+        $ligacao->rollBack();
+    }
     header('Location: equipamentos.php?erro_eliminar=1');
     exit;
 }

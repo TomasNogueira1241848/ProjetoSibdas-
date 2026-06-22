@@ -590,6 +590,20 @@ function obter_id_por_nome($ligacao, $tabela, $nome)
  
     return $resultado ? $resultado->id : null;
 }
+
+function obter_funcao_fornecedor_id_equipamento($ligacao, array $padroes, $fallback)
+{
+    foreach ($padroes as $padrao) {
+        $stmt = $ligacao->prepare('SELECT id FROM funcoes_fornecedor WHERE LOWER(nome) LIKE :padrao ORDER BY id LIMIT 1');
+        $stmt->execute([':padrao' => $padrao]);
+        $registo = $stmt->fetch();
+        if ($registo && isset($registo->id)) {
+            return (int) $registo->id;
+        }
+    }
+
+    return (int) $fallback;
+}
  
 function inserir_documentos_minimos($ligacao, $equipamentoId, $documentosMinimosObrigatorios, $documentosPost)
 {
@@ -1422,10 +1436,14 @@ function preencher_dados_edicao_equipamento($ligacao, $equipamentoId, &$valores,
         exit;
     }
 
+    $funcaoPrincipalId = obter_funcao_fornecedor_id_equipamento($ligacao, ['%principal%'], 1);
+    $funcaoFabricanteId = obter_funcao_fornecedor_id_equipamento($ligacao, ['%fabricante%'], 2);
+    $funcaoAssistenciaId = obter_funcao_fornecedor_id_equipamento($ligacao, ['%assist%'], 4);
+
     $stmtFuncao = $ligacao->prepare('SELECT fornecedor_id FROM equipamento_fornecedores WHERE equipamento_id = :id AND funcao_fornecedor_id = :funcao LIMIT 1');
-    $stmtFuncao->execute([':id' => $equipamentoId, ':funcao' => 2]);
+    $stmtFuncao->execute([':id' => $equipamentoId, ':funcao' => $funcaoFabricanteId]);
     $fabricante = $stmtFuncao->fetch();
-    $stmtFuncao->execute([':id' => $equipamentoId, ':funcao' => 4]);
+    $stmtFuncao->execute([':id' => $equipamentoId, ':funcao' => $funcaoAssistenciaId]);
     $prestador = $stmtFuncao->fetch();
 
     $valores = [
@@ -1458,13 +1476,19 @@ function preencher_dados_edicao_equipamento($ligacao, $equipamentoId, &$valores,
     $dadosFormularioEquipamentoEditar = $valores;
 
     $stmtAdicionais = $ligacao->prepare('
-        SELECT f.nome
+        SELECT DISTINCT f.nome
         FROM equipamento_fornecedores ef
         INNER JOIN fornecedores f ON f.id = ef.fornecedor_id
-        WHERE ef.equipamento_id = :id AND ef.funcao_fornecedor_id = 3
+        WHERE ef.equipamento_id = :id
+          AND ef.funcao_fornecedor_id NOT IN (:funcao_principal, :funcao_fabricante, :funcao_assistencia)
         ORDER BY f.nome
     ');
-    $stmtAdicionais->execute([':id' => $equipamentoId]);
+    $stmtAdicionais->execute([
+        ':id' => $equipamentoId,
+        ':funcao_principal' => $funcaoPrincipalId,
+        ':funcao_fabricante' => $funcaoFabricanteId,
+        ':funcao_assistencia' => $funcaoAssistenciaId
+    ]);
     $dadosFormularioEquipamentoEditar['fornecedoresAssociadosEquipamento'] = array_column($stmtAdicionais->fetchAll(PDO::FETCH_ASSOC), 'nome');
 
     $stmtDocs = $ligacao->prepare('
@@ -1528,7 +1552,7 @@ function preencher_dados_edicao_equipamento($ligacao, $equipamentoId, &$valores,
     }
 
     $stmtGarantia = $ligacao->prepare('
-        SELECT g.*, f.nome AS fornecedor_nome, eg.nome AS estado_nome, c.codigo AS contrato_codigo,
+        SELECT g.*, f.nome AS fornecedor_nome, CASE WHEN eg.nome = \'Expirada\' THEN \'Expirado\' ELSE eg.nome END AS estado_nome, c.codigo AS contrato_codigo,
                COUNT(gf.ficheiro_id) AS total_ficheiros
         FROM garantias g
         INNER JOIN fornecedores f ON f.id = g.fornecedor_id
@@ -1563,7 +1587,7 @@ function preencher_dados_edicao_equipamento($ligacao, $equipamentoId, &$valores,
     }
 
     $stmtContrato = $ligacao->prepare('
-        SELECT c.*, tc.nome AS tipo_nome, f.nome AS fornecedor_nome, ec.nome AS estado_nome,
+        SELECT c.*, tc.nome AS tipo_nome, f.nome AS fornecedor_nome, CASE WHEN ec.nome IN (\'Inválido\',\'Invalido\') THEN \'Cancelado\' ELSE ec.nome END AS estado_nome,
                COUNT(cf.ficheiro_id) AS total_ficheiros
         FROM contratos c
         INNER JOIN contrato_equipamentos ce ON ce.contrato_id = c.id
@@ -1601,7 +1625,7 @@ function preencher_dados_edicao_equipamento($ligacao, $equipamentoId, &$valores,
     }
 
     $stmtOutrosContratos = $ligacao->prepare('
-        SELECT c.*, tc.nome AS tipo_nome, f.nome AS fornecedor_nome, ec.nome AS estado_nome,
+        SELECT c.*, tc.nome AS tipo_nome, f.nome AS fornecedor_nome, CASE WHEN ec.nome IN (\'Inválido\',\'Invalido\') THEN \'Cancelado\' ELSE ec.nome END AS estado_nome,
                COUNT(cf.ficheiro_id) AS total_ficheiros
         FROM contratos c
         INNER JOIN contrato_equipamentos ce ON ce.contrato_id = c.id
@@ -2010,8 +2034,11 @@ if ($ligacao === null) {
         /* Listas de valores controlados (lookups) carregadas da base de dados */
         $areasDocumento = obter_opcoes($ligacao, 'SELECT id, nome FROM areas_documento ORDER BY id');
         $estadosDocumento = obter_opcoes($ligacao, 'SELECT id, nome FROM estados_documento ORDER BY id');
-        $estadosGarantia = obter_opcoes($ligacao, 'SELECT id, nome FROM estados_garantia ORDER BY id');
-        $estadosContrato = obter_opcoes($ligacao, 'SELECT id, nome FROM estados_contrato ORDER BY id');
+        $ligacao->exec("INSERT IGNORE INTO estados_garantia (nome) VALUES ('Expirado')");
+        $ligacao->exec("INSERT IGNORE INTO estados_garantia (nome) VALUES ('Cancelado')");
+        $ligacao->exec("INSERT IGNORE INTO estados_contrato (nome) VALUES ('Cancelado')");
+        $estadosGarantia = obter_opcoes($ligacao, "SELECT id, CASE WHEN nome = 'Expirada' THEN 'Expirado' ELSE nome END AS nome FROM estados_garantia WHERE nome <> 'Expirada' ORDER BY id");
+        $estadosContrato = obter_opcoes($ligacao, "SELECT id, nome FROM estados_contrato WHERE nome NOT IN ('Inválido', 'Invalido') ORDER BY id");
         $contratosExistentes = obter_opcoes($ligacao, 'SELECT id, codigo, designacao FROM contratos ORDER BY codigo');
         $estadosManutencao = obter_opcoes($ligacao, 'SELECT id, nome FROM estados_manutencao ORDER BY id');
         $prioridadesManutencao = obter_opcoes($ligacao, 'SELECT id, nome FROM prioridades_manutencao ORDER BY id');
@@ -2262,20 +2289,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 )
             ");
 
+            $funcaoPrincipalId = obter_funcao_fornecedor_id_equipamento($ligacao, ['%principal%'], 1);
+            $funcaoFabricanteId = obter_funcao_fornecedor_id_equipamento($ligacao, ['%fabricante%'], 2);
+            $funcaoAssistenciaId = obter_funcao_fornecedor_id_equipamento($ligacao, ['%assist%'], 4);
+            $funcaoAdicionalId = obter_funcao_fornecedor_id_equipamento($ligacao, ['%adicional%', '%consum%', '%distrib%'], 3);
+
             $associacoesFornecedores = [
                 [
                     'fornecedor_id' => $valores['fornecedor_principal_id'],
-                    'funcao_fornecedor_id' => 1,
+                    'funcao_fornecedor_id' => $funcaoPrincipalId,
                     'observacoes' => 'Fornecedor principal'
                 ],
                 [
                     'fornecedor_id' => $valores['fabricante_id'],
-                    'funcao_fornecedor_id' => 2,
+                    'funcao_fornecedor_id' => $funcaoFabricanteId,
                     'observacoes' => 'Fabricante principal'
                 ],
                 [
                     'fornecedor_id' => $valores['prestador_assistencia_id'],
-                    'funcao_fornecedor_id' => 4,
+                    'funcao_fornecedor_id' => $funcaoAssistenciaId,
                     'observacoes' => 'Assistência técnica principal'
                 ]
             ];
@@ -2299,7 +2331,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $stmtFornecedor->execute([
                             ':equipamento_id' => $equipamentoId,
                             ':fornecedor_id' => $fornecedorAdicionalId,
-                            ':funcao_fornecedor_id' => 3,
+                            ':funcao_fornecedor_id' => $funcaoAdicionalId,
                             ':observacoes' => 'Fornecedor adicional associado'
                         ]);
                     }
@@ -2615,7 +2647,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                             $fornNome = htmlspecialchars($fornecedor->nome);
                                                             $fornTipo = htmlspecialchars($fornecedor->tipo ?? '');
                                                             $checkboxId = 'fornecedorAssociado' . preg_replace('/[^A-Za-z0-9]/', '', $fornecedor->nome) . 'Equipamento';
-                                                            $associadosSelecionados = $_POST['fornecedoresAssociadosEquipamento'] ?? [];
+                                                            $associadosSelecionados = $_POST['fornecedoresAssociadosEquipamento'] ?? ($dadosFormularioEquipamentoEditar['fornecedoresAssociadosEquipamento'] ?? []);
                                                             $estaSelecionado = in_array($fornecedor->nome, $associadosSelecionados, true) ? 'checked' : '';
                                                         ?>
                                                         <div class="col-md-6 fornecedor-associado-item" data-fornecedor-item="<?php echo $fornNome . ' ' . $fornTipo; ?>">

@@ -164,9 +164,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      * Coerência: o piso principal não pode ser superior ao número de andares.
      * (Só se ambos forem números válidos; o piso pode ser 0 = rés-do-chão.)
      */
-    if (preg_match('/^-?\d+$/', $valores['pisoPrincipalLocalizacao'])
+    if (
+        preg_match('/^-?\d+$/', $valores['pisoPrincipalLocalizacao'])
         && ctype_digit($valores['numeroAndaresLocalizacao'])
-        && (int) $valores['pisoPrincipalLocalizacao'] > (int) $valores['numeroAndaresLocalizacao']) {
+        && (int) $valores['pisoPrincipalLocalizacao'] > (int) $valores['numeroAndaresLocalizacao']
+    ) {
         $erros[] = 'O piso principal não pode ser superior ao número de andares.';
     }
 

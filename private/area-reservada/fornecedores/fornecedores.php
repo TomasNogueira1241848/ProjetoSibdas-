@@ -123,6 +123,26 @@ include __DIR__ . '/../../includes/nav.php';
                 </div>
             <?php endif; ?>
 
+            <?php if ((isset($_GET['descontinuado']) && $_GET['descontinuado'] == '1') || (isset($_GET['abatido']) && $_GET['abatido'] == '1')): ?>
+                <div class="alert alert-success d-flex align-items-start gap-2" role="alert">
+                    <i class="fa-solid fa-circle-check mt-1"></i>
+                    <div>
+                        <strong class="d-block">Fornecedor descontinuado</strong>
+                        <span>O fornecedor foi descontinuado com sucesso. Os equipamentos, documentos, garantias e contratos associados mantêm-se disponíveis.</span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ((isset($_GET['erro_descontinuar']) && $_GET['erro_descontinuar'] == '1') || (isset($_GET['erro_abate']) && $_GET['erro_abate'] == '1')): ?>
+                <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
+                    <i class="fa-solid fa-circle-exclamation mt-1"></i>
+                    <div>
+                        <strong class="d-block">Não foi possível descontinuar</strong>
+                        <span>Verifique se o fornecedor existe.</span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <?php if ($erroBD !== ''): ?>
                 <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
                     <i class="fa-solid fa-circle-exclamation mt-1"></i>
@@ -194,6 +214,7 @@ include __DIR__ . '/../../includes/nav.php';
                                 <option value="">Todos</option>
                                 <option value="Ativo">Ativo</option>
                                 <option value="Inativo">Inativo</option>
+                                <option value="Descontinuado">Descontinuado</option>
                             </select>
                         </div>
 
@@ -229,7 +250,10 @@ include __DIR__ . '/../../includes/nav.php';
 
                             <tbody>
                                 <?php foreach ($fornecedores as $fornecedor): ?>
-                                    <?php $classeEstado = $fornecedor->estado === 'Ativo' ? 'badge-ativo' : 'badge-inativo'; ?>
+                                    <?php
+                                    $fornecedorDescontinuado = in_array(mb_strtolower((string) $fornecedor->estado), ['descontinuado', 'abatido'], true);
+                                    $classeEstado = $fornecedor->estado === 'Ativo' ? 'badge-ativo' : 'badge-inativo';
+                                    ?>
 
                                     <tr>
                                         <td><?php echo htmlspecialchars($fornecedor->nome); ?></td>
@@ -244,23 +268,25 @@ include __DIR__ . '/../../includes/nav.php';
                                             </span>
                                         </td>
                                         <td class="text-center">
-                                            <a href="fornecedor-detalhes.php?id=<?php echo htmlspecialchars($fornecedor->id); ?>"
+                                            <a href="fornecedor-detalhes.php?id_fornecedor=<?php echo urlencode(aes_encrypt($fornecedor->id)); ?>"
                                                 class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip"
                                                 data-bs-title="Ver detalhes">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <a href="fornecedor-editar.php?id_fornecedor=<?php echo urlencode(aes_encrypt($fornecedor->id)); ?>"
-                                                class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
-                                                data-bs-title="Editar">
-                                                <i class="fa-solid fa-pen"></i>
-                                            </a>
+                                            <?php if (!$fornecedorDescontinuado): ?>
+                                                <a href="fornecedor-editar.php?id_fornecedor=<?php echo urlencode(aes_encrypt($fornecedor->id)); ?>"
+                                                    class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
+                                                    data-bs-title="Editar">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </a>
 
-                                            <a href="fornecedor-eliminar.php?id=<?php echo htmlspecialchars($fornecedor->id); ?>"
-                                                class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip"
-                                                data-bs-title="Eliminar">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </a>
+                                                <a href="fornecedor-eliminar.php?id_fornecedor=<?php echo urlencode(aes_encrypt($fornecedor->id)); ?>"
+                                                    class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip"
+                                                    data-bs-title="Descontinuar">
+                                                    <i class="fa-solid fa-box-archive"></i>
+                                                </a>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
