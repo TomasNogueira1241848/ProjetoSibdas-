@@ -1,26 +1,31 @@
 document.addEventListener('DOMContentLoaded', function () {
-    aplicarConteudosPublicos();
+    const inicializadores = [
+        aplicarConteudosPublicos,
+        inicializarFlatpickrGlobal,
+        inicializarDataTablesAreaReservada,
+        inicializarFormularioContacto,
+        inicializarTooltips,
+        inicializarToastPublic,
+        inicializarGestaoConteudosPublicos,
+        inicializarNavegacaoAbasEquipamento,
+        preencherFormularioEquipamentoEditar,
+        inicializarBlocosDinamicosEquipamento,
+        inicializarInputsPDFs,
+        inicializarBotoesRemoverPDFs,
+        inicializarCamposCondicionaisEquipamento,
+        inicializarPesquisaFornecedoresAssociados,
+        inicializarGraficosDashboard
+    ];
 
-    inicializarFlatpickrGlobal();
-    inicializarDataTablesAreaReservada();
-
-    inicializarFormularioContacto();
-
-    inicializarTooltips();
-    inicializarToastPublic();
-
-    inicializarGestaoConteudosPublicos();
-
-    inicializarNavegacaoAbasEquipamento();
-    preencherFormularioEquipamentoEditar();
-    inicializarBlocosDinamicosEquipamento();
-
-    inicializarInputsPDFs();
-    inicializarBotoesRemoverPDFs();
-    inicializarCamposCondicionaisEquipamento();
-    inicializarPesquisaFornecedoresAssociados();
-
-    inicializarGraficosDashboard();
+    inicializadores.forEach(function (inicializador) {
+        try {
+            if (typeof inicializador === 'function') {
+                inicializador();
+            }
+        } catch (erro) {
+            console.error('Erro ao inicializar componente:', erro);
+        }
+    });
 });
 
 
@@ -839,9 +844,13 @@ function mostrarMensagemConteudosPublicos(texto) {
 }
 
 
+
 /* Inicializa os gráficos estatísticos da dashboard */
 function inicializarGraficosDashboard() {
-    if (typeof Chart === 'undefined') return;
+    if (typeof Chart === 'undefined') {
+        console.warn('Chart.js não foi carregado. Confirma se assets/js/chart.umd.min.js existe e se o footer.php está atualizado.');
+        return;
+    }
 
     Chart.defaults.font.family = 'Arial, Helvetica, sans-serif';
     Chart.defaults.color = '#4f5b67';
@@ -852,19 +861,53 @@ function inicializarGraficosDashboard() {
 }
 
 
+/* Cria um gráfico Chart.js sem duplicar instâncias no mesmo canvas */
+function criarGraficoDashboard(canvas, configuracao) {
+    if (!canvas || typeof Chart === 'undefined') return;
+
+    const graficoExistente = Chart.getChart(canvas);
+    if (graficoExistente) {
+        graficoExistente.destroy();
+    }
+
+    new Chart(canvas, configuracao);
+}
+
+
+/* Obtém dados vindos da base de dados para os gráficos da dashboard */
+function obterDadosDashboard(chave, labelsPadrao, valoresPadrao) {
+    const dadosDashboard = window.dashboardData || {};
+    const dados = dadosDashboard[chave] || {};
+
+    if (Array.isArray(dados.labels) && Array.isArray(dados.valores) && dados.labels.length > 0) {
+        return {
+            labels: dados.labels,
+            valores: dados.valores
+        };
+    }
+
+    return {
+        labels: labelsPadrao,
+        valores: valoresPadrao
+    };
+}
+
+
 /* Gráfico circular com a distribuição dos equipamentos por estado */
 function criarGraficoEstado() {
     const graficoEstado = document.getElementById('graficoEstado');
 
     if (!graficoEstado) return;
 
-    new Chart(graficoEstado, {
+    const dados = obterDadosDashboard('estados', ['Sem dados'], [0]);
+
+    criarGraficoDashboard(graficoEstado, {
         type: 'doughnut',
         data: {
-            labels: ['Ativo', 'Em Manutenção', 'Inativo', 'Em Calibração', 'Abatido'],
+            labels: dados.labels,
             datasets: [{
-                data: [118, 14, 10, 5, 3],
-                backgroundColor: ['#198754', '#ffc107', '#6c757d', '#0dcaf0', '#dc3545'],
+                data: dados.valores,
+                backgroundColor: ['#198754', '#ffc107', '#6c757d', '#0dcaf0', '#dc3545', '#6610f2', '#fd7e14', '#1a6fa8'],
                 borderWidth: 2,
                 borderColor: '#ffffff'
             }]
@@ -896,13 +939,15 @@ function criarGraficoCategoria() {
 
     if (!graficoCategoria) return;
 
-    new Chart(graficoCategoria, {
+    const dados = obterDadosDashboard('categorias', ['Sem dados'], [0]);
+
+    criarGraficoDashboard(graficoCategoria, {
         type: 'bar',
         data: {
-            labels: ['Monitorização', 'Suporte de Vida', 'Terapia', 'Diagnóstico', 'Laboratório'],
+            labels: dados.labels,
             datasets: [{
                 label: 'Equipamentos',
-                data: [42, 31, 28, 24, 17],
+                data: dados.valores,
                 backgroundColor: '#1a6fa8',
                 borderRadius: 8
             }]
@@ -946,13 +991,15 @@ function criarGraficoLocalizacao() {
 
     if (!graficoLocalizacao) return;
 
-    new Chart(graficoLocalizacao, {
+    const dados = obterDadosDashboard('localizacoes', ['Sem dados'], [0]);
+
+    criarGraficoDashboard(graficoLocalizacao, {
         type: 'bar',
         data: {
-            labels: ['UCI', 'Urgência', 'Bloco', 'Med. Interna', 'Consulta', 'Laboratório'],
+            labels: dados.labels,
             datasets: [{
                 label: 'Equipamentos',
-                data: [26, 24, 22, 20, 18, 15],
+                data: dados.valores,
                 backgroundColor: '#0a2540',
                 borderRadius: 8
             }]
@@ -988,8 +1035,8 @@ function criarGraficoLocalizacao() {
             }
         }
     });
-
 }
+
 
 /* Ativa o Flatpickr nos campos de data de forma global */
 function inicializarFlatpickrGlobal() {
@@ -1008,7 +1055,7 @@ function inicializarFlatpickrGlobal() {
 }
 
 
-/* Inicializa as DataTables das páginas de listagem da área reservada */
+/* Inicializa as DataTables das listagens principais e das tabelas da dashboard */
 function inicializarDataTablesAreaReservada() {
     if (!window.jQuery || !window.jQuery.fn || !window.jQuery.fn.DataTable) return;
 
@@ -1017,24 +1064,21 @@ function inicializarDataTablesAreaReservada() {
     inicializarTabelaLocalizacoes();
     inicializarTabelaDocumentacao();
     inicializarTabelaContratosGarantias();
+    inicializarDataTablesDashboard();
 }
 
 
 /* Opções comuns para tabelas DataTables */
-function criarOpcoesDataTable(mensagens, ordemInicial) {
-    return {
+function criarOpcoesDataTable(mensagens, ordemInicial, colunasSemOrdenacao) {
+    const colunasBloqueadas = Array.isArray(colunasSemOrdenacao) ? colunasSemOrdenacao : [-1];
+
+    const opcoes = {
         pageLength: 5,
         lengthChange: false,
         pagingType: 'simple_numbers',
         ordering: true,
         autoWidth: false,
         order: ordemInicial || [[0, 'asc']],
-        columnDefs: [
-            {
-                orderable: false,
-                targets: -1
-            }
-        ],
         dom: 't' + '<"datatable-footer d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3"ip>',
         language: {
             decimal: '',
@@ -1055,8 +1099,16 @@ function criarOpcoesDataTable(mensagens, ordemInicial) {
             }
         }
     };
-}
 
+    if (colunasBloqueadas.length > 0) {
+        opcoes.columnDefs = [{
+            orderable: false,
+            targets: colunasBloqueadas
+        }];
+    }
+
+    return opcoes;
+}
 
 /* Liga um input/select a um filtro de coluna de uma DataTable */
 function ligarFiltroDataTable(tabela, seletor, coluna) {
@@ -1068,6 +1120,91 @@ function ligarFiltroDataTable(tabela, seletor, coluna) {
     elemento.on('input change', function () {
         tabela.column(coluna).search(this.value).draw();
     });
+}
+
+
+/* Tabelas da dashboard com DataTables e pesquisas externas */
+function inicializarDataTablesDashboard() {
+    const tabelasDashboard = [
+        {
+            tabela: '#tabelaServicosDashboard',
+            pesquisa: '#pesquisaServicoDashboard',
+            ordem: [[1, 'desc']],
+            colunasSemOrdenacao: [],
+            mensagens: {
+                emptyTable: 'Sem dados de serviço.',
+                info: 'A mostrar _START_ a _END_ de _TOTAL_ serviços',
+                infoEmpty: 'Sem serviços para mostrar',
+                infoFiltered: '(filtrado de _MAX_ serviços)',
+                zeroRecords: 'Nenhum serviço encontrado.'
+            }
+        },
+        {
+            tabela: '#tabelaSuporteVidaDashboard',
+            pesquisa: '#pesquisaSuporteVidaDashboard',
+            ordem: [[1, 'desc']],
+            colunasSemOrdenacao: [],
+            mensagens: {
+                emptyTable: 'Sem equipamentos de suporte de vida.',
+                info: 'A mostrar _START_ a _END_ de _TOTAL_ serviços',
+                infoEmpty: 'Sem serviços para mostrar',
+                infoFiltered: '(filtrado de _MAX_ serviços)',
+                zeroRecords: 'Nenhum serviço encontrado.'
+            }
+        },
+        {
+            tabela: '#tabelaGarantiasConteudo',
+            pesquisa: '#pesquisaGarantiasDashboard',
+            ordem: [[3, 'asc']],
+            colunasSemOrdenacao: [-1],
+            mensagens: {
+                emptyTable: 'Sem garantias expiradas ou próximas do fim.',
+                info: 'A mostrar _START_ a _END_ de _TOTAL_ garantias',
+                infoEmpty: 'Sem garantias para mostrar',
+                infoFiltered: '(filtrado de _MAX_ garantias)',
+                zeroRecords: 'Nenhuma garantia encontrada.'
+            }
+        },
+        {
+            tabela: '#tabelaManutencoes',
+            pesquisa: '#pesquisaManutencoesDashboard',
+            ordem: [[3, 'asc']],
+            colunasSemOrdenacao: [-1],
+            mensagens: {
+                emptyTable: 'Sem manutenções preventivas agendadas.',
+                info: 'A mostrar _START_ a _END_ de _TOTAL_ manutenções',
+                infoEmpty: 'Sem manutenções para mostrar',
+                infoFiltered: '(filtrado de _MAX_ manutenções)',
+                zeroRecords: 'Nenhuma manutenção encontrada.'
+            }
+        }
+    ];
+
+    tabelasDashboard.forEach(inicializarDataTableDashboard);
+}
+
+
+/* Inicializa uma tabela da dashboard sem repetir a lógica de pesquisa */
+function inicializarDataTableDashboard(configuracao) {
+    const $ = window.jQuery;
+    const tabela = $(configuracao.tabela);
+
+    if (!tabela.length || $.fn.dataTable.isDataTable(tabela[0])) return;
+
+    const opcoes = criarOpcoesDataTable(
+        configuracao.mensagens,
+        configuracao.ordem,
+        configuracao.colunasSemOrdenacao
+    );
+
+    const dataTable = tabela.DataTable(opcoes);
+    const pesquisa = $(configuracao.pesquisa);
+
+    if (pesquisa.length) {
+        pesquisa.on('input', function () {
+            dataTable.search(this.value).draw();
+        });
+    }
 }
 
 
@@ -1205,4 +1342,3 @@ function inicializarTabelaContratosGarantias() {
     $('#filtroFornecedorContratoDT').on('change', aplicarFiltrosContratosGarantias);
     $('#filtroEstadoContratoDT').on('change', aplicarFiltrosContratosGarantias);
 }
-
