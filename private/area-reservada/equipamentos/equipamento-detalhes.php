@@ -9,6 +9,7 @@ require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
 
 redirect_if_not_logged();
+exigir_permissao('equipamentos', 'ver');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     header('Location: equipamentos.php');
@@ -553,11 +554,13 @@ include __DIR__ . '/../../includes/nav.php';
                 </div>
 
                 <div class="d-flex flex-wrap gap-2">
-                    <?php if (!$equipamentoAbatido): ?>
+                    <?php if (!$equipamentoAbatido && tem_permissao('equipamentos', 'editar')): ?>
                         <a href="equipamento-editar.php?id_equipamento=<?php echo urlencode($idEquipamentoEncrypted); ?>" class="btn btn-primary btn-sm">
                             <i class="fa-solid fa-pen me-1"></i> Editar
                         </a>
+                    <?php endif; ?>
 
+                    <?php if (!$equipamentoAbatido && tem_permissao('equipamentos', 'remover')): ?>
                         <a href="equipamento-eliminar.php?id_equipamento=<?php echo urlencode($idEquipamentoEncrypted); ?>" class="btn btn-outline-danger btn-sm">
                             <i class="fa-solid fa-trash me-1"></i> Abater
                         </a>

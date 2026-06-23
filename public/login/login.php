@@ -43,7 +43,7 @@ unset($_SESSION['old_login']);
                     </div>
 
                     <!-- Formulário -->
-                    <form id="formLogin" action="processa_login.php" method="post" novalidate>
+                    <form id="formLogin" name="formulario" action="processa_login.php" method="post" novalidate>
                         <div class="mb-3">
                             <label for="emailLogin" class="form-label">Email</label>
                             <div class="input-group">

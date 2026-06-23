@@ -7,6 +7,7 @@ $activeMenu = 'contratos';
 require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
 redirect_if_not_logged();
+exigir_permissao('contratos', 'ver');
 function e($v)
 {
     return htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8');
@@ -82,7 +83,7 @@ include __DIR__ . '/../../includes/nav.php'; ?>
                     <p class="text-muted small mb-0">Consulta da garantia, equipamento e fornecedor associado.</p>
                 </div>
                 <div class="d-flex gap-2"><a href="contratos.php" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left me-1"></i> Voltar</a><?php if ($garantia && !$equipamentoAbatido && !$garantiaCancelada): ?>
-                        <a href="garantia-eliminar.php?id_garantia=<?php echo urlencode($idEncrypted); ?>" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash me-1"></i> Eliminar</a>
+                        <?php if (tem_permissao('contratos', 'remover')): ?><a href="garantia-eliminar.php?id_garantia=<?php echo urlencode($idEncrypted); ?>" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash me-1"></i> Eliminar</a><?php endif; ?>
                     <?php endif; ?>
                 </div>
 

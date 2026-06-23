@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
 redirect_if_not_logged();
+exigir_permissao('contratos', 'remover');
 $idEncrypted = $_GET['id_contrato'] ?? null;
 $id = $idEncrypted ? aes_decrypt($idEncrypted) : null;
 if (!$id || !is_numeric($id)) {

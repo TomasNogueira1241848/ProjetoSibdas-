@@ -20,6 +20,7 @@ require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
 
 redirect_if_not_logged();
+exigir_permissao('equipamentos', 'ver');
 
 $equipamentos = [];
 $categorias = [];
@@ -115,9 +116,11 @@ include __DIR__ . '/../../includes/nav.php';
                     </p>
                 </div>
 
-                <a href="equipamento-novo.php" class="btn btn-primary btn-sm">
-                    <i class="fa-solid fa-plus me-1"></i> Novo equipamento
-                </a>
+                <?php if (tem_permissao('equipamentos', 'criar')): ?>
+                    <a href="equipamento-novo.php" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-plus me-1"></i> Novo equipamento
+                    </a>
+                <?php endif; ?>
             </div>
 
             <?php if (isset($_GET['sucesso']) && $_GET['sucesso'] == '1'): ?>
@@ -331,23 +334,27 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <?php if (!$equipamentoAbatido): ?>
+                                            <?php if (!$equipamentoAbatido && tem_permissao('equipamentos', 'editar')): ?>
                                                 <a href="equipamento-editar.php?id_equipamento=<?php echo urlencode(aes_encrypt($equipamento->id)); ?>"
                                                     class="btn btn-sm btn-outline-secondary"
                                                     data-bs-toggle="tooltip"
                                                     data-bs-title="Editar">
                                                     <i class="fa-solid fa-pen"></i>
                                                 </a>
+                                            <?php endif; ?>
 
+                                            <?php if (!$equipamentoAbatido && tem_permissao('equipamentos', 'remover')): ?>
                                                 <a href="equipamento-eliminar.php?id_equipamento=<?php echo urlencode(aes_encrypt($equipamento->id)); ?>"
                                                     class="btn btn-sm btn-outline-danger"
                                                     data-bs-toggle="tooltip"
                                                     data-bs-title="Abater">
                                                     <i class="fa-solid fa-box-archive"></i>
                                                 </a>
-                                            <?php else: ?>
-                                                <span class="badge text-bg-secondary" data-bs-toggle="tooltip" data-bs-title="Equipamento já abatido. Só é possível consultar os detalhes.">
-                                                    Sem ações
+                                            <?php endif; ?>
+
+                                            <?php if ($equipamentoAbatido || (!tem_permissao('equipamentos', 'editar') && !tem_permissao('equipamentos', 'remover'))): ?>
+                                                <span class="badge text-bg-secondary" data-bs-toggle="tooltip" data-bs-title="Disponível apenas para consulta.">
+                                                    Consulta
                                                 </span>
                                             <?php endif; ?>
                                         </td>

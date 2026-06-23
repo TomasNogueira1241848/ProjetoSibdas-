@@ -27,9 +27,7 @@ if ($password === '') {
 
 if (!empty($erros)) {
     $_SESSION['erros_login'] = $erros;
-    $_SESSION['old_login'] = [
-        'email' => $email
-    ];
+    $_SESSION['old_login'] = ['email' => $email];
 
     header('Location: ' . BASE_URL . '/public/login/login.php');
     exit;
@@ -38,67 +36,63 @@ if (!empty($erros)) {
 $ligacao = ligar_base_dados();
 
 if ($ligacao === null) {
-    $_SESSION['erros_login'] = [
-        'Não foi possível ligar à base de dados.'
-    ];
-
-    $_SESSION['old_login'] = [
-        'email' => $email
-    ];
+    $_SESSION['erros_login'] = ['Não foi possível ligar à base de dados.'];
+    $_SESSION['old_login'] = ['email' => $email];
 
     header('Location: ' . BASE_URL . '/public/login/login.php');
     exit;
 }
 
 try {
-    $sql = '
-        SELECT 
-            u.id,
-            u.nome,
-            u.email,
-            u.password_hash,
-            u.estado,
-            p.nome AS perfil
-        FROM utilizadores u
-        INNER JOIN perfis_utilizador p ON p.id = u.perfil_id
-        WHERE u.email = :email
+    /*
+     * Ficha 14:
+     * - o email do agente está guardado na coluna name com AES_ENCRYPT
+     * - no login é comparado usando AES_DECRYPT
+     *
+     * Nota técnica:
+     * como a ligação PDO usa ATTR_EMULATE_PREPARES = false,
+     * não se deve reutilizar o mesmo placeholder (:chave) duas vezes.
+     * Por isso usamos :chave_select e :chave_where.
+     */
+    $comando = $ligacao->prepare("
+        SELECT
+            id,
+            nome,
+            CAST(AES_DECRYPT(name, :chave_select) AS CHAR(255)) AS email,
+            passwrd,
+            profile,
+            last_login
+        FROM agents
+        WHERE CAST(AES_DECRYPT(name, :chave_where) AS CHAR(255)) = :email
+          AND (deleted_at IS NULL)
         LIMIT 1
-    ';
+    ");
 
-    $consulta = $ligacao->prepare($sql);
-    $consulta->bindValue(':email', $email);
-    $consulta->execute();
+    $comando->execute([
+        ':chave_select' => MYSQL_AES_KEY,
+        ':chave_where' => MYSQL_AES_KEY,
+        ':email' => $email
+    ]);
 
-    $utilizador = $consulta->fetch();
+    $agente = $comando->fetch();
 
-    if (!$utilizador || $utilizador->estado !== 'Ativo' || !password_verify($password, $utilizador->password_hash)) {
-        $_SESSION['erros_login'] = [
-            'Credenciais inválidas.'
-        ];
-
-        $_SESSION['old_login'] = [
-            'email' => $email
-        ];
+    if (!$agente || $password !== $agente->passwrd) {
+        $_SESSION['erros_login'] = ['Credenciais inválidas.'];
+        $_SESSION['old_login'] = ['email' => $email];
 
         header('Location: ' . BASE_URL . '/public/login/login.php');
         exit;
     }
 
-    $_SESSION['utilizador'] = [
-        'id' => $utilizador->id,
-        'nome' => $utilizador->nome,
-        'email' => $utilizador->email,
-        'perfil' => $utilizador->perfil
-    ];
-
-    $atualizarLogin = $ligacao->prepare('
-        UPDATE utilizadores
-        SET ultimo_login = NOW()
-        WHERE id = :id
-    ');
-
-    $atualizarLogin->bindValue(':id', $utilizador->id);
+    $atualizarLogin = $ligacao->prepare('UPDATE agents SET last_login = NOW() WHERE id = :id');
+    $atualizarLogin->bindValue(':id', $agente->id, PDO::PARAM_INT);
     $atualizarLogin->execute();
+
+    $_SESSION['utilizador'] = $agente->email;
+    $_SESSION['utilizador_id'] = $agente->id;
+    $_SESSION['utilizador_nome'] = $agente->nome;
+    $_SESSION['utilizador_email'] = $agente->email;
+    $_SESSION['profile'] = normalizar_perfil($agente->profile);
 
     $ligacao = null;
 
@@ -107,13 +101,8 @@ try {
 } catch (PDOException $erro) {
     $ligacao = null;
 
-    $_SESSION['erros_login'] = [
-        'Ocorreu um erro ao validar o login.'
-    ];
-
-    $_SESSION['old_login'] = [
-        'email' => $email
-    ];
+    $_SESSION['erros_login'] = ['Ocorreu um erro ao validar o login na base de dados.'];
+    $_SESSION['old_login'] = ['email' => $email];
 
     header('Location: ' . BASE_URL . '/public/login/login.php');
     exit;

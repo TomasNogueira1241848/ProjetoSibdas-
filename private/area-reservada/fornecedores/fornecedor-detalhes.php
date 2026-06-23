@@ -9,6 +9,7 @@ require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
 
 redirect_if_not_logged();
+exigir_permissao('fornecedores', 'ver');
 
 function e($valor)
 {
@@ -176,8 +177,11 @@ include __DIR__ . '/../../includes/nav.php';
                     <p class="text-muted small mb-0">Consulta da ficha do fornecedor e dos registos associados.</p>
                 </div>
                 <div class="d-flex gap-2">
-                    <?php if (!$fornecedorDescontinuado): ?>
+                    <?php if (!$fornecedorDescontinuado && tem_permissao('fornecedores', 'editar')): ?>
                         <a href="fornecedor-editar.php?id_fornecedor=<?php echo urlencode($idEncrypted); ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-pen me-1"></i> Editar</a>
+                    <?php endif; ?>
+
+                    <?php if (!$fornecedorDescontinuado && tem_permissao('fornecedores', 'remover')): ?>
                         <a href="fornecedor-eliminar.php?id_fornecedor=<?php echo urlencode($idEncrypted); ?>" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-box-archive me-1"></i> Descontinuar</a>
                     <?php endif; ?>
                     <a href="fornecedores.php" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left me-1"></i> Voltar</a>

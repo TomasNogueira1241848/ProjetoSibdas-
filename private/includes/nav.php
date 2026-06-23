@@ -20,15 +20,17 @@ $assetPath = $assetPath ?? '../../assets';
                     aria-expanded="false">
                     <i class="fa-regular fa-user"></i>
                     <span class="d-none d-sm-inline ms-2">
-                        <?php echo htmlspecialchars($_SESSION['utilizador']['email'] ?? 'Utilizador'); ?>
+                        <?php echo htmlspecialchars(utilizador_nome()); ?>
                     </span>
                 </button>
 
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li>
-                        <a class="dropdown-item" href="#">
-                            <i class="fa-solid fa-key me-2"></i> Alterar password
-                        </a>
+                        <span class="dropdown-item-text small">
+                            <strong><?php echo htmlspecialchars(utilizador_nome()); ?></strong><br>
+                            <span class="text-muted"><?php echo htmlspecialchars(utilizador_email()); ?></span><br>
+                            <span class="text-muted"><?php echo htmlspecialchars(perfil_nome()); ?></span>
+                        </span>
                     </li>
 
                     <li>

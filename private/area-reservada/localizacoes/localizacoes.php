@@ -19,6 +19,8 @@ $extraScripts = [
 require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
 
+exigir_permissao('localizacoes', 'ver');
+
 $localizacoes = [];
 $tiposLocalizacao = [];
 $estadosLocalizacao = [];
@@ -114,9 +116,11 @@ include __DIR__ . '/../../includes/nav.php';
                     </p>
                 </div>
 
-                <a href="localizacao-nova.php" class="btn btn-primary btn-sm">
-                    <i class="fa-solid fa-plus me-1"></i> Nova localização
-                </a>
+                <?php if (tem_permissao('localizacoes', 'criar')): ?>
+                    <a href="localizacao-nova.php" class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-plus me-1"></i> Nova localização
+                    </a>
+                <?php endif; ?>
             </div>
 
             <?php if (isset($_GET['sucesso']) && $_GET['sucesso'] == '1'): ?>
@@ -271,13 +275,15 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
 
-                                            <?php if (!$localizacaoAbatida): ?>
+                                            <?php if (!$localizacaoAbatida && tem_permissao('localizacoes', 'editar')): ?>
                                                 <a href="localizacao-editar.php?id_localizacao=<?php echo urlencode(aes_encrypt($localizacao->id)); ?>"
                                                     class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
                                                     data-bs-title="Editar">
                                                     <i class="fa-solid fa-pen"></i>
                                                 </a>
+                                            <?php endif; ?>
 
+                                            <?php if (!$localizacaoAbatida && tem_permissao('localizacoes', 'remover')): ?>
                                                 <a href="localizacao-eliminar.php?id_localizacao=<?php echo urlencode(aes_encrypt($localizacao->id)); ?>"
                                                     class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip"
                                                     data-bs-title="Abater">

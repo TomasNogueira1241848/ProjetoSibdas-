@@ -8,6 +8,7 @@ $activeMenu = 'documentacao';
 require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
 redirect_if_not_logged();
+exigir_permissao('documentacao', 'ver');
 
 function e($v)
 {
@@ -89,7 +90,7 @@ include __DIR__ . '/../../includes/nav.php';
                 </div>
                 <div class="d-flex gap-2">
                     <a href="documentacao.php" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left me-1"></i> Voltar</a>
-                    <?php if ($documento && !$equipamentoAbatido && !$documentoInvalido): ?>
+                    <?php if ($documento && !$equipamentoAbatido && !$documentoInvalido && tem_permissao('documentacao', 'remover')): ?>
                         <a href="documento-eliminar.php?id_documento=<?php echo urlencode($idEncrypted); ?>" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash me-1"></i> Eliminar</a>
                     <?php endif; ?>
                 </div>

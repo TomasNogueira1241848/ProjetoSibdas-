@@ -10,6 +10,7 @@ require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
  
 redirect_if_not_logged();
+exigir_permissao('equipamentos', 'criar');
  
 $erros = [];
 $erroSistema = '';

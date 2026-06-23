@@ -15,6 +15,7 @@ require_once __DIR__ . '/../includes/funcoes.php';
 require_once __DIR__ . '/../includes/basedados.php';
 
 redirect_if_not_logged();
+exigir_permissao('dashboard', 'ver');
 
 function e($valor)
 {
@@ -358,8 +359,9 @@ include __DIR__ . '/../includes/nav.php';
         <main class="col-12 col-md-9 col-lg-10 p-3 p-md-4 overflow-hidden" id="dashboard">
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                 <div>
-                    <div class="d-flex align-items-center gap-2 mb-1">
-                        <h4 class="fw-bold mb-0">Dashboard</h4>
+                    <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                        <h4 class="fw-bold mb-0">Bem-vindo, <?php echo e(utilizador_nome()); ?></h4>
+                        <span class="badge bg-light text-dark border"><?php echo e(perfil_nome()); ?></span>
                     </div>
                     <p class="text-muted mb-0">Visão rápida do estado global do parque tecnológico hospitalar.</p>
                 </div>
@@ -370,11 +372,19 @@ include __DIR__ . '/../includes/nav.php';
                     <a href="#tabelaGarantiasDashboard" class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Ver garantias expiradas ou próximas do fim">
                         <i class="fa-solid fa-triangle-exclamation me-1"></i> Garantias
                     </a>
-                    <a href="equipamentos/equipamento-novo.php" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Adicionar equipamento">
-                        <i class="fa-solid fa-plus me-1"></i> Novo equipamento
-                    </a>
+                    <?php if (tem_permissao('equipamentos', 'criar')): ?>
+                        <a href="equipamentos/equipamento-novo.php" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Adicionar equipamento">
+                            <i class="fa-solid fa-plus me-1"></i> Novo equipamento
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
+
+            <?php if (!empty($_SESSION['erros_permissao'])): ?>
+                <div class="alert alert-warning" role="alert">
+                    <i class="fa-solid fa-lock me-2"></i><?php echo e($_SESSION['erros_permissao'][0]); unset($_SESSION['erros_permissao']); ?>
+                </div>
+            <?php endif; ?>
 
             <?php if ($erroBD !== ''): ?>
                 <div class="alert alert-danger" role="alert">

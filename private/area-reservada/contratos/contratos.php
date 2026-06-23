@@ -10,6 +10,7 @@ $extraScripts = [$assetPath . '/jquery/jquery-3.7.1.min.js', $assetPath . '/js/j
 require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
 redirect_if_not_logged();
+exigir_permissao('contratos', 'ver');
 
 function e($v)
 {
@@ -148,7 +149,7 @@ include __DIR__ . '/../../includes/nav.php'; ?>
                                     <td><?php echo e($garantia->data_fim ?? '—'); ?></td>
                                     <td><span class="badge <?php echo badge_estado($garantia->estado); ?>"><?php echo e($garantia->estado); ?></span></td>
                                     <td class="text-center"><a href="garantia-detalhes.php?id_garantia=<?php echo urlencode(aes_encrypt($garantia->id)); ?>" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
-                                        <i class="fa-solid fa-eye"></i></a><?php if (!$bloquear): ?> 
+                                        <i class="fa-solid fa-eye"></i></a><?php if (!$bloquear && tem_permissao('contratos', 'remover')): ?> 
                                             <a href="garantia-eliminar.php?id_garantia=<?php echo urlencode(aes_encrypt($garantia->id)); ?>" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar"><i class="fa-solid fa-trash"></i></a>
                                             <?php endif; ?></td>
                                 </tr><?php endforeach; ?></tbody>
@@ -187,7 +188,7 @@ include __DIR__ . '/../../includes/nav.php'; ?>
                                     <td><?php echo e($contrato->data_fim ?? '—'); ?></td>
                                     <td><span class="badge <?php echo badge_estado($contrato->estado); ?>"><?php echo e($contrato->estado); ?></span></td>
                                     <td class="text-center"><a href="contrato-detalhes.php?id_contrato=<?php echo urlencode(aes_encrypt($contrato->id)); ?>" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes">
-                                        <i class="fa-solid fa-eye"></i></a><?php if (!$bloquear): ?> <a href="contrato-eliminar.php?id_contrato=<?php echo urlencode(aes_encrypt($contrato->id)); ?>" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar"><i class="fa-solid fa-trash"></i></a>
+                                        <i class="fa-solid fa-eye"></i></a><?php if (!$bloquear && tem_permissao('contratos', 'remover')): ?> <a href="contrato-eliminar.php?id_contrato=<?php echo urlencode(aes_encrypt($contrato->id)); ?>" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar"><i class="fa-solid fa-trash"></i></a>
                                             <?php endif; ?></td>
                                 </tr><?php endforeach; ?></tbody>
                         </table>

@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/conteudos_publicos.php';
 
 redirect_if_not_logged();
+exigir_permissao('conteudos', 'editar');
 
 $pageTitle = 'MedInfo Solutions — Gestão de Conteúdos';
 $assetPath = '../../../assets';

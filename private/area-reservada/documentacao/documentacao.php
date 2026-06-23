@@ -14,6 +14,7 @@ $extraScripts = [
 require_once __DIR__ . '/../../includes/funcoes.php';
 require_once __DIR__ . '/../../includes/basedados.php';
 redirect_if_not_logged();
+exigir_permissao('documentacao', 'ver');
 
 function e($v)
 {
@@ -183,7 +184,7 @@ include __DIR__ . '/../../includes/nav.php';
                                         <td><?php echo e($documento->data_documento ?? '—'); ?></td>
                                         <td><?php echo e($documento->validade ?? '—'); ?></td>
                                         <td><span class="badge <?php echo badge_estado($documento->estado); ?>"><?php echo e($documento->estado); ?></span></td>
-                                        <td class="text-center"><a href="documento-detalhes.php?id_documento=<?php echo urlencode(aes_encrypt($documento->id)); ?>" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes"><i class="fa-solid fa-eye"></i></a><?php if (!$bloquearEliminar): ?> <a href="documento-eliminar.php?id_documento=<?php echo urlencode(aes_encrypt($documento->id)); ?>" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar"><i class="fa-solid fa-trash"></i></a><?php endif; ?></td>
+                                        <td class="text-center"><a href="documento-detalhes.php?id_documento=<?php echo urlencode(aes_encrypt($documento->id)); ?>" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" data-bs-title="Ver detalhes"><i class="fa-solid fa-eye"></i></a><?php if (!$bloquearEliminar && tem_permissao('documentacao', 'remover')): ?> <a href="documento-eliminar.php?id_documento=<?php echo urlencode(aes_encrypt($documento->id)); ?>" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Eliminar"><i class="fa-solid fa-trash"></i></a><?php endif; ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

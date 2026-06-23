@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
 /* Validação do formulário de contacto da área pública */
 function inicializarFormularioContacto() {
     const formContacto = document.getElementById('formContacto');
