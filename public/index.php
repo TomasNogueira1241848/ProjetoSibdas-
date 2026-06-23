@@ -1,50 +1,45 @@
 <?php
-require_once __DIR__ . '/../config/config.php';
-?>
+require_once __DIR__ . '/../private/includes/conteudos_publicos.php';
 
+$conteudos = obter_conteudos_publicos();
+?>
 <!DOCTYPE html>
 <html lang="pt">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo APP_NAME; ?></title>
+    <title><?php echo h(APP_NAME); ?></title>
     <link rel="icon" href="../assets/img/Logo empresa.png" type="image/png">
 
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../assets/bootstrap/bootstrap.min.css">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="../assets/fontawesome/all.min.css">
-    <!-- CSS -->
     <link rel="stylesheet" href="../assets/css/1241848.css">
 </head>
 
 <body>
 
-    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="navbar-principal">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-3" href="#">
+            <a class="navbar-brand d-flex align-items-center gap-3" href="#hero">
                 <img src="../assets/img/Logo empresa.png" alt="MedInfo Icon" id="logo-icone">
 
                 <div class="brand-text-wrapper d-flex flex-column">
-                    <span class="brand-title"><?php echo APP_NAME; ?></span>
+                    <span class="brand-title"><?php echo h(APP_NAME); ?></span>
                     <span class="brand-subtitle">Hospital Inventory</span>
                 </div>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Abrir navegação">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#sobre-nos">Sobre Nós</a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="#servicos">Serviços</a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="#clientes">Clientes</a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="#contactos">Contactos</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#sobre-nos">Sobre Nós</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#servicos">Serviços</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#clientes">Clientes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contactos">Contactos</a></li>
                     <li class="nav-item ms-2">
                         <a class="btn btn-outline-light btn-sm px-3" href="login/login.php">
                             <i class="fa-solid fa-right-to-bracket me-1"></i> Entrar
@@ -55,26 +50,18 @@ require_once __DIR__ . '/../config/config.php';
         </div>
     </nav>
 
-    <!-- HERO -->
     <section id="hero">
         <div class="hero-imagem">
             <div class="hero-overlay">
                 <div class="container h-100">
                     <div class="row h-100 align-items-center justify-content-center text-center">
                         <div class="col-lg-8">
-                            <h1 class="hero-titulo mb-3 text-white">
-                                Soluções digitais para a gestão hospitalar
-                            </h1>
-                            <p class="hero-subtitulo mb-4 text-white-50">
-                                Desenvolvemos sistemas de informação especializados para instituições de saúde,
-                                com foco na rastreabilidade, segurança e eficiência operacional.
-                            </p>
+                            <h1 class="hero-titulo mb-3 text-white"><?php echo h($conteudos['hero_titulo']); ?></h1>
+                            <p class="hero-subtitulo mb-4 text-white-50"><?php echo h($conteudos['hero_subtitulo']); ?></p>
                             <a href="#servicos" class="btn btn-primary me-2 px-4 py-2">
                                 <i class="fa-solid fa-circle-info me-1"></i> Os nossos serviços
                             </a>
-                            <a href="#contactos" class="btn btn-outline-light px-4 py-2">
-                                Fale connosco
-                            </a>
+                            <a href="#contactos" class="btn btn-outline-light px-4 py-2">Fale connosco</a>
                         </div>
                     </div>
                 </div>
@@ -82,27 +69,26 @@ require_once __DIR__ . '/../config/config.php';
         </div>
     </section>
 
-    <!-- SOBRE NÓS -->
     <section id="sobre-nos" class="py-5 bg-light">
         <div class="container py-4">
             <div class="row">
                 <div class="col-12 mb-4">
-                    <h2 class="fw-bold">Sobre Nós</h2>
+                    <h2 class="fw-bold"><?php echo h($conteudos['sobre_titulo']); ?></h2>
                     <hr class="divisor">
                 </div>
             </div>
+
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-4 mb-lg-0">
-                    <p>A <strong>MedInfo Solutions</strong> é uma empresa portuguesa especializada no desenvolvimento
-                        de software para a área da saúde. Fundada em 2015 e sediada no Porto, temos como missão
-                        modernizar a gestão tecnológica das instituições de saúde nacionais.</p>
-                    <p>A nossa equipa é composta por engenheiros biomédicos, engenheiros informáticos e especialistas
-                        em sistemas de informação hospitalares, o que nos permite desenvolver soluções tecnicamente
-                        sólidas e clinicamente adequadas.</p>
-                    <p>Trabalhamos com hospitais públicos e privados, clínicas e centros de saúde em todo o território
-                        nacional, com especial foco em sistemas de gestão de inventário e manutenção de equipamentos
-                        médicos.</p>
+                    <p><?php echo nl2br_h($conteudos['sobre_texto_1']); ?></p>
+                    <?php if (!empty($conteudos['sobre_texto_2'])): ?>
+                        <p><?php echo nl2br_h($conteudos['sobre_texto_2']); ?></p>
+                    <?php endif; ?>
+                    <?php if (!empty($conteudos['sobre_texto_3'])): ?>
+                        <p><?php echo nl2br_h($conteudos['sobre_texto_3']); ?></p>
+                    <?php endif; ?>
                 </div>
+
                 <div class="col-lg-6">
                     <div class="row g-3">
                         <div class="col-6">
@@ -114,8 +100,7 @@ require_once __DIR__ . '/../config/config.php';
                         </div>
                         <div class="col-6">
                             <div class="card text-center p-3 h-100">
-                                <i class="fa-solid fa-calendar-check fa-2x mb-2"
-                                    style="color: var(--cor-primaria);"></i>
+                                <i class="fa-solid fa-calendar-check fa-2x mb-2" style="color: var(--cor-primaria);"></i>
                                 <h3 class="fw-bold" style="color: var(--cor-primaria);">+10</h3>
                                 <p class="text-muted mb-0 small">Anos de experiência</p>
                             </div>
@@ -140,88 +125,73 @@ require_once __DIR__ . '/../config/config.php';
         </div>
     </section>
 
-    <!-- SERVIÇOS -->
     <section id="servicos" class="py-5">
         <div class="container py-4">
             <div class="row mb-4">
                 <div class="col-12">
-                    <h2 class="fw-bold">Serviços</h2>
+                    <h2 class="fw-bold"><?php echo h($conteudos['servicos_titulo']); ?></h2>
                     <hr class="divisor">
-                    <p class="text-muted">Desenvolvemos soluções adaptadas às necessidades específicas de cada
-                        instituição.</p>
+                    <p class="text-muted"><?php echo h($conteudos['servicos_texto']); ?></p>
                 </div>
             </div>
+
             <div class="row g-4">
                 <div class="col-md-6 col-lg-4">
                     <div class="card h-100 p-3">
                         <div class="card-body">
                             <i class="fa-solid fa-boxes-stacked fa-2x mb-3" style="color: var(--cor-primaria);"></i>
                             <h5 class="card-title fw-bold">Gestão de Inventário</h5>
-                            <p class="card-text text-muted">
-                                Sistema web para registo, consulta e gestão de equipamentos médicos,
-                                com rastreabilidade completa do ciclo de vida de cada dispositivo.
-                            </p>
+                            <p class="card-text text-muted">Sistema web para registo, consulta e gestão de equipamentos médicos, com rastreabilidade completa do ciclo de vida de cada dispositivo.</p>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-6 col-lg-4">
                     <div class="card h-100 p-3">
                         <div class="card-body">
-                            <i class="fa-solid fa-screwdriver-wrench fa-2x mb-3"
-                                style="color: var(--cor-primaria);"></i>
-                            <h5 class="card-title fw-bold">Gestão de Manutenção (CMMS)</h5>
-                            <p class="card-text text-muted">
-                                Plataforma de gestão de manutenção preventiva e corretiva de equipamentos médicos,
-                                com histórico de intervenções e alertas automáticos.
-                            </p>
+                            <i class="fa-solid fa-screwdriver-wrench fa-2x mb-3" style="color: var(--cor-primaria);"></i>
+                            <h5 class="card-title fw-bold">Gestão de Manutenção</h5>
+                            <p class="card-text text-muted">Plataforma de gestão de manutenção preventiva e corretiva de equipamentos médicos, com histórico de intervenções e alertas automáticos.</p>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-6 col-lg-4">
                     <div class="card h-100 p-3">
                         <div class="card-body">
                             <i class="fa-solid fa-file-medical fa-2x mb-3" style="color: var(--cor-primaria);"></i>
                             <h5 class="card-title fw-bold">Gestão Documental</h5>
-                            <p class="card-text text-muted">
-                                Centralização e organização de documentação técnica, manuais, certificados
-                                de calibração e contratos de manutenção associados a cada equipamento.
-                            </p>
+                            <p class="card-text text-muted">Centralização e organização de documentação técnica, manuais, certificados de calibração e contratos de manutenção.</p>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-6 col-lg-4">
                     <div class="card h-100 p-3">
                         <div class="card-body">
                             <i class="fa-solid fa-chart-line fa-2x mb-3" style="color: var(--cor-primaria);"></i>
                             <h5 class="card-title fw-bold">Dashboards e Relatórios</h5>
-                            <p class="card-text text-muted">
-                                Painéis de controlo com indicadores estatísticos e gráficos para apoio
-                                à decisão técnica e administrativa dos departamentos de engenharia clínica.
-                            </p>
+                            <p class="card-text text-muted">Painéis de controlo com indicadores estatísticos e gráficos para apoio à decisão técnica e administrativa.</p>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-6 col-lg-4">
                     <div class="card h-100 p-3">
                         <div class="card-body">
                             <i class="fa-solid fa-handshake fa-2x mb-3" style="color: var(--cor-primaria);"></i>
                             <h5 class="card-title fw-bold">Gestão de Fornecedores</h5>
-                            <p class="card-text text-muted">
-                                Registo e gestão de fabricantes, distribuidores e empresas de assistência técnica,
-                                com associação direta aos equipamentos e contratos.
-                            </p>
+                            <p class="card-text text-muted">Registo e gestão de fabricantes, distribuidores e empresas de assistência técnica associados a equipamentos e contratos.</p>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-6 col-lg-4">
                     <div class="card h-100 p-3">
                         <div class="card-body">
                             <i class="fa-solid fa-headset fa-2x mb-3" style="color: var(--cor-primaria);"></i>
                             <h5 class="card-title fw-bold">Suporte e Formação</h5>
-                            <p class="card-text text-muted">
-                                Suporte técnico dedicado e formação presencial ou remota para as equipas
-                                de engenharia biomédica e gestão hospitalar.
-                            </p>
+                            <p class="card-text text-muted">Suporte técnico dedicado e formação presencial ou remota para equipas de engenharia biomédica e gestão hospitalar.</p>
                         </div>
                     </div>
                 </div>
@@ -229,60 +199,48 @@ require_once __DIR__ . '/../config/config.php';
         </div>
     </section>
 
-    <!-- CLIENTES -->
     <section id="clientes" class="py-5 bg-light">
         <div class="container py-4">
             <div class="row mb-4">
                 <div class="col-12">
-                    <h2 class="fw-bold">Os Nossos Clientes</h2>
+                    <h2 class="fw-bold"><?php echo h($conteudos['clientes_titulo']); ?></h2>
                     <hr class="divisor">
-                    <p class="text-muted">Trabalhamos com algumas das principais instituições de saúde nacionais.</p>
+                    <p class="text-muted"><?php echo h($conteudos['clientes_texto']); ?></p>
                 </div>
             </div>
+
             <div class="row g-3">
-                <div class="col-6 col-md-4 col-lg-3">
-                    <div class="card text-center p-3">
-                        <i class="fa-solid fa-hospital fa-2x mb-2 text-muted"></i>
-                        <p class="mb-0 small fw-bold">Hospital de Santo António</p>
-                        <p class="mb-0 small text-muted">Porto</p>
+                <?php
+                $clientes = [
+                    ['Hospital de Santo António', 'Porto'],
+                    ['Centro Hospitalar de Gaia', 'Vila Nova de Gaia'],
+                    ['Hospital da Luz', 'Lisboa'],
+                    ['ULS de Matosinhos', 'Matosinhos']
+                ];
+                ?>
+                <?php foreach ($clientes as $cliente): ?>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="card text-center p-3 h-100">
+                            <i class="fa-solid fa-hospital fa-2x mb-2 text-muted"></i>
+                            <p class="mb-0 small fw-bold"><?php echo h($cliente[0]); ?></p>
+                            <p class="mb-0 small text-muted"><?php echo h($cliente[1]); ?></p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                    <div class="card text-center p-3">
-                        <i class="fa-solid fa-hospital fa-2x mb-2 text-muted"></i>
-                        <p class="mb-0 small fw-bold">Centro Hospitalar de Gaia</p>
-                        <p class="mb-0 small text-muted">Vila Nova de Gaia</p>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                    <div class="card text-center p-3">
-                        <i class="fa-solid fa-hospital fa-2x mb-2 text-muted"></i>
-                        <p class="mb-0 small fw-bold">Hospital da Luz</p>
-                        <p class="mb-0 small text-muted">Lisboa</p>
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3">
-                    <div class="card text-center p-3">
-                        <i class="fa-solid fa-hospital fa-2x mb-2 text-muted"></i>
-                        <p class="mb-0 small fw-bold">ULS de Matosinhos</p>
-                        <p class="mb-0 small text-muted">Matosinhos</p>
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </section>
 
-    <!-- CONTACTOS -->
     <section id="contactos" class="py-5">
         <div class="container py-4">
             <div class="row mb-4">
                 <div class="col-12">
-                    <h2 class="fw-bold">Contactos</h2>
+                    <h2 class="fw-bold"><?php echo h($conteudos['contactos_titulo']); ?></h2>
                     <hr class="divisor">
-                    <p class="text-muted">Entre em contacto connosco para mais informações ou para agendar uma
-                        demonstração.</p>
+                    <p class="text-muted"><?php echo h($conteudos['contactos_texto']); ?></p>
                 </div>
             </div>
+
             <div class="row g-4">
                 <div class="col-lg-7">
                     <form id="formContacto" novalidate>
@@ -292,19 +250,21 @@ require_once __DIR__ . '/../config/config.php';
                                 <input type="text" class="form-control" id="nome" name="nome" required>
                                 <div class="invalid-feedback">Introduza o seu nome.</div>
                             </div>
+
                             <div class="col-md-6">
                                 <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                                 <input type="email" class="form-control" id="email" name="email" required>
                                 <div class="invalid-feedback">Introduza um email válido.</div>
                             </div>
+
                             <div class="col-12">
                                 <label for="instituicao" class="form-label">Instituição</label>
                                 <input type="text" class="form-control" id="instituicao" name="instituicao" required>
                                 <div class="invalid-feedback">Introduza uma instituição.</div>
                             </div>
+
                             <div class="col-12">
-                                <label for="assunto" class="form-label">Assunto <span
-                                        class="text-danger">*</span></label>
+                                <label for="assunto" class="form-label">Assunto <span class="text-danger">*</span></label>
                                 <select class="form-select" id="assunto" name="assunto" required>
                                     <option value="">Selecione um assunto</option>
                                     <option value="info">Pedido de informação</option>
@@ -312,29 +272,30 @@ require_once __DIR__ . '/../config/config.php';
                                     <option value="suporte">Suporte técnico</option>
                                     <option value="outro">Outro</option>
                                 </select>
-                                <div class="invalid-feedback"> Selecione um assunto.</div>
+                                <div class="invalid-feedback">Selecione um assunto.</div>
                             </div>
+
                             <div class="col-12">
-                                <label for="mensagem" class="form-label">Mensagem <span
-                                        class="text-danger">*</span></label>
-                                <textarea class="form-control" id="mensagem" name="mensagem" rows="4"
-                                    required></textarea>
-                                <div class="invalid-feedback"> Escreva a sua mensagem.</div>
+                                <label for="mensagem" class="form-label">Mensagem <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="mensagem" name="mensagem" rows="4" required></textarea>
+                                <div class="invalid-feedback">Escreva a sua mensagem.</div>
                             </div>
+
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary px-4">
                                     <i class="fa-solid fa-paper-plane me-1"></i> Enviar mensagem
                                 </button>
                             </div>
+
                             <div class="col-12">
                                 <div id="mensagemSucesso" class="alert alert-success d-none">
-                                    <i class="fa-solid fa-check me-1"></i> Mensagem enviada com sucesso. Entraremos em
-                                    contacto brevemente.
+                                    <i class="fa-solid fa-check me-1"></i> Mensagem enviada com sucesso. Entraremos em contacto brevemente.
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
+
                 <div class="col-lg-5">
                     <div class="card p-4 h-100">
                         <h5 class="fw-bold mb-4">
@@ -343,98 +304,84 @@ require_once __DIR__ . '/../config/config.php';
                         </h5>
 
                         <div class="d-flex gap-3 mb-3">
-                            <div class="pt-1">
-                                <i class="fa-solid fa-location-dot fa-lg" style="color: var(--cor-primaria);"></i>
-                            </div>
+                            <div class="pt-1"><i class="fa-solid fa-location-dot fa-lg" style="color: var(--cor-primaria);"></i></div>
                             <div>
                                 <div class="fw-bold small text-muted mb-1">MORADA</div>
-                                Rua Dr. António Bernardino de Almeida, 431<br>
-                                4200-072 Porto
+                                <?php echo nl2br_h($conteudos['morada']); ?>
                             </div>
                         </div>
 
                         <div class="d-flex gap-3 mb-3">
-                            <div class="pt-1">
-                                <i class="fa-solid fa-phone fa-lg" style="color: var(--cor-primaria);"></i>
-                            </div>
+                            <div class="pt-1"><i class="fa-solid fa-phone fa-lg" style="color: var(--cor-primaria);"></i></div>
                             <div>
                                 <div class="fw-bold small text-muted mb-1">TELEFONE</div>
-                                +351 222 123 456
+                                <?php echo h($conteudos['telefone']); ?>
                             </div>
                         </div>
 
                         <div class="d-flex gap-3 mb-3">
-                            <div class="pt-1">
-                                <i class="fa-solid fa-envelope fa-lg" style="color: var(--cor-primaria);"></i>
-                            </div>
+                            <div class="pt-1"><i class="fa-solid fa-envelope fa-lg" style="color: var(--cor-primaria);"></i></div>
                             <div>
                                 <div class="fw-bold small text-muted mb-1">EMAIL</div>
-                                geral@medinfosolutions.pt
+                                <?php echo h($conteudos['email']); ?>
                             </div>
                         </div>
 
                         <div class="d-flex gap-3 mb-4">
-                            <div class="pt-1">
-                                <i class="fa-solid fa-globe fa-lg" style="color: var(--cor-primaria);"></i>
-                            </div>
+                            <div class="pt-1"><i class="fa-solid fa-globe fa-lg" style="color: var(--cor-primaria);"></i></div>
                             <div>
                                 <div class="fw-bold small text-muted mb-1">WEBSITE</div>
-                                www.medinfosolutions.pt
+                                <?php echo h($conteudos['website']); ?>
                             </div>
                         </div>
+
                         <hr>
+
                         <div class="d-flex gap-3">
-                            <div class="pt-1">
-                                <i class="fa-solid fa-clock fa-lg" style="color: var(--cor-primaria);"></i>
-                            </div>
+                            <div class="pt-1"><i class="fa-solid fa-clock fa-lg" style="color: var(--cor-primaria);"></i></div>
                             <div>
                                 <div class="fw-bold small text-muted mb-1">HORÁRIO</div>
-                                2ª a 6ª Feira: 9h — 18h<br>
-                                <span class="text-muted small">Sábado, Domingo e Feriados: Encerrado</span>
+                                <?php echo nl2br_h($conteudos['horario']); ?>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
 
-                <!-- FOOTER -->
-                <footer class="py-4" id="footer">
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-md-6 mb-2 mb-md-0">
-                                <i class="fa-solid fa-heart-pulse me-1"></i>
-                                <strong>MedInfo Solutions</strong> &copy; 2025 — Todos os direitos reservados
-                            </div>
-                            <div class="col-md-6 text-md-end">
-                                <a href="#sobre-nos" class="text-decoration-none me-3">Sobre Nós</a>
-                                <a href="#servicos" class="text-decoration-none me-3">Serviços</a>
-                                <a href="#contactos" class="text-decoration-none">Contactos</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-
-                <!-- TOAST -->
-                <div class="toast-container position-fixed bottom-0 end-0 p-3">
-                    <div id="toastPublic" class="toast" role="status" aria-live="polite" aria-atomic="true">
-                        <div class="toast-header">
-                            <i class="fa-solid fa-gauge text-primary me-2"></i>
-                            <strong class="me-auto">Página Inicial</strong>
-                            <small>agora</small>
-                            <button type="button" class="btn-close" data-bs-dismiss="toast"
-                                aria-label="Fechar"></button>
-                        </div>
-                        <div class="toast-body">
-                            Seja bem vindo á página inicial da nossa empresa. Aqui pode conhecer mais sobre o nosso
-                            projeto. Para mais informações contacte-nos.
-                        </div>
-                    </div>
+    <footer class="py-4" id="footer">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-2 mb-md-0">
+                    <i class="fa-solid fa-heart-pulse me-1"></i>
+                    <strong><?php echo h($conteudos['rodape_texto']); ?></strong>
                 </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#sobre-nos" class="text-decoration-none me-3">Sobre Nós</a>
+                    <a href="#servicos" class="text-decoration-none me-3">Serviços</a>
+                    <a href="#contactos" class="text-decoration-none">Contactos</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-                <!-- Bootstrap JS -->
-                <script src="../assets/bootstrap/bootstrap.bundle.min.js"></script>
-                <!-- JS --->
-                <script src="../assets/js/1241848.js"></script>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toastPublic" class="toast" role="status" aria-live="polite" aria-atomic="true">
+            <div class="toast-header">
+                <i class="fa-solid fa-gauge text-primary me-2"></i>
+                <strong class="me-auto">Página Inicial</strong>
+                <small>agora</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Fechar"></button>
+            </div>
+            <div class="toast-body">
+                Seja bem-vindo à página inicial da nossa empresa. Aqui pode conhecer mais sobre o nosso projeto. Para mais informações contacte-nos.
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/1241848.js?v=conteudos-bd-1"></script>
 </body>
 
 </html>
-

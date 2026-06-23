@@ -1,6 +1,6 @@
 <?php
 $assetPath = $assetPath ?? '../../assets';
-$jsVersion = $jsVersion ?? 'dashboard-datatables-1';
+$jsVersion = $jsVersion ?? 'conteudos-bd-1';
 ?>
  
 <!-- Bootstrap JS -->
