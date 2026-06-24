@@ -1770,7 +1770,7 @@ include __DIR__ . '/../../includes/nav.php';
                                     <div class="col-md-4">
                                         <label for="numeroSerieEquipamento" class="form-label">N.º de série </label>
                                         <input type="text" class="form-control" id="numeroSerieEquipamento" name="numero_serie_equipamento"
-                                            value="<?php echo valor_formulario('numero_serie_equipamento', $valores); ?>" placeholder="Ex: SN-1234, ABC123 ou outro">
+                                            value="<?php echo valor_formulario('numero_serie_equipamento', $valores); ?>" placeholder="Ex: SN-1234">
                                     </div>
  
                                     <div class="col-md-4">
@@ -1879,7 +1879,7 @@ include __DIR__ . '/../../includes/nav.php';
                                     </div>
  
                                     <div class="col-12">
-                                        <label for="pesquisaFornecedoresAssociadosEquipamento" class="form-label">Fornecedores associados adicionais</label>
+                                        <label for="pesquisaFornecedoresAssociadosEquipamento" class="form-label">Fornecedores associados adicionais (opcional)</label>
                                         <input type="search" class="form-control mb-2 pesquisa-fornecedores-associados"
                                             id="pesquisaFornecedoresAssociadosEquipamento"
                                             placeholder="Pesquisar fornecedor, fabricante, assistência técnica ou consumíveis..."

@@ -33,20 +33,8 @@ function inicializarFormularioContacto() {
     if (!formContacto) return;
 
     formContacto.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        if (!validarFormulario(formContacto)) return;
-        formContacto.reset();
-        limparValidacaoManual(formContacto);
-
-        const mensagemSucesso = document.getElementById('mensagemSucesso');
-
-        if (mensagemSucesso) {
-            mensagemSucesso.classList.remove('d-none');
-
-            setTimeout(function () {
-                mensagemSucesso.classList.add('d-none');
-            }, 4000);
+        if (!validarFormulario(formContacto)) {
+            e.preventDefault();
         }
     });
 }
@@ -801,6 +789,7 @@ function inicializarDataTablesAreaReservada() {
     inicializarTabelaLocalizacoes();
     inicializarTabelaDocumentacao();
     inicializarTabelaContratosGarantias();
+    inicializarTabelaMensagensSite();
     inicializarDataTablesDashboard();
 }
 
@@ -1175,6 +1164,23 @@ function inicializarDataTableDashboard(configuracao) {
             dataTable.search(this.value).draw();
         });
     }
+}
+
+
+/* Tabela das mensagens recebidas no formulário público */
+function inicializarTabelaMensagensSite() {
+    const $ = window.jQuery;
+    const tabela = $('#tabelaMensagensSite');
+
+    if (!tabela.length || $.fn.dataTable.isDataTable(tabela[0])) return;
+
+    tabela.DataTable(criarOpcoesDataTable({
+        emptyTable: 'Ainda não existem mensagens recebidas.',
+        info: 'A mostrar _START_ a _END_ de _TOTAL_ mensagens',
+        infoEmpty: 'Sem mensagens para mostrar',
+        infoFiltered: '(filtrado de _MAX_ mensagens)',
+        zeroRecords: 'Nenhuma mensagem encontrada.'
+    }, [[0, 'desc']], []));
 }
 
 

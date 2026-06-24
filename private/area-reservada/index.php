@@ -366,6 +366,11 @@ include __DIR__ . '/../includes/nav.php';
                     <p class="text-muted mb-0">Visão rápida do estado global do parque tecnológico hospitalar.</p>
                 </div>
                 <div class="d-flex flex-wrap gap-2">
+                    <?php if (tem_permissao('conteudos', 'ver')): ?>
+                        <a href="conteudos/mensagens.php" class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Ver mensagens enviadas no formulário público">
+                            <i class="fa-solid fa-envelope-open-text me-1"></i> Mensagens do site
+                        </a>
+                    <?php endif; ?>
                     <a href="#tabelaManutencoesDashboard" class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" data-bs-title="Ver próximas manutenções">
                         <i class="fa-solid fa-calendar-check text-primary me-2"></i> Manutenções
                     </a>

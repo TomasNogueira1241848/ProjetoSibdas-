@@ -1,6 +1,84 @@
 <?php
 require_once __DIR__ . '/../private/includes/conteudos_publicos.php';
 
+$contactoSucesso = false;
+$contactoErros = [];
+$contactoValores = [
+    'nome' => '',
+    'email' => '',
+    'instituicao' => '',
+    'assunto' => '',
+    'mensagem' => ''
+];
+
+$assuntosContacto = [
+    'info' => 'Pedido de informação',
+    'demo' => 'Agendar demonstração',
+    'suporte' => 'Suporte técnico',
+    'outro' => 'Outro'
+];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form_origem'] ?? '') === 'contacto_publico') {
+    foreach ($contactoValores as $campo => $valor) {
+        $contactoValores[$campo] = trim((string) ($_POST[$campo] ?? ''));
+    }
+
+    if ($contactoValores['nome'] === '') {
+        $contactoErros[] = 'Introduza o seu nome.';
+    }
+
+    if ($contactoValores['email'] === '' || !filter_var($contactoValores['email'], FILTER_VALIDATE_EMAIL)) {
+        $contactoErros[] = 'Introduza um email válido.';
+    }
+
+    if ($contactoValores['instituicao'] === '') {
+        $contactoErros[] = 'Introduza uma instituição.';
+    }
+
+    if ($contactoValores['assunto'] === '' || !isset($assuntosContacto[$contactoValores['assunto']])) {
+        $contactoErros[] = 'Selecione um assunto.';
+    }
+
+    if ($contactoValores['mensagem'] === '') {
+        $contactoErros[] = 'Escreva a sua mensagem.';
+    }
+
+    if (empty($contactoErros)) {
+        $ligacaoContacto = ligar_base_dados();
+
+        if ($ligacaoContacto === null) {
+            $contactoErros[] = 'Não foi possível enviar a mensagem. Tente novamente mais tarde.';
+        } else {
+            try {
+                $consultaContacto = $ligacaoContacto->prepare("
+                    INSERT INTO mensagens_contacto (nome, email, instituicao, assunto, mensagem, estado, recebido_em)
+                    VALUES (:nome, :email, :instituicao, :assunto, :mensagem, 'Nova', NOW())
+                ");
+
+                $consultaContacto->execute([
+                    ':nome' => $contactoValores['nome'],
+                    ':email' => $contactoValores['email'],
+                    ':instituicao' => $contactoValores['instituicao'],
+                    ':assunto' => $assuntosContacto[$contactoValores['assunto']],
+                    ':mensagem' => $contactoValores['mensagem']
+                ]);
+
+                $contactoSucesso = true;
+                $contactoValores = [
+                    'nome' => '',
+                    'email' => '',
+                    'instituicao' => '',
+                    'assunto' => '',
+                    'mensagem' => ''
+                ];
+            } catch (PDOException $erro) {
+                definir_erro_conteudos_publicos($erro->getMessage());
+                $contactoErros[] = 'Não foi possível guardar a mensagem na base de dados.';
+            }
+        }
+    }
+}
+
 $conteudos = obter_conteudos_publicos();
 ?>
 <!DOCTYPE html>
@@ -243,23 +321,24 @@ $conteudos = obter_conteudos_publicos();
 
             <div class="row g-4">
                 <div class="col-lg-7">
-                    <form id="formContacto" novalidate>
+                    <form id="formContacto" method="post" action="#contactos" novalidate>
+                        <input type="hidden" name="form_origem" value="contacto_publico">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="nome" class="form-label">Nome <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="nome" name="nome" required>
+                                <input type="text" class="form-control" id="nome" name="nome" value="<?php echo h($contactoValores['nome']); ?>" required>
                                 <div class="invalid-feedback">Introduza o seu nome.</div>
                             </div>
 
                             <div class="col-md-6">
                                 <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control" id="email" name="email" required>
+                                <input type="email" class="form-control" id="email" name="email" value="<?php echo h($contactoValores['email']); ?>" required>
                                 <div class="invalid-feedback">Introduza um email válido.</div>
                             </div>
 
                             <div class="col-12">
                                 <label for="instituicao" class="form-label">Instituição</label>
-                                <input type="text" class="form-control" id="instituicao" name="instituicao" required>
+                                <input type="text" class="form-control" id="instituicao" name="instituicao" value="<?php echo h($contactoValores['instituicao']); ?>" required>
                                 <div class="invalid-feedback">Introduza uma instituição.</div>
                             </div>
 
@@ -267,17 +346,17 @@ $conteudos = obter_conteudos_publicos();
                                 <label for="assunto" class="form-label">Assunto <span class="text-danger">*</span></label>
                                 <select class="form-select" id="assunto" name="assunto" required>
                                     <option value="">Selecione um assunto</option>
-                                    <option value="info">Pedido de informação</option>
-                                    <option value="demo">Agendar demonstração</option>
-                                    <option value="suporte">Suporte técnico</option>
-                                    <option value="outro">Outro</option>
+                                    <option value="info" <?php echo $contactoValores['assunto'] === 'info' ? 'selected' : ''; ?>>Pedido de informação</option>
+                                    <option value="demo" <?php echo $contactoValores['assunto'] === 'demo' ? 'selected' : ''; ?>>Agendar demonstração</option>
+                                    <option value="suporte" <?php echo $contactoValores['assunto'] === 'suporte' ? 'selected' : ''; ?>>Suporte técnico</option>
+                                    <option value="outro" <?php echo $contactoValores['assunto'] === 'outro' ? 'selected' : ''; ?>>Outro</option>
                                 </select>
                                 <div class="invalid-feedback">Selecione um assunto.</div>
                             </div>
 
                             <div class="col-12">
                                 <label for="mensagem" class="form-label">Mensagem <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="mensagem" name="mensagem" rows="4" required></textarea>
+                                <textarea class="form-control" id="mensagem" name="mensagem" rows="4" required><?php echo h($contactoValores['mensagem']); ?></textarea>
                                 <div class="invalid-feedback">Escreva a sua mensagem.</div>
                             </div>
 
@@ -287,11 +366,22 @@ $conteudos = obter_conteudos_publicos();
                                 </button>
                             </div>
 
-                            <div class="col-12">
-                                <div id="mensagemSucesso" class="alert alert-success d-none">
-                                    <i class="fa-solid fa-check me-1"></i> Mensagem enviada com sucesso. Entraremos em contacto brevemente.
+                            <?php if ($contactoSucesso): ?>
+                                <div class="col-12">
+                                    <div id="mensagemSucesso" class="alert alert-success">
+                                        <i class="fa-solid fa-check me-1"></i> Mensagem enviada com sucesso. Entraremos em contacto brevemente.
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endif; ?>
+
+                            <?php if (!empty($contactoErros)): ?>
+                                <div class="col-12">
+                                    <div class="alert alert-danger">
+                                        <i class="fa-solid fa-triangle-exclamation me-1"></i>
+                                        <?php echo h($contactoErros[0]); ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </form>
                 </div>
@@ -381,7 +471,7 @@ $conteudos = obter_conteudos_publicos();
     </div>
 
     <script src="../assets/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="../assets/js/1241848.js?v=conteudos-bd-1"></script>
+    <script src="../assets/js/1241848.js?v=mensagens-bd-1"></script>
 </body>
 
 </html>

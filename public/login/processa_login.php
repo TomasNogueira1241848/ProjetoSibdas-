@@ -45,16 +45,6 @@ if ($ligacao === null) {
 }
 
 try {
-    /*
-     * Ficha 14:
-     * - o email do agente está guardado na coluna name com AES_ENCRYPT
-     * - no login é comparado usando AES_DECRYPT
-     *
-     * Nota técnica:
-     * como a ligação PDO usa ATTR_EMULATE_PREPARES = false,
-     * não se deve reutilizar o mesmo placeholder (:chave) duas vezes.
-     * Por isso usamos :chave_select e :chave_where.
-     */
     $comando = $ligacao->prepare("
         SELECT
             id,
@@ -77,7 +67,7 @@ try {
 
     $agente = $comando->fetch();
 
-    if (!$agente || $password !== $agente->passwrd) {
+    if (!$agente || !password_verify($password, $agente->passwrd)) {
         registar_evento_sistema('autenticacao', 'login', 'falha', 'Tentativa de login com credenciais inválidas.', ['email' => $email]);
         $_SESSION['erros_login'] = ['Credenciais inválidas.'];
         $_SESSION['old_login'] = ['email' => $email];
