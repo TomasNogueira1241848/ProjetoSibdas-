@@ -27,6 +27,43 @@ function mostrar_valor($valor, $vazio = 'Não indicado')
     return $texto !== '' ? e($texto) : '<span class="text-muted small">' . e($vazio) . '</span>';
 }
 
+function limpar_observacoes_sistema($texto)
+{
+    $texto = trim((string) ($texto ?? ''));
+
+    if ($texto === '') {
+        return '';
+    }
+
+    $texto = str_replace(["\r\n", "\r"], "\n", $texto);
+
+    if (preg_match('/Observa(?:ções|coes)\s*:\s*(.*)$/isu', $texto, $match)) {
+        return trim($match[1]);
+    }
+
+    $linhasLimpas = [];
+    foreach (preg_split('/\R/u', $texto) as $linha) {
+        $linha = trim($linha);
+
+        if ($linha === '') {
+            continue;
+        }
+
+        if (preg_match('/^(Responsável|Responsavel|Associado a|Periodicidade)\s*:/iu', $linha)) {
+            continue;
+        }
+
+        $linhasLimpas[] = $linha;
+    }
+
+    return trim(implode("\n", $linhasLimpas));
+}
+
+function mostrar_observacoes($valor)
+{
+    return mostrar_valor(limpar_observacoes_sistema($valor));
+}
+
 function formatar_data($data)
 {
     if (empty($data) || $data === '0000-00-00') {
@@ -797,7 +834,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                         campo_detalhe('Responsável', mostrar_valor($documento->responsavel_documento));
                                                         campo_detalhe('Data do documento', formatar_data($documento->data_documento));
                                                         campo_detalhe('Validade', formatar_data($documento->validade));
-                                                        campo_detalhe('Observações', mostrar_valor($documento->observacoes), 'col-12');
+                                                        campo_detalhe('Observações', mostrar_observacoes($documento->observacoes), 'col-12');
                                                         ?>
                                                         <div class="col-12">
                                                             <p class="text-muted small mb-1">PDFs associados</p>
@@ -840,7 +877,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                         campo_detalhe('Data de início', formatar_data($garantia->data_inicio));
                                                         campo_detalhe('Data de fim', formatar_data($garantia->data_fim));
                                                         campo_detalhe('Cobertura', mostrar_valor($garantia->cobertura), 'col-12');
-                                                        campo_detalhe('Observações', mostrar_valor($garantia->observacoes), 'col-12');
+                                                        campo_detalhe('Observações', mostrar_observacoes($garantia->observacoes), 'col-12');
                                                         ?>
                                                         <div class="col-12">
                                                             <p class="text-muted small mb-1">PDFs associados</p>
@@ -879,7 +916,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                         campo_detalhe('Valor anual', formatar_moeda($contrato->valor_anual));
                                                         campo_detalhe('Periodicidade', mostrar_valor($contrato->periodicidade_contrato));
                                                         campo_detalhe('Renovação automática', sim_nao($contrato->renovacao_automatica));
-                                                        campo_detalhe('Observações', mostrar_valor($contrato->observacoes), 'col-12');
+                                                        campo_detalhe('Observações', mostrar_observacoes($contrato->observacoes), 'col-12');
                                                         ?>
                                                         <div class="col-12">
                                                             <p class="text-muted small mb-1">PDFs associados</p>
@@ -920,7 +957,6 @@ include __DIR__ . '/../../includes/nav.php';
                                                         campo_detalhe('Periodicidade', mostrar_valor($manutencao->periodicidade));
                                                         campo_detalhe('Responsável', mostrar_valor($manutencao->responsavel));
                                                         campo_detalhe('Prioridade', mostrar_valor($manutencao->prioridade_nome));
-                                                        campo_detalhe('Observações', mostrar_valor($manutencao->observacoes), 'col-12');
                                                         ?>
                                                     </div>
                                                 </div>

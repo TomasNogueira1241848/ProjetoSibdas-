@@ -88,6 +88,54 @@ function selected_formulario($valor, $valorAtual)
  * Assim, qualquer fornecedor criado na área de fornecedores aparece automaticamente
  * em todos os seletores do formulário de equipamento.
  */
+
+const VALOR_MONETARIO_MAXIMO = 99999999.99;
+
+function normalizar_valor_monetario($valor)
+{
+    $valor = trim((string) $valor);
+
+    if ($valor === '') {
+        return '';
+    }
+
+    $valor = str_replace(',', '.', $valor);
+
+    if (!preg_match('/^\d+(\.\d{1,2})?$/', $valor)) {
+        return null;
+    }
+
+    $numero = (float) $valor;
+
+    if ($numero < 0 || $numero > VALOR_MONETARIO_MAXIMO) {
+        return null;
+    }
+
+    return number_format($numero, 2, '.', '');
+}
+
+function validar_valor_monetario(&$valor, $nomeCampo, &$erros, $obrigatorio = true)
+{
+    $valorOriginal = trim((string) ($valor ?? ''));
+
+    if ($valorOriginal === '') {
+        if ($obrigatorio) {
+            $erros[] = $nomeCampo . ' é obrigatório.';
+        }
+        $valor = '';
+        return;
+    }
+
+    $valorNormalizado = normalizar_valor_monetario($valorOriginal);
+
+    if ($valorNormalizado === null) {
+        $erros[] = $nomeCampo . ' deve ser um número entre 0 e 99.999.999,99, com no máximo duas casas decimais.';
+        return;
+    }
+
+    $valor = $valorNormalizado;
+}
+
 function options_fornecedores_por_nome($fornecedores, $incluirSemFornecedor = false, $selecionado = '')
 {
     $html = '<option value="" ' . selected_formulario('', $selecionado) . '>Selecionar</option>';
@@ -249,8 +297,13 @@ function validar_documentos_minimos($documentosMinimosObrigatorios, $documentosP
             $erros[] = 'Selecione o fornecedor associado ao documento "' . $nomeDocumento . '".';
         }
  
+        if (count($ficheiros) > 1) {
+            $erros[] = 'O documento "' . $nomeDocumento . '" pode ter apenas um PDF.';
+            continue;
+        }
+
         if (empty($ficheiros)) {
-            $erros[] = 'Adicione pelo menos um PDF para o documento "' . $nomeDocumento . '".';
+            $erros[] = 'Adicione um PDF para o documento "' . $nomeDocumento . '".';
             continue;
         }
  
@@ -300,6 +353,12 @@ function extrair_observacoes_livres($texto)
         return '';
     }
 
+    $texto = str_replace(["\r\n", "\r"], "\n", $texto);
+
+    if (preg_match('/Observa(?:ções|coes)\s*:\s*(.*)$/isu', $texto, $match)) {
+        return trim($match[1]);
+    }
+
     $linhasLivres = [];
     foreach (preg_split('/\R/u', $texto) as $linha) {
         $linha = trim($linha);
@@ -307,17 +366,7 @@ function extrair_observacoes_livres($texto)
             continue;
         }
 
-        if (stripos($linha, 'Responsável:') === 0 || stripos($linha, 'Responsavel:') === 0 || stripos($linha, 'Associado a:') === 0 || stripos($linha, 'Periodicidade:') === 0) {
-            continue;
-        }
-
-        if (stripos($linha, 'Observações:') === 0) {
-            $linhasLivres[] = trim(substr($linha, strlen('Observações:')));
-            continue;
-        }
-
-        if (stripos($linha, 'Observacoes:') === 0) {
-            $linhasLivres[] = trim(substr($linha, strlen('Observacoes:')));
+        if (preg_match('/^(Responsável|Responsavel|Associado a|Periodicidade)\s*:/iu', $linha)) {
             continue;
         }
 
@@ -331,44 +380,22 @@ function extrair_observacoes_livres($texto)
 
 function preparar_observacoes_com_detalhes($observacoes, array $detalhes = [])
 {
-    $linhas = [];
-
-    foreach ($detalhes as $rotulo => $valor) {
-        $valor = trim((string) ($valor ?? ''));
-        if ($valor !== '') {
-            $linhas[] = $rotulo . ': ' . $valor;
-        }
-    }
-
-    $observacoes = trim((string) ($observacoes ?? ''));
-    if ($observacoes !== '') {
-        $linhas[] = 'Observações: ' . $observacoes;
-    }
-
-    return implode("\n", $linhas);
+    return extrair_observacoes_livres($observacoes);
 }
 
 function preparar_observacoes_documento($documento)
 {
-    return preparar_observacoes_com_detalhes($documento['observacoes'] ?? '', [
-        'Responsável' => $documento['responsavel'] ?? ''
-    ]);
+    return extrair_observacoes_livres($documento['observacoes'] ?? '');
 }
 
 function preparar_observacoes_garantia($garantia)
 {
-    return preparar_observacoes_com_detalhes($garantia['observacoes'] ?? '', [
-        'Responsável' => $garantia['responsavel'] ?? ''
-    ]);
+    return extrair_observacoes_livres($garantia['observacoes'] ?? '');
 }
 
 function preparar_observacoes_contrato($contrato)
 {
-    return preparar_observacoes_com_detalhes($contrato['observacoes'] ?? '', [
-        'Associado a' => $contrato['associado'] ?? 'Equipamento atual',
-        'Responsável' => $contrato['responsavel'] ?? '',
-        'Periodicidade' => $contrato['periodicidade'] ?? ''
-    ]);
+    return extrair_observacoes_livres($contrato['observacoes'] ?? '');
 }
 
 function obter_id_por_nome($ligacao, $tabela, $nome)
@@ -643,13 +670,13 @@ function contrato_extra_tem_dados($contrato)
     return false;
 }
 
-function validar_contratos_extra($outrosContratos, &$erros, $ligacao = null)
+function validar_contratos_extra(&$outrosContratos, &$erros, $ligacao = null)
 {
     if (empty($outrosContratos) || !is_array($outrosContratos)) {
         return;
     }
 
-    foreach ($outrosContratos as $indice => $contrato) {
+    foreach ($outrosContratos as $indice => &$contrato) {
         if (!contrato_extra_tem_dados($contrato)) {
             continue;
         }
@@ -702,11 +729,7 @@ function validar_contratos_extra($outrosContratos, &$erros, $ligacao = null)
             $erros[] = $prefixo . 'a data de fim não pode ser anterior à data de início.';
         }
 
-        if ($valorAnual === '') {
-            $erros[] = $prefixo . 'o valor anual é obrigatório.';
-        } elseif (!is_numeric($valorAnual) || (float) $valorAnual < 0) {
-            $erros[] = $prefixo . 'o valor anual deve ser um número igual ou superior a zero.';
-        }
+        validar_valor_monetario($contrato['valor_anual'], $prefixo . 'o valor anual', $erros, true);
 
         if ($renovacao === '') {
             $erros[] = $prefixo . 'indique se existe renovação automática.';
@@ -739,6 +762,8 @@ function validar_contratos_extra($outrosContratos, &$erros, $ligacao = null)
             }
         }
     }
+
+    unset($contrato);
 }
 
 function inserir_contratos_extra($ligacao, $equipamentoId, $outrosContratos)
@@ -802,25 +827,6 @@ function inserir_contratos_extra($ligacao, $equipamentoId, $outrosContratos)
             throw new RuntimeException('Não foi possível associar corretamente o contrato opcional #' . ((int) $indice + 1) . ' às tabelas auxiliares.');
         }
 
-        $observacoes = trim($contrato['observacoes'] ?? '');
-        $detalhes = [];
-
-        if (trim($contrato['associado'] ?? '') !== '') {
-            $detalhes[] = 'Associado a: ' . trim($contrato['associado']);
-        }
-
-        if (trim($contrato['responsavel'] ?? '') !== '') {
-            $detalhes[] = 'Responsável: ' . trim($contrato['responsavel']);
-        }
-
-        if (trim($contrato['periodicidade'] ?? '') !== '') {
-            $detalhes[] = 'Periodicidade: ' . trim($contrato['periodicidade']);
-        }
-
-        if ($observacoes !== '') {
-            $detalhes[] = 'Observações: ' . $observacoes;
-        }
-
         $stmtContrato->execute([
             ':codigo' => strtoupper(trim($contrato['codigo'])),
             ':designacao' => trim($contrato['designacao']),
@@ -833,8 +839,7 @@ function inserir_contratos_extra($ligacao, $equipamentoId, $outrosContratos)
             ':periodicidade' => trim((string) ($contrato['periodicidade'] ?? '')),
             ':renovacao_automatica' => (trim($contrato['renovacao_automatica'] ?? '') === 'Sim') ? 1 : 0,
             ':estado_contrato_id' => $estadoContratoId,
-            ':observacoes' => implode("
-", $detalhes)
+            ':observacoes' => extrair_observacoes_livres($contrato['observacoes'] ?? '')
         ]);
 
         $contratoId = $ligacao->lastInsertId();
@@ -885,8 +890,13 @@ function obter_ficheiros_grupo($grupo)
  
 function validar_ficheiros_pdf($ficheiros, $nomeCampo, &$erros, $obrigatorio = true)
 {
+    if (count($ficheiros) > 1) {
+        $erros[] = 'Só pode existir um PDF em "' . $nomeCampo . '".';
+        return;
+    }
+
     if ($obrigatorio && empty($ficheiros)) {
-        $erros[] = 'Adicione pelo menos um PDF em "' . $nomeCampo . '".';
+        $erros[] = 'Adicione um PDF em "' . $nomeCampo . '".';
         return;
     }
  
@@ -949,10 +959,10 @@ function validar_garantia($garantia, &$erros)
         $erros[] = 'A data de fim da garantia não pode ser anterior à data de início.';
     }
  
-    validar_ficheiros_pdf(obter_ficheiros_grupo('garantia'), 'PDFs da garantia', $erros, true);
+    validar_ficheiros_pdf(obter_ficheiros_grupo('garantia'), 'PDF da garantia', $erros, true);
 }
  
-function validar_contrato_manutencao($contrato, &$erros)
+function validar_contrato_manutencao(&$contrato, &$erros)
 {
     $camposObrigatorios = [
         'codigo' => 'O código do contrato de manutenção é obrigatório.',
@@ -990,11 +1000,9 @@ function validar_contrato_manutencao($contrato, &$erros)
         $erros[] = 'A data de fim do contrato de manutenção não pode ser anterior à data de início.';
     }
  
-    if (!empty($contrato['valor_anual']) && (!is_numeric($contrato['valor_anual']) || (float) $contrato['valor_anual'] < 0)) {
-        $erros[] = 'O valor anual do contrato de manutenção deve ser um número igual ou superior a zero.';
-    }
+    validar_valor_monetario($contrato['valor_anual'], 'O valor anual do contrato de manutenção', $erros, true);
  
-    validar_ficheiros_pdf(obter_ficheiros_grupo('contratoManutencao'), 'PDFs do contrato de manutenção', $erros, true);
+    validar_ficheiros_pdf(obter_ficheiros_grupo('contratoManutencao'), 'PDF do contrato de manutenção', $erros, true);
 }
  
 function validar_manutencao($manutencao, &$erros)
@@ -1184,7 +1192,7 @@ function inserir_manutencao($ligacao, $equipamentoId, $manutencao)
         ':estado_manutencao_id' => $estadoManutencaoId,
         ':prioridade_id' => $prioridadeId,
         ':responsavel' => trim($manutencao['responsavel']),
-        ':observacoes' => 'Registo criado na inserção do equipamento.'
+        ':observacoes' => ''
     ]);
 }
  
@@ -1310,11 +1318,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erros[] = 'A data de aquisição não é válida.';
     }
  
-    if ($valores['custo_aquisicao'] === '') {
-        $erros[] = 'O custo de aquisição é obrigatório.';
-    } elseif (!is_numeric($valores['custo_aquisicao']) || (float) $valores['custo_aquisicao'] < 0) {
-        $erros[] = 'O custo de aquisição deve ser um número igual ou superior a zero.';
-    }
+    validar_valor_monetario($valores['custo_aquisicao'], 'O custo de aquisição', $erros, true);
  
     $anoAtual = (int) date('Y') + 1;
  
@@ -1806,7 +1810,7 @@ include __DIR__ . '/../../includes/nav.php';
                                     <div class="col-md-4">
                                         <label for="custoAquisicaoEquipamento" class="form-label">Custo de aquisição
                                             (€)</label>
-                                        <input type="number" class="form-control" id="custoAquisicaoEquipamento" name="custo_aquisicao" min="0"
+                                        <input type="number" class="form-control" id="custoAquisicaoEquipamento" name="custo_aquisicao" min="0" max="99999999.99"
                                             step="0.01" value="<?php echo valor_formulario('custo_aquisicao', $valores); ?>">
                                     </div>
  
@@ -2116,7 +2120,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheiroManualUtilizadorEquipamento"
                                                     name="documentosMinimos[ManualUtilizador][ficheiros][]"
-                                                    accept="application/pdf,.pdf" multiple
+                                                    accept="application/pdf,.pdf"
                                                     data-lista="listaManualUtilizadorEquipamento">
                                                 
                                                 <div class="pdf-lista mt-3" id="listaManualUtilizadorEquipamento">
@@ -2220,7 +2224,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheiroManualServicoEquipamento"
                                                     name="documentosMinimos[ManualServico][ficheiros][]"
-                                                    accept="application/pdf,.pdf" multiple
+                                                    accept="application/pdf,.pdf"
                                                     data-lista="listaManualServicoEquipamento">
                                                 
                                                 <div class="pdf-lista mt-3" id="listaManualServicoEquipamento">
@@ -2324,7 +2328,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheiroCertificadoCalibracaoEquipamento"
                                                     name="documentosMinimos[CertificadoCalibracao][ficheiros][]"
-                                                    accept="application/pdf,.pdf" multiple
+                                                    accept="application/pdf,.pdf"
                                                     data-lista="listaCertificadoCalibracaoEquipamento">
                                                 
                                                 <div class="pdf-lista mt-3" id="listaCertificadoCalibracaoEquipamento">
@@ -2428,7 +2432,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheiroFaturaGuiaAquisicaoEquipamento"
                                                     name="documentosMinimos[FaturaGuiaAquisicao][ficheiros][]"
-                                                    accept="application/pdf,.pdf" multiple
+                                                    accept="application/pdf,.pdf"
                                                     data-lista="listaFaturaGuiaAquisicaoEquipamento">
                                                 
                                                 <div class="pdf-lista mt-3" id="listaFaturaGuiaAquisicaoEquipamento">
@@ -2532,7 +2536,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheiroDeclaracaoConformidadeEquipamento"
                                                     name="documentosMinimos[DeclaracaoConformidade][ficheiros][]"
-                                                    accept="application/pdf,.pdf" multiple
+                                                    accept="application/pdf,.pdf"
                                                     data-lista="listaDeclaracaoConformidadeEquipamento">
                                                 
                                                 <div class="pdf-lista mt-3" id="listaDeclaracaoConformidadeEquipamento">
@@ -2636,7 +2640,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <input type="file" class="form-control input-pdf-multiplo"
                                                     id="ficheiroRelatorioTecnicoEquipamento"
                                                     name="documentosMinimos[RelatorioTecnico][ficheiros][]"
-                                                    accept="application/pdf,.pdf" multiple
+                                                    accept="application/pdf,.pdf"
                                                     data-lista="listaRelatorioTecnicoEquipamento">
                                                 
                                                 <div class="pdf-lista mt-3" id="listaRelatorioTecnicoEquipamento">
@@ -2721,7 +2725,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <label class="form-label fw-semibold">
                                                     <i class="fa-solid fa-file-pdf me-1 text-danger"></i> PDFs deste documento
                                                 </label>
-                                                <input type="file" class="form-control" name="outrosDocumentos[__IDX__][ficheiros][]" accept="application/pdf,.pdf" multiple>
+                                                <input type="file" class="form-control" name="outrosDocumentos[__IDX__][ficheiros][]" accept="application/pdf,.pdf">
                                             </div>
                                         </div>
                                     </template>
@@ -2826,10 +2830,10 @@ include __DIR__ . '/../../includes/nav.php';
  
                                                 <div class="col-12">
                                                     <label for="ficheirosGarantiaEquipamento" class="form-label fw-semibold">
-                                                        <i class="fa-solid fa-file-pdf me-1 text-danger"></i> PDFs da garantia
+                                                        <i class="fa-solid fa-file-pdf me-1 text-danger"></i> PDF da garantia
                                                     </label>
                                                     <input type="file" class="form-control input-pdf-multiplo" id="ficheirosGarantiaEquipamento"
-                                                        name="garantia[ficheiros][]" accept="application/pdf,.pdf" multiple
+                                                        name="garantia[ficheiros][]" accept="application/pdf,.pdf"
                                                         data-lista="listaFicheirosGarantiaEquipamento" data-removivel="true">
                                                     <div class="pdf-lista mt-3" id="listaFicheirosGarantiaEquipamento">
                                                         <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
@@ -2897,7 +2901,7 @@ include __DIR__ . '/../../includes/nav.php';
  
                                                 <div class="col-md-3">
                                                     <label for="valorContratoManutencaoEquipamento" class="form-label">Valor anual (€)</label>
-                                                    <input type="number" class="form-control" id="valorContratoManutencaoEquipamento" name="contratoManutencao[valor_anual]" min="0" step="0.01" value="">
+                                                    <input type="number" class="form-control" id="valorContratoManutencaoEquipamento" name="contratoManutencao[valor_anual]" min="0" max="99999999.99" step="0.01" value="">
                                                 </div>
  
                                                 <div class="col-md-3">
@@ -2934,10 +2938,10 @@ include __DIR__ . '/../../includes/nav.php';
  
                                                 <div class="col-12">
                                                     <label for="ficheirosContratoManutencaoEquipamento" class="form-label fw-semibold">
-                                                        <i class="fa-solid fa-file-pdf me-1 text-danger"></i> PDFs do contrato de manutenção
+                                                        <i class="fa-solid fa-file-pdf me-1 text-danger"></i> PDF do contrato de manutenção
                                                     </label>
                                                     <input type="file" class="form-control input-pdf-multiplo" id="ficheirosContratoManutencaoEquipamento"
-                                                        name="contratoManutencao[ficheiros][]" accept="application/pdf,.pdf" multiple
+                                                        name="contratoManutencao[ficheiros][]" accept="application/pdf,.pdf"
                                                         data-lista="listaFicheirosContratoManutencaoEquipamento" data-removivel="true">
                                                     <div class="pdf-lista mt-3" id="listaFicheirosContratoManutencaoEquipamento">
                                                         <p class="text-muted small mb-0">Nenhum ficheiro selecionado.</p>
@@ -3019,7 +3023,7 @@ include __DIR__ . '/../../includes/nav.php';
 
                                             <div class="col-md-3">
                                                 <label class="form-label">Valor anual (€)</label>
-                                                <input type="number" class="form-control" name="outrosContratos[__IDX__][valor_anual]" min="0" step="0.01">
+                                                <input type="number" class="form-control" name="outrosContratos[__IDX__][valor_anual]" min="0" max="99999999.99" step="0.01">
                                             </div>
 
                                             <div class="col-md-3">
@@ -3058,7 +3062,7 @@ include __DIR__ . '/../../includes/nav.php';
                                                 <label class="form-label fw-semibold">
                                                     <i class="fa-solid fa-file-pdf me-1 text-danger"></i> PDFs deste contrato
                                                 </label>
-                                                <input type="file" class="form-control" name="outrosContratos[__IDX__][ficheiros][]" accept="application/pdf,.pdf" multiple>
+                                                <input type="file" class="form-control" name="outrosContratos[__IDX__][ficheiros][]" accept="application/pdf,.pdf">
                                             </div>
                                         </div>
                                     </template>

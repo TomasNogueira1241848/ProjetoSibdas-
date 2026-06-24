@@ -17,6 +17,38 @@ function v($v)
     $v = trim((string)($v ?? ''));
     return $v === '' ? '—' : $v;
 }
+
+function limpar_observacoes_sistema($texto)
+{
+    $texto = trim((string) ($texto ?? ''));
+
+    if ($texto === '') {
+        return '';
+    }
+
+    $texto = str_replace(["\r\n", "\r"], "\n", $texto);
+
+    if (preg_match('/Observa(?:ções|coes)\s*:\s*(.*)$/isu', $texto, $match)) {
+        return trim($match[1]);
+    }
+
+    $linhasLimpas = [];
+    foreach (preg_split('/\R/u', $texto) as $linha) {
+        $linha = trim($linha);
+
+        if ($linha === '') {
+            continue;
+        }
+
+        if (preg_match('/^(Responsável|Responsavel|Associado a|Periodicidade)\s*:/iu', $linha)) {
+            continue;
+        }
+
+        $linhasLimpas[] = $linha;
+    }
+
+    return trim(implode("\n", $linhasLimpas));
+}
 function data_pt($d)
 {
     return $d ? date('d/m/Y', strtotime($d)) : '—';
@@ -110,7 +142,7 @@ include __DIR__ . '/../../includes/nav.php'; ?>
                             </div>
                             <div class="col-12">
                                 <p class="text-muted small mb-1">Observações</p>
-                                <p class="mb-0"><?php echo nl2br(e(v($garantia->observacoes))); ?></p>
+                                <p class="mb-0"><?php echo nl2br(e(v(limpar_observacoes_sistema($garantia->observacoes)))); ?></p>
                             </div>
                         </div>
                     </div>

@@ -384,6 +384,11 @@ function configurarCampoCondicional(configuracao) {
             campo.disabled = !ativo;
 
             if (!ativo) {
+                if (campo.type === 'checkbox' || campo.type === 'radio') {
+                    campo.checked = false;
+                } else {
+                    campo.value = '';
+                }
                 campo.classList.remove('is-invalid');
             }
         });
