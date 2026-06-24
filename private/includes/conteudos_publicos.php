@@ -1,20 +1,28 @@
 <?php
-
+/*
+ * MedInfo Solutions — conteudos_publicos.php
+ * Funcoes de leitura dos conteudos do site publico.
+ * (Comentarios meramente descritivos; nao alteram o codigo.)
+ */
+ 
 require_once __DIR__ . '/basedados.php';
-
+ 
 $GLOBALS['conteudos_publicos_ultimo_erro'] = '';
-
+ 
+// Funcao: definir erro conteudos publicos.
 function definir_erro_conteudos_publicos($mensagem)
 {
     $GLOBALS['conteudos_publicos_ultimo_erro'] = $mensagem;
     error_log('Erro nos conteúdos públicos: ' . $mensagem);
 }
-
+ 
+// Funcao: conteudos publicos ultimo erro.
 function conteudos_publicos_ultimo_erro()
 {
     return $GLOBALS['conteudos_publicos_ultimo_erro'] ?? '';
 }
-
+ 
+// Funcao: conteudos publicos padrao.
 function conteudos_publicos_padrao()
 {
     return [
@@ -38,84 +46,89 @@ function conteudos_publicos_padrao()
         'rodape_texto' => 'MedInfo Solutions © 2025 — Todos os direitos reservados'
     ];
 }
-
+ 
+// Funcao: campos conteudos publicos.
 function campos_conteudos_publicos()
 {
     return array_keys(conteudos_publicos_padrao());
 }
-
+ 
+// Funcao: normalizar conteudos publicos.
 function normalizar_conteudos_publicos($registo)
 {
     $conteudos = conteudos_publicos_padrao();
-
+ 
     if (!$registo) {
         return $conteudos;
     }
-
+ 
     foreach ($conteudos as $campo => $valorPadrao) {
         if (isset($registo->$campo) && $registo->$campo !== null && $registo->$campo !== '') {
             $conteudos[$campo] = $registo->$campo;
         }
     }
-
+ 
     return $conteudos;
 }
-
+ 
+// Funcao: preparar dados conteudos publicos.
 function preparar_dados_conteudos_publicos($dados)
 {
     $padrao = conteudos_publicos_padrao();
     $conteudos = [];
-
+ 
     foreach ($padrao as $campo => $valorPadrao) {
         $valor = isset($dados[$campo]) ? trim((string) $dados[$campo]) : $valorPadrao;
         $conteudos[$campo] = $valor;
     }
-
+ 
     return $conteudos;
 }
-
+ 
+// Funcao: garantir linha conteudos publicos.
 function garantir_linha_conteudos_publicos($ligacao)
 {
     $existe = (int) $ligacao->query('SELECT COUNT(*) FROM conteudos_publicos WHERE id = 1')->fetchColumn();
-
+ 
     if ($existe > 0) {
         return true;
     }
-
+ 
     $padrao = conteudos_publicos_padrao();
     $campos = campos_conteudos_publicos();
     $placeholders = array_map(function ($campo) {
         return ':' . $campo;
     }, $campos);
-
+ 
     $sql = 'INSERT INTO conteudos_publicos (id, ' . implode(', ', $campos) . ')
             VALUES (1, ' . implode(', ', $placeholders) . ')';
-
+ 
     $consulta = $ligacao->prepare($sql);
-
+ 
     foreach ($padrao as $campo => $valor) {
         $consulta->bindValue(':' . $campo, $valor);
     }
-
+ 
     return $consulta->execute();
 }
-
+ 
+// Obtem conteudos publicos.
 function obter_conteudos_publicos()
 {
     $ligacao = ligar_base_dados();
-
+ 
     if ($ligacao === null) {
         definir_erro_conteudos_publicos('Não foi possível ligar à base de dados.');
         return conteudos_publicos_padrao();
     }
-
+ 
     try {
         garantir_linha_conteudos_publicos($ligacao);
-
+ 
         $consulta = $ligacao->query('SELECT * FROM conteudos_publicos WHERE id = 1 LIMIT 1');
         $registo = $consulta->fetch();
         $ligacao = null;
-
+ 
         return normalizar_conteudos_publicos($registo);
     } catch (PDOException $erro) {
         definir_erro_conteudos_publicos($erro->getMessage());
@@ -123,40 +136,41 @@ function obter_conteudos_publicos()
         return conteudos_publicos_padrao();
     }
 }
-
+ 
+// Funcao: guardar conteudos publicos.
 function guardar_conteudos_publicos($dados, $utilizadorId = null)
 {
     $ligacao = ligar_base_dados();
-
+ 
     if ($ligacao === null) {
         definir_erro_conteudos_publicos('Não foi possível ligar à base de dados.');
         return false;
     }
-
+ 
     try {
         garantir_linha_conteudos_publicos($ligacao);
-
+ 
         $conteudos = preparar_dados_conteudos_publicos($dados);
         $sets = [];
-
+ 
         foreach (campos_conteudos_publicos() as $campo) {
             $sets[] = $campo . ' = :' . $campo;
         }
-
+ 
         $sets[] = 'atualizado_por = :atualizado_por';
         $sets[] = 'atualizado_em = NOW()';
-
+ 
         $sql = 'UPDATE conteudos_publicos SET ' . implode(', ', $sets) . ' WHERE id = 1';
         $consulta = $ligacao->prepare($sql);
-
+ 
         foreach ($conteudos as $campo => $valor) {
             $consulta->bindValue(':' . $campo, $valor);
         }
-
+ 
         $utilizadorId = is_numeric($utilizadorId) ? (int) $utilizadorId : null;
         $consulta->bindValue(':atualizado_por', $utilizadorId, $utilizadorId === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
         $consulta->execute();
-
+ 
         $ligacao = null;
         return true;
     } catch (PDOException $erro) {
@@ -165,12 +179,14 @@ function guardar_conteudos_publicos($dados, $utilizadorId = null)
         return false;
     }
 }
-
+ 
+// Funcao: h.
 function h($valor)
 {
     return htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
 }
-
+ 
+// Funcao: nl2br h.
 function nl2br_h($valor)
 {
     return nl2br(h($valor));

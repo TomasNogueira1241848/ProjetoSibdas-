@@ -1,0 +1,442 @@
+// Modelo DBML - MedInfo Solutions
+// Representa as tabelas, campos obrigatórios, chaves e relações principais da base de dados.
+
+Table agents {
+  id int [pk, increment, not null]
+  nome varchar(150) [not null]
+  name varbinary(255) [not null]
+  passwrd varchar(255) [not null]
+  profile varchar(60) [not null]
+  last_login datetime
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at datetime
+  deleted_at datetime
+}
+
+Table areas_documento {
+  id int [pk, increment, not null]
+  nome varchar(40) [not null, unique]
+}
+
+Table categorias_equipamento {
+  id int [pk, increment, not null]
+  nome varchar(80) [not null, unique]
+}
+
+Table conteudos_publicos {
+  id int [pk, increment, not null]
+  hero_titulo varchar(200) [not null]
+  hero_subtitulo text [not null]
+  sobre_titulo varchar(150) [not null]
+  sobre_texto_1 text [not null]
+  sobre_texto_2 text
+  sobre_texto_3 text
+  servicos_titulo varchar(150) [not null]
+  servicos_texto text [not null]
+  clientes_titulo varchar(150) [not null]
+  clientes_texto text [not null]
+  contactos_titulo varchar(150) [not null]
+  contactos_texto text [not null]
+  morada text [not null]
+  telefone varchar(40) [not null]
+  email varchar(150) [not null]
+  website varchar(150) [not null]
+  horario text [not null]
+  rodape_texto varchar(200) [not null]
+  atualizado_por int
+  atualizado_em timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table contratos {
+  id int [pk, increment, not null]
+  codigo varchar(30) [not null, unique]
+  designacao varchar(150) [not null]
+  tipo_contrato_id int [not null]
+  fornecedor_id int [not null]
+  responsavel varchar(120)
+  data_inicio date
+  data_fim date
+  valor_anual decimal(10,2)
+  periodicidade varchar(80)
+  renovacao_automatica tinyint(1) [default: '0']
+  estado_contrato_id int [not null]
+  observacoes text
+  criado_em timestamp [default: `CURRENT_TIMESTAMP`]
+  atualizado_em timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (tipo_contrato_id) [name: "fk_contratos_tipo"]
+    (fornecedor_id) [name: "fk_contratos_fornecedor"]
+    (estado_contrato_id) [name: "fk_contratos_estado"]
+  }
+}
+
+Table contrato_equipamentos {
+  id int [pk, increment, not null]
+  contrato_id int [not null]
+  equipamento_id int [not null]
+
+  indexes {
+    (contrato_id, equipamento_id) [unique, name: "contrato_id"]
+    (equipamento_id) [name: "fk_conteq_equipamento"]
+  }
+}
+
+Table contrato_ficheiros {
+  id int [pk, increment, not null]
+  contrato_id int [not null]
+  ficheiro_id int [not null]
+
+  indexes {
+    (contrato_id, ficheiro_id) [unique, name: "contrato_id"]
+    (ficheiro_id) [name: "fk_contfich_ficheiro"]
+  }
+}
+
+Table criticidades {
+  id int [pk, increment, not null]
+  nome varchar(40) [not null, unique]
+}
+
+Table documentos {
+  id int [pk, increment, not null]
+  codigo varchar(30) [not null, unique]
+  titulo varchar(150) [not null]
+  tipo_documento_id int [not null]
+  area_documento_id int [not null]
+  equipamento_id int [not null]
+  fornecedor_id int
+  responsavel varchar(120)
+  manutencao_id int
+  data_documento date
+  validade date
+  estado_documento_id int [not null]
+  obrigatorio tinyint(1) [default: '0']
+  observacoes text
+  criado_em timestamp [default: `CURRENT_TIMESTAMP`]
+  atualizado_em timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (tipo_documento_id) [name: "fk_documentos_tipo"]
+    (area_documento_id) [name: "fk_documentos_area"]
+    (equipamento_id) [name: "fk_documentos_equipamento"]
+    (fornecedor_id) [name: "fk_documentos_fornecedor"]
+    (manutencao_id) [name: "fk_documentos_manutencao"]
+    (estado_documento_id) [name: "fk_documentos_estado"]
+  }
+}
+
+Table documento_ficheiros {
+  id int [pk, increment, not null]
+  documento_id int [not null]
+  ficheiro_id int [not null]
+
+  indexes {
+    (documento_id, ficheiro_id) [unique, name: "documento_id"]
+    (ficheiro_id) [name: "fk_docfich_ficheiro"]
+  }
+}
+
+Table equipamentos {
+  id int [pk, increment, not null]
+  codigo varchar(20) [not null, unique]
+  designacao varchar(150) [not null]
+  categoria_id int [not null]
+  marca varchar(120) [not null]
+  modelo varchar(120) [not null]
+  numero_serie varchar(80) [not null]
+  data_aquisicao date
+  ano_fabrico int
+  custo_aquisicao decimal(10,2)
+  tipo_entrada_id int
+  estado_id int [not null]
+  criticidade_id int [not null]
+  fornecedor_principal_id int [not null]
+  localizacao_id int [not null]
+  servico varchar(120)
+  piso int
+  sala varchar(50)
+  equipamento_pai_id int
+  tem_consumiveis tinyint(1) [default: '0']
+  consumiveis_descricao text
+  observacoes text
+  criado_em timestamp [default: `CURRENT_TIMESTAMP`]
+  atualizado_em timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (marca, modelo, numero_serie) [unique, name: "uq_equipamento_serie"]
+    (categoria_id) [name: "fk_equipamentos_categoria"]
+    (estado_id) [name: "fk_equipamentos_estado"]
+    (criticidade_id) [name: "fk_equipamentos_criticidade"]
+    (tipo_entrada_id) [name: "fk_equipamentos_tipo_entrada"]
+    (fornecedor_principal_id) [name: "fk_equipamentos_fornecedor"]
+    (localizacao_id) [name: "fk_equipamentos_localizacao"]
+    (equipamento_pai_id) [name: "fk_equipamentos_pai"]
+  }
+}
+
+Table equipamento_fornecedores {
+  id int [pk, increment, not null]
+  equipamento_id int [not null]
+  fornecedor_id int [not null]
+  funcao_fornecedor_id int [not null]
+  observacoes varchar(255)
+
+  indexes {
+    (equipamento_id, fornecedor_id, funcao_fornecedor_id) [unique, name: "equipamento_id"]
+    (fornecedor_id) [name: "fk_eqforn_fornecedor"]
+    (funcao_fornecedor_id) [name: "fk_eqforn_funcao"]
+  }
+}
+
+Table estados_contrato {
+  id int [pk, increment, not null]
+  nome varchar(40) [not null, unique]
+}
+
+Table estados_documento {
+  id int [pk, increment, not null]
+  nome varchar(40) [not null, unique]
+}
+
+Table estados_equipamento {
+  id int [pk, increment, not null]
+  nome varchar(40) [not null, unique]
+}
+
+Table estados_garantia {
+  id int [pk, increment, not null]
+  nome varchar(40) [not null, unique]
+}
+
+Table estados_localizacao {
+  id int [pk, increment, not null]
+  nome varchar(40) [not null, unique]
+}
+
+Table estados_manutencao {
+  id int [pk, increment, not null]
+  nome varchar(40) [not null, unique]
+}
+
+Table ficheiros_pdf {
+  id int [pk, increment, not null]
+  nome_original varchar(200) [not null]
+  nome_guardado varchar(200) [not null]
+  caminho_ficheiro varchar(255)
+  tipo_mime varchar(80) [default: 'application/pdf']
+  tamanho_bytes int
+  carregado_por int
+  carregado_em timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (carregado_por) [name: "fk_ficheiros_agent"]
+  }
+}
+
+Table fornecedores {
+  id int [pk, increment, not null]
+  nome varchar(150) [not null]
+  nif varchar(20) [not null, unique]
+  tipo_fornecedor_id int [not null]
+  email varchar(150) [not null]
+  telefone varchar(30) [not null]
+  contrato_ativo tinyint(1) [default: '0']
+  area_atuacao varchar(120)
+  morada varchar(255)
+  website varchar(150)
+  pessoa_contacto varchar(120)
+  telefone_contacto varchar(30)
+  observacoes text
+  estado varchar(30) [not null, default: 'Ativo']
+  criado_em timestamp [default: `CURRENT_TIMESTAMP`]
+  atualizado_em timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (tipo_fornecedor_id) [name: "fk_fornecedores_tipo"]
+  }
+}
+
+Table funcoes_fornecedor {
+  id int [pk, increment, not null]
+  nome varchar(80) [not null, unique]
+}
+
+Table garantias {
+  id int [pk, increment, not null]
+  codigo varchar(30) [not null, unique]
+  designacao varchar(150) [not null]
+  equipamento_id int [not null]
+  fornecedor_id int [not null]
+  responsavel varchar(120)
+  contrato_id int
+  data_inicio date
+  data_fim date
+  estado_garantia_id int [not null]
+  cobertura text
+  observacoes text
+  criado_em timestamp [default: `CURRENT_TIMESTAMP`]
+  atualizado_em timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (equipamento_id) [name: "fk_garantias_equipamento"]
+    (fornecedor_id) [name: "fk_garantias_fornecedor"]
+    (contrato_id) [name: "fk_garantias_contrato"]
+    (estado_garantia_id) [name: "fk_garantias_estado"]
+  }
+}
+
+Table garantia_ficheiros {
+  id int [pk, increment, not null]
+  garantia_id int [not null]
+  ficheiro_id int [not null]
+
+  indexes {
+    (garantia_id, ficheiro_id) [unique, name: "garantia_id"]
+    (ficheiro_id) [name: "fk_garfich_ficheiro"]
+  }
+}
+
+Table localizacoes {
+  id int [pk, increment, not null]
+  codigo varchar(20) [not null, unique]
+  nome varchar(150) [not null]
+  tipo_localizacao_id int [not null]
+  numero_andares int [not null, default: '1']
+  edificio varchar(120)
+  piso_principal varchar(40)
+  responsavel varchar(100) [not null]
+  telefone varchar(30)
+  descricao text
+  estado_localizacao_id int [not null]
+  criado_em timestamp [default: `CURRENT_TIMESTAMP`]
+  atualizado_em timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (tipo_localizacao_id) [name: "fk_localizacoes_tipo"]
+    (estado_localizacao_id) [name: "fk_localizacoes_estado"]
+  }
+}
+
+Table logs {
+  id int [pk, increment, not null]
+  tipo_evento varchar(50) [not null]
+  descricao text [not null]
+  agente_id int
+  ip varchar(45)
+  created_at datetime [not null, default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (tipo_evento) [name: "idx_logs_tipo_evento"]
+    (agente_id) [name: "idx_logs_agente_id"]
+    (created_at) [name: "idx_logs_created_at"]
+  }
+}
+
+Table manutencoes {
+  id int [pk, increment, not null]
+  equipamento_id int [not null]
+  tipo_manutencao_id int [not null]
+  ultima_manutencao date
+  proxima_manutencao date
+  periodicidade varchar(50)
+  estado_manutencao_id int [not null]
+  prioridade_id int [not null]
+  responsavel varchar(120)
+  observacoes text
+  criado_em timestamp [default: `CURRENT_TIMESTAMP`]
+  atualizado_em timestamp [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (equipamento_id) [name: "fk_manutencoes_equipamento"]
+    (tipo_manutencao_id) [name: "fk_manutencoes_tipo"]
+    (estado_manutencao_id) [name: "fk_manutencoes_estado"]
+    (prioridade_id) [name: "fk_manutencoes_prioridade"]
+  }
+}
+
+Table mensagens_contacto {
+  id int [pk, increment, not null]
+  nome varchar(100) [not null]
+  email varchar(150) [not null]
+  instituicao varchar(150)
+  assunto varchar(150) [not null]
+  mensagem text [not null]
+  estado varchar(30) [default: 'Nova']
+  recebido_em timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table prioridades_manutencao {
+  id int [pk, increment, not null]
+  nome varchar(40) [not null, unique]
+}
+
+Table tipos_contrato {
+  id int [pk, increment, not null]
+  nome varchar(80) [not null, unique]
+}
+
+Table tipos_documento {
+  id int [pk, increment, not null]
+  nome varchar(80) [not null, unique]
+}
+
+Table tipos_entrada {
+  id int [pk, increment, not null]
+  nome varchar(40) [not null, unique]
+}
+
+Table tipos_fornecedor {
+  id int [pk, increment, not null]
+  nome varchar(80) [not null, unique]
+}
+
+Table tipos_localizacao {
+  id int [pk, increment, not null]
+  nome varchar(80) [not null, unique]
+}
+
+Table tipos_manutencao {
+  id int [pk, increment, not null]
+  nome varchar(60) [not null, unique]
+}
+
+Ref: contratos.estado_contrato_id > estados_contrato.id
+Ref: contratos.fornecedor_id > fornecedores.id
+Ref: contratos.tipo_contrato_id > tipos_contrato.id
+Ref: contrato_equipamentos.contrato_id > contratos.id // ON DELETE CASCADE
+Ref: contrato_equipamentos.equipamento_id > equipamentos.id // ON DELETE CASCADE
+Ref: contrato_ficheiros.contrato_id > contratos.id // ON DELETE CASCADE
+Ref: contrato_ficheiros.ficheiro_id > ficheiros_pdf.id // ON DELETE CASCADE
+Ref: documentos.area_documento_id > areas_documento.id
+Ref: documentos.equipamento_id > equipamentos.id // ON DELETE CASCADE
+Ref: documentos.estado_documento_id > estados_documento.id
+Ref: documentos.fornecedor_id > fornecedores.id // ON DELETE SET NULL
+Ref: documentos.manutencao_id > manutencoes.id // ON DELETE SET NULL
+Ref: documentos.tipo_documento_id > tipos_documento.id
+Ref: documento_ficheiros.documento_id > documentos.id // ON DELETE CASCADE
+Ref: documento_ficheiros.ficheiro_id > ficheiros_pdf.id // ON DELETE CASCADE
+Ref: equipamentos.categoria_id > categorias_equipamento.id
+Ref: equipamentos.criticidade_id > criticidades.id
+Ref: equipamentos.estado_id > estados_equipamento.id
+Ref: equipamentos.fornecedor_principal_id > fornecedores.id
+Ref: equipamentos.localizacao_id > localizacoes.id
+Ref: equipamentos.equipamento_pai_id > equipamentos.id // ON DELETE SET NULL
+Ref: equipamentos.tipo_entrada_id > tipos_entrada.id
+Ref: equipamento_fornecedores.equipamento_id > equipamentos.id // ON DELETE CASCADE
+Ref: equipamento_fornecedores.fornecedor_id > fornecedores.id
+Ref: equipamento_fornecedores.funcao_fornecedor_id > funcoes_fornecedor.id
+Ref: ficheiros_pdf.carregado_por > agents.id // ON DELETE SET NULL
+Ref: fornecedores.tipo_fornecedor_id > tipos_fornecedor.id
+Ref: garantias.contrato_id > contratos.id // ON DELETE SET NULL
+Ref: garantias.equipamento_id > equipamentos.id // ON DELETE CASCADE
+Ref: garantias.estado_garantia_id > estados_garantia.id
+Ref: garantias.fornecedor_id > fornecedores.id
+Ref: garantia_ficheiros.ficheiro_id > ficheiros_pdf.id // ON DELETE CASCADE
+Ref: garantia_ficheiros.garantia_id > garantias.id // ON DELETE CASCADE
+Ref: localizacoes.estado_localizacao_id > estados_localizacao.id
+Ref: localizacoes.tipo_localizacao_id > tipos_localizacao.id
+Ref: manutencoes.equipamento_id > equipamentos.id // ON DELETE CASCADE
+Ref: manutencoes.estado_manutencao_id > estados_manutencao.id
+Ref: manutencoes.prioridade_id > prioridades_manutencao.id
+Ref: manutencoes.tipo_manutencao_id > tipos_manutencao.id

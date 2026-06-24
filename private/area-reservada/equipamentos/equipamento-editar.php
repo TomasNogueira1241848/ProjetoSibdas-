@@ -2690,7 +2690,7 @@ include __DIR__ . '/../../includes/nav.php';
                                     </div>
  
                                     <div class="col-12">
-                                        <label for="pesquisaFornecedoresAssociadosEquipamento" class="form-label">Fornecedores associados adicionais</label>
+                                        <label for="pesquisaFornecedoresAssociadosEquipamento" class="form-label">Fornecedores associados adicionais (opcional)</label>
                                         <input type="search" class="form-control mb-2 pesquisa-fornecedores-associados"
                                             id="pesquisaFornecedoresAssociadosEquipamento"
                                             placeholder="Pesquisar fornecedor, fabricante, assistência técnica ou consumíveis..."

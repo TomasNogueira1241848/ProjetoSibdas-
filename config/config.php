@@ -2,10 +2,10 @@
 
 define('APP_NAME', 'MedInfo Solutions');
 define('APP_VERSION', '1.0.0');
-define('APP_COPYRIGHT', 'MedInfo Solutions © 2025 — Todos os direitos reservados');
+define('APP_COPYRIGHT', 'MedInfo Solutions © 2026 — Todos os direitos reservados');
 define('APP_SUBTITLE', 'Gestão de Inventário Hospitalar');
 
-define('BASE_URL', 'http://127.0.0.1/sibdas/1241848/medinfo-solutions/');
+define('BASE_URL', 'http://127.0.0.1/sibdas/1241848/medinfo-solutions');
 
 define('MYSQL_HOST', 'vsgate-s1.dei.isep.ipp.pt');
 define('MYSQL_PORT', '10464');
