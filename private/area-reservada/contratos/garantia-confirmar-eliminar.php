@@ -23,6 +23,7 @@ try {
     }
     $stmt = $ligacao->prepare('UPDATE garantias SET estado_garantia_id=:estado WHERE id=:id');
     $stmt->execute([':estado' => (int)$estado->id, ':id' => (int)$id]);
+    registar_evento_sistema('dados', 'garantias', 'cancelar', 'Garantia cancelada.', ['id' => (int) $id]);
     header('Location: contratos.php?garantia_cancelada=1');
     exit;
 } catch (Throwable $e) {

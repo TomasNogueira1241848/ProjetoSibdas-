@@ -95,7 +95,7 @@ include __DIR__ . '/../../includes/nav.php';
                     <?php endif; ?>
                 </div>
             </div>
-            <?php if ($erroBD !== ''): ?><div class="alert alert-danger"><?php echo e($erroBD); ?></div><?php elseif ($documento): ?>
+            <?php if ($erroBD !== ''): ?><?php mostrar_alerta_erro_base_dados($erroBD); ?><?php elseif ($documento): ?>
                 <?php if ($equipamentoAbatido): ?>
                     <div class="alert alert-warning"><strong>Atenção:</strong> este documento está associado a um equipamento abatido.</div>
                 <?php endif; ?>

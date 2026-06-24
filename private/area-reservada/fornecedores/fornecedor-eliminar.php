@@ -42,8 +42,11 @@ if ($ligacao === null) {
             header('Location: fornecedores.php');
             exit;
         }
-        $stmt = $ligacao->prepare('SELECT COUNT(DISTINCT e.id) AS total FROM equipamentos e LEFT JOIN equipamento_fornecedores ef ON ef.equipamento_id = e.id WHERE e.fornecedor_principal_id = :id OR ef.fornecedor_id = :id');
-        $stmt->execute([':id' => $idFornecedor]);
+        $stmt = $ligacao->prepare('SELECT COUNT(DISTINCT e.id) AS total FROM equipamentos e LEFT JOIN equipamento_fornecedores ef ON ef.equipamento_id = e.id WHERE e.fornecedor_principal_id = :id_principal OR ef.fornecedor_id = :id_associado');
+        $stmt->execute([
+            ':id_principal' => $idFornecedor,
+            ':id_associado' => $idFornecedor
+        ]);
         $resumo['equipamentos'] = (int) $stmt->fetch()->total;
         $stmt = $ligacao->prepare('SELECT COUNT(*) AS total FROM documentos WHERE fornecedor_id = :id');
         $stmt->execute([':id' => $idFornecedor]);
@@ -72,7 +75,7 @@ include __DIR__ . '/../../includes/nav.php';
                     <p class="text-muted small mb-0">Confirmação antes de retirar o fornecedor de uso.</p>
                 </div>
             </div>
-            <?php if ($erroBD !== ''): ?><div class="alert alert-danger"><?php echo e($erroBD); ?></div><?php elseif ($fornecedor): ?>
+            <?php if ($erroBD !== ''): ?><?php mostrar_alerta_erro_base_dados($erroBD); ?><?php elseif ($fornecedor): ?>
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
                         <div class="card p-4 border-danger">

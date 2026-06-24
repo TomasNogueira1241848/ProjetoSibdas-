@@ -101,7 +101,7 @@ if ($ligacao === null) {
             INNER JOIN estados_equipamento ee ON ee.id = e.estado_id
             INNER JOIN localizacoes l ON l.id = e.localizacao_id
             INNER JOIN estados_localizacao el ON el.id = l.estado_localizacao_id
-            WHERE ef.fornecedor_id = :id
+            WHERE ef.fornecedor_id = :id_associado
             UNION
             SELECT e.id, e.codigo, e.designacao, e.marca, e.modelo, "Fornecedor principal" AS funcao,
                    l.nome AS localizacao, el.nome AS localizacao_estado, ee.nome AS estado
@@ -109,10 +109,13 @@ if ($ligacao === null) {
             INNER JOIN estados_equipamento ee ON ee.id = e.estado_id
             INNER JOIN localizacoes l ON l.id = e.localizacao_id
             INNER JOIN estados_localizacao el ON el.id = l.estado_localizacao_id
-            WHERE e.fornecedor_principal_id = :id
+            WHERE e.fornecedor_principal_id = :id_principal
             ORDER BY codigo
         ');
-        $stmt->execute([':id' => $idFornecedor]);
+        $stmt->execute([
+            ':id_associado' => $idFornecedor,
+            ':id_principal' => $idFornecedor
+        ]);
         $equipamentos = $stmt->fetchAll();
 
         $stmt = $ligacao->prepare('
@@ -189,7 +192,7 @@ include __DIR__ . '/../../includes/nav.php';
             </div>
 
             <?php if ($erroBD !== ''): ?>
-                <div class="alert alert-danger"><?php echo e($erroBD); ?></div>
+                <?php mostrar_alerta_erro_base_dados($erroBD); ?>
             <?php elseif ($fornecedor): ?>
                 <?php if ($fornecedorDescontinuado): ?>
                     <div class="alert alert-warning d-flex align-items-start gap-2">

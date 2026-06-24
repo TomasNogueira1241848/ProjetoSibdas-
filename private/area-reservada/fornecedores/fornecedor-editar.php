@@ -287,6 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $ligacao !== null && $fornecedor !=
                 ':id' => $fornecedorId
             ]);
 
+            registar_evento_sistema('dados', 'fornecedores', 'editar', 'Fornecedor atualizado: ' . ($valores['nomeFornecedor'] ?? ''), ['id' => $fornecedorId]);
             header('Location: fornecedores.php?editado=1');
             exit;
         } catch (PDOException $erro) {

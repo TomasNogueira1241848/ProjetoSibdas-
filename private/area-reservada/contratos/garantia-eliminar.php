@@ -48,7 +48,7 @@ include __DIR__ . '/../../includes/nav.php'; ?>
                     <h4 class="fw-bold mb-1">Remover garantia</h4>
                     <p class="text-muted small mb-0">Confirmação antes de remover a garantia.</p>
                 </div>
-            </div><?php if ($erroBD): ?><div class="alert alert-danger"><?php echo e($erroBD); ?></div><?php elseif ($garantia): ?><div class="row justify-content-center">
+            </div><?php if ($erroBD): ?><?php mostrar_alerta_erro_base_dados($erroBD); ?><?php elseif ($garantia): ?><div class="row justify-content-center">
                     <div class="col-lg-8">
                         <div class="card p-4 border-danger">
                             <h5 class="fw-bold mb-2">Tem a certeza que pretende remover esta garantia?</h5>

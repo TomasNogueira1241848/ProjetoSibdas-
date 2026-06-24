@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ? 'Conteúdos originais repostos com sucesso.'
                 : 'Conteúdos atualizados com sucesso.';
 
+            registar_evento_sistema('dados', 'conteudos', $acao === 'repor' ? 'repor' : 'editar', $mensagemSucesso);
             $conteudos = obter_conteudos_publicos();
         } else {
             $erros[] = 'Não foi possível guardar os conteúdos na base de dados.';

@@ -87,7 +87,7 @@ include __DIR__ . '/../../includes/nav.php'; ?>
                     <?php endif; ?>
                 </div>
 
-            </div><?php if ($erroBD): ?><div class="alert alert-danger"><?php echo e($erroBD); ?></div>
+            </div><?php if ($erroBD): ?><?php mostrar_alerta_erro_base_dados($erroBD); ?>
                 <?php elseif ($garantia): ?><?php if ($equipamentoAbatido): ?>
                 <div class="alert alert-warning"><strong>Atenção:</strong> o equipamento associado a esta garantia está abatido.</div>
             <?php endif; ?><div class="row g-3 mb-4">

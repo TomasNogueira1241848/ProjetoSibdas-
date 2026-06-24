@@ -145,13 +145,7 @@ include __DIR__ . '/../../includes/nav.php';
             <?php endif; ?>
 
             <?php if ($erroBD !== ''): ?>
-                <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
-                    <i class="fa-solid fa-circle-exclamation mt-1"></i>
-                    <div>
-                        <strong class="d-block">Erro na base de dados</strong>
-                        <span><?php echo htmlspecialchars($erroBD); ?></span>
-                    </div>
-                </div>
+                <?php mostrar_alerta_erro_base_dados($erroBD); ?>
             <?php endif; ?>
 
             <!-- INDICADORES -->
@@ -227,6 +221,18 @@ include __DIR__ . '/../../includes/nav.php';
             <!-- TABELA -->
             <section class="mb-4">
                 <div class="card p-3">
+                    <div class="d-flex justify-content-end mb-3 exportacoes-tabela" data-exportacao-tabela="tabelaLocalizacoes">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-download me-1"></i> Guardar dados
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><button class="dropdown-item" type="button" data-exportacao="json"><i class="fa-solid fa-file-code me-2"></i> Guardar em JSON</button></li>
+                                <li><button class="dropdown-item" type="button" data-exportacao="csv"><i class="fa-solid fa-file-csv me-2"></i> Guardar em CSV/Excel</button></li>
+                                <li><button class="dropdown-item" type="button" data-exportacao="pdf"><i class="fa-solid fa-file-pdf me-2"></i> Guardar em PDF</button></li>
+                            </ul>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-dashboard table-hover align-middle mb-0 tabela-datatable" id="tabelaLocalizacoes">
                             <thead>

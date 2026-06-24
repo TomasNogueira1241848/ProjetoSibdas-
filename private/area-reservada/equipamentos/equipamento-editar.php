@@ -2351,6 +2351,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $ligacao->commit();
 
+            registar_evento_sistema('dados', 'equipamentos', 'editar', 'Equipamento atualizado: ' . ($valores['designacao_equipamento'] ?? ''), ['id' => $equipamentoId ?? null, 'codigo' => $valores['codigo_equipamento'] ?? null]);
             header('Location: equipamentos.php?editado=1');
             exit;
         } catch (Throwable $erro) {

@@ -235,6 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':estado_localizacao_id' => $estadoLocalizacaoId
             ]);
 
+            registar_evento_sistema('dados', 'localizacoes', 'criar', 'Localização criada: ' . ($valores['nomeLocalizacao'] ?? ''));
             header('Location: localizacoes.php?sucesso=1');
             exit;
         } catch (PDOException $erro) {

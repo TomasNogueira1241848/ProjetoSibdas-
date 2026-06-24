@@ -267,6 +267,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $ligacao !== null && $localizacao !
                 ':id' => $localizacaoId
             ]);
 
+            registar_evento_sistema('dados', 'localizacoes', 'editar', 'Localização atualizada: ' . ($valores['nomeLocalizacao'] ?? ''), ['id' => $localizacaoId]);
             header('Location: localizacoes.php?editado=1');
             exit;
         } catch (PDOException $erro) {

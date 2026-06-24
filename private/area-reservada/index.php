@@ -387,9 +387,7 @@ include __DIR__ . '/../includes/nav.php';
             <?php endif; ?>
 
             <?php if ($erroBD !== ''): ?>
-                <div class="alert alert-danger" role="alert">
-                    <i class="fa-solid fa-triangle-exclamation me-2"></i><?php echo e($erroBD); ?>
-                </div>
+                <?php mostrar_alerta_erro_base_dados($erroBD); ?>
             <?php endif; ?>
 
             <section aria-labelledby="tituloIndicadores" class="mb-4">

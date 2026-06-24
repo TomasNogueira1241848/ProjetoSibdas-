@@ -23,6 +23,7 @@ try {
     }
     $stmt = $ligacao->prepare('UPDATE contratos SET estado_contrato_id=:estado WHERE id=:id');
     $stmt->execute([':estado' => (int)$estado->id, ':id' => (int)$id]);
+    registar_evento_sistema('dados', 'contratos', 'cancelar', 'Contrato cancelado.', ['id' => (int) $id]);
     header('Location: contratos.php?cancelado=1');
     exit;
 } catch (Throwable $e) {

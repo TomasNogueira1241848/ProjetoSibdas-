@@ -583,13 +583,7 @@ include __DIR__ . '/../../includes/nav.php';
             <?php endif; ?>
 
             <?php if ($erroBD !== ''): ?>
-                <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
-                    <i class="fa-solid fa-circle-exclamation mt-1"></i>
-                    <div>
-                        <strong class="d-block">Erro na base de dados</strong>
-                        <span><?php echo e($erroBD); ?></span>
-                    </div>
-                </div>
+                <?php mostrar_alerta_erro_base_dados($erroBD); ?>
             <?php elseif ($equipamento): ?>
 
                 <section class="mb-4">

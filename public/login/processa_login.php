@@ -36,6 +36,7 @@ if (!empty($erros)) {
 $ligacao = ligar_base_dados();
 
 if ($ligacao === null) {
+    registar_evento_sistema('erro', 'autenticacao', 'ligacao_bd', 'Falha ao ligar à base de dados durante o login.', ['email' => $email]);
     $_SESSION['erros_login'] = ['Não foi possível ligar à base de dados.'];
     $_SESSION['old_login'] = ['email' => $email];
 
@@ -77,6 +78,7 @@ try {
     $agente = $comando->fetch();
 
     if (!$agente || $password !== $agente->passwrd) {
+        registar_evento_sistema('autenticacao', 'login', 'falha', 'Tentativa de login com credenciais inválidas.', ['email' => $email]);
         $_SESSION['erros_login'] = ['Credenciais inválidas.'];
         $_SESSION['old_login'] = ['email' => $email];
 
@@ -94,6 +96,8 @@ try {
     $_SESSION['utilizador_email'] = $agente->email;
     $_SESSION['profile'] = normalizar_perfil($agente->profile);
 
+    registar_evento_sistema('autenticacao', 'login', 'sucesso', 'Login efetuado com sucesso.', ['email' => $agente->email, 'perfil' => $_SESSION['profile']]);
+
     $ligacao = null;
 
     header('Location: ' . BASE_URL . '/private/area-reservada/index.php');
@@ -101,6 +105,7 @@ try {
 } catch (PDOException $erro) {
     $ligacao = null;
 
+    registar_evento_sistema('erro', 'autenticacao', 'erro_login', 'Erro ao validar o login na base de dados.', ['email' => $email, 'erro' => $erro->getMessage()]);
     $_SESSION['erros_login'] = ['Ocorreu um erro ao validar o login na base de dados.'];
     $_SESSION['old_login'] = ['email' => $email];
 

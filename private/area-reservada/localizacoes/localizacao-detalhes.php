@@ -101,7 +101,7 @@ include __DIR__ . '/../../includes/nav.php';
                 </div>
                 <div class="d-flex gap-2"><?php if (!$localizacaoAbatida && tem_permissao('localizacoes', 'editar')): ?><a href="localizacao-editar.php?id_localizacao=<?php echo urlencode($idEncrypted); ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-pen me-1"></i> Editar</a><?php endif; ?><?php if (!$localizacaoAbatida && tem_permissao('localizacoes', 'remover')): ?><a href="localizacao-eliminar.php?id_localizacao=<?php echo urlencode($idEncrypted); ?>" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-box-archive me-1"></i> Abater</a><?php endif; ?><a href="localizacoes.php" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left me-1"></i> Voltar</a></div>
             </div>
-            <?php if ($erroBD !== ''): ?><div class="alert alert-danger"><?php echo e($erroBD); ?></div><?php elseif ($localizacao): ?>
+            <?php if ($erroBD !== ''): ?><?php mostrar_alerta_erro_base_dados($erroBD); ?><?php elseif ($localizacao): ?>
                 <?php if ($localizacaoAbatida): ?><div class="alert alert-warning"><strong>Localização abatida.</strong> Os equipamentos associados passam a apresentar esta indicação.</div><?php endif; ?>
                 <section class="mb-4">
                     <div class="card p-4">

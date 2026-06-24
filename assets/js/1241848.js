@@ -860,6 +860,239 @@ function ligarFiltroDataTable(tabela, seletor, coluna) {
 }
 
 
+/* Cria um único botão "Guardar dados" para exportar a tabela filtrada em JSON, CSV/Excel ou PDF */
+function adicionarBotaoGuardarDadosDataTable(tabela, dataTable, titulo, colunasIgnoradas) {
+    const $ = window.jQuery;
+    const tabelaJQ = $(tabela);
+
+    if (!tabelaJQ.length || !dataTable) return;
+
+    const tabelaHtml = tabelaJQ[0];
+    const idTabela = tabelaHtml.id || titulo.replace(/\s+/g, '-').toLowerCase();
+    const card = tabelaJQ.closest('.card');
+
+    if (!card.length) return;
+
+    let grupo = card.find(`[data-exportacao-tabela="${idTabela}"]`).first();
+
+    if (!grupo.length) {
+        grupo = $(criarHtmlBotaoGuardarDados(idTabela));
+
+        const responsivo = card.children('.table-responsive').first();
+
+        if (responsivo.length) {
+            responsivo.before(grupo);
+        } else {
+            card.prepend(grupo);
+        }
+    }
+
+    grupo.find('[data-exportacao]')
+        .off('click.exportacaoTabela')
+        .on('click.exportacaoTabela', function () {
+            exportarDataTable(dataTable, tabelaHtml, titulo, this.dataset.exportacao, colunasIgnoradas);
+        });
+}
+
+function criarHtmlBotaoGuardarDados(idTabela) {
+    return `
+        <div class="d-flex justify-content-end mb-3 exportacoes-tabela" data-exportacao-tabela="${idTabela}">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-download me-1"></i> Guardar dados
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <button class="dropdown-item" type="button" data-exportacao="json">
+                            <i class="fa-solid fa-file-code me-2"></i> Guardar em JSON
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" type="button" data-exportacao="csv">
+                            <i class="fa-solid fa-file-csv me-2"></i> Guardar em CSV/Excel
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item" type="button" data-exportacao="pdf">
+                            <i class="fa-solid fa-file-pdf me-2"></i> Guardar em PDF
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    `;
+}
+
+/* Exporta apenas as linhas visíveis depois da pesquisa/filtros aplicados pelo DataTables */
+function exportarDataTable(dataTable, tabelaHtml, titulo, formato, colunasIgnoradas) {
+    const dados = obterDadosDataTableParaExportar(dataTable, tabelaHtml, colunasIgnoradas);
+    const nomeFicheiro = gerarNomeExportacao(titulo, formato);
+
+    if (formato === 'json') {
+        descarregarFicheiro(JSON.stringify(dados.linhas, null, 2), nomeFicheiro, 'application/json;charset=utf-8');
+        return;
+    }
+
+    if (formato === 'csv') {
+        descarregarFicheiro('\ufeff' + criarCsvExportacao(dados.cabecalhos, dados.linhas), nomeFicheiro, 'text/csv;charset=utf-8');
+        return;
+    }
+
+    if (formato === 'pdf') {
+        abrirTabelaParaGuardarPDF(titulo, dados.cabecalhos, dados.linhas);
+    }
+}
+
+function obterDadosDataTableParaExportar(dataTable, tabelaHtml, colunasIgnoradas) {
+    const cabecalhosOriginais = Array.from(tabelaHtml.querySelectorAll('thead th')).map(function (th) {
+        return limparTextoExportacao(th.textContent);
+    });
+
+    const ignoradas = normalizarColunasIgnoradas(colunasIgnoradas, cabecalhosOriginais.length);
+    const indicesUsados = cabecalhosOriginais
+        .map(function (_, indice) { return indice; })
+        .filter(function (indice) { return !ignoradas.includes(indice); });
+
+    const cabecalhos = indicesUsados.map(function (indice) {
+        return cabecalhosOriginais[indice] || `Coluna ${indice + 1}`;
+    });
+
+    const linhas = dataTable.rows({ search: 'applied', order: 'applied' }).nodes().toArray().map(function (linha) {
+        const celulas = Array.from(linha.children);
+        const registo = {};
+
+        indicesUsados.forEach(function (indice, posicao) {
+            registo[cabecalhos[posicao]] = limparTextoExportacao(celulas[indice] ? celulas[indice].innerText : '');
+        });
+
+        return registo;
+    });
+
+    return { cabecalhos, linhas };
+}
+
+function normalizarColunasIgnoradas(colunasIgnoradas, totalColunas) {
+    const lista = Array.isArray(colunasIgnoradas) ? colunasIgnoradas : [-1];
+
+    return lista.map(function (indice) {
+        return indice < 0 ? totalColunas + indice : indice;
+    });
+}
+
+function limparTextoExportacao(texto) {
+    return String(texto || '').replace(/\s+/g, ' ').trim();
+}
+
+function criarCsvExportacao(cabecalhos, linhas) {
+    const separador = ';';
+    const linhasCsv = [cabecalhos.map(escaparCampoCsv).join(separador)];
+
+    linhas.forEach(function (linha) {
+        linhasCsv.push(cabecalhos.map(function (cabecalho) {
+            return escaparCampoCsv(linha[cabecalho]);
+        }).join(separador));
+    });
+
+    return linhasCsv.join('\n');
+}
+
+function escaparCampoCsv(valor) {
+    const texto = String(valor ?? '');
+
+    if (/[";\n\r]/.test(texto)) {
+        return '"' + texto.replace(/"/g, '""') + '"';
+    }
+
+    return texto;
+}
+
+function descarregarFicheiro(conteudo, nomeFicheiro, tipo) {
+    const blob = new Blob([conteudo], { type: tipo });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = nomeFicheiro;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+}
+
+function abrirTabelaParaGuardarPDF(titulo, cabecalhos, linhas) {
+    const janela = window.open('', '_blank');
+
+    if (!janela) {
+        alert('Não foi possível abrir a janela de impressão. Permita pop-ups para guardar em PDF.');
+        return;
+    }
+
+    const linhasHtml = linhas.map(function (linha) {
+        const celulas = cabecalhos.map(function (cabecalho) {
+            return `<td>${escaparHtmlExportacao(linha[cabecalho])}</td>`;
+        }).join('');
+
+        return `<tr>${celulas}</tr>`;
+    }).join('');
+
+    const cabecalhosHtml = cabecalhos.map(function (cabecalho) {
+        return `<th>${escaparHtmlExportacao(cabecalho)}</th>`;
+    }).join('');
+
+    janela.document.write(`
+        <!doctype html>
+        <html lang="pt">
+        <head>
+            <meta charset="utf-8">
+            <title>${escaparHtmlExportacao(titulo)}</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 24px; color: #222; }
+                h1 { font-size: 20px; margin-bottom: 4px; }
+                p { margin-top: 0; color: #555; }
+                table { width: 100%; border-collapse: collapse; font-size: 11px; }
+                th, td { border: 1px solid #ccc; padding: 6px; text-align: left; vertical-align: top; }
+                th { background: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <h1>${escaparHtmlExportacao(titulo)}</h1>
+            <p>Exportação gerada em ${new Date().toLocaleString('pt-PT')}.</p>
+            <table>
+                <thead><tr>${cabecalhosHtml}</tr></thead>
+                <tbody>${linhasHtml || `<tr><td colspan="${cabecalhos.length}">Sem registos para exportar.</td></tr>`}</tbody>
+            </table>
+            <script>
+                window.onload = function () { window.print(); };
+            <\/script>
+        </body>
+        </html>
+    `);
+
+    janela.document.close();
+}
+
+function escaparHtmlExportacao(valor) {
+    return String(valor ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function gerarNomeExportacao(titulo, formato) {
+    const base = String(titulo || 'exportacao')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '') || 'exportacao';
+
+    const data = new Date().toISOString().slice(0, 10);
+    return `${base}_${data}.${formato}`;
+}
+
+
 /* Tabelas da dashboard com DataTables e pesquisas externas */
 function inicializarDataTablesDashboard() {
     const tabelasDashboard = [
@@ -967,6 +1200,7 @@ function inicializarTabelaEquipamentos() {
     ligarFiltroDataTable(tabelaEquipamentos, '#filtroCategoriaEquipamentosDT', 2);
     ligarFiltroDataTable(tabelaEquipamentos, '#filtroLocalizacaoEquipamentosDT', 6);
     ligarFiltroDataTable(tabelaEquipamentos, '#filtroEstadoEquipamentosDT', 7);
+    adicionarBotaoGuardarDadosDataTable(tabela, tabelaEquipamentos, 'Equipamentos', [-1]);
 }
 
 
@@ -992,6 +1226,7 @@ function inicializarTabelaFornecedores() {
     ligarFiltroDataTable(tabelaFornecedores, '#filtroTipoFornecedorDT', 2);
     ligarFiltroDataTable(tabelaFornecedores, '#filtroContratoFornecedorDT', 5);
     ligarFiltroDataTable(tabelaFornecedores, '#filtroEstadoFornecedorDT', 6);
+    adicionarBotaoGuardarDadosDataTable(tabela, tabelaFornecedores, 'Fornecedores', [-1]);
 }
 
 
@@ -1016,6 +1251,7 @@ function inicializarTabelaLocalizacoes() {
 
     ligarFiltroDataTable(tabelaLocalizacoes, '#filtroTipoLocalizacaoDT', 2);
     ligarFiltroDataTable(tabelaLocalizacoes, '#filtroEstadoLocalizacaoDT', 6);
+    adicionarBotaoGuardarDadosDataTable(tabela, tabelaLocalizacoes, 'Localizações', [-1]);
 }
 
 
@@ -1041,6 +1277,7 @@ function inicializarTabelaDocumentacao() {
     ligarFiltroDataTable(tabelaDocumentacao, '#filtroTipoDocumentoDT', 2);
     ligarFiltroDataTable(tabelaDocumentacao, '#filtroAreaDocumentoDT', 3);
     ligarFiltroDataTable(tabelaDocumentacao, '#filtroEstadoDocumentoDT', 7);
+    adicionarBotaoGuardarDadosDataTable(tabela, tabelaDocumentacao, 'Documentação', [-1]);
 }
 
 
@@ -1078,4 +1315,7 @@ function inicializarTabelaContratosGarantias() {
     $('#filtroTipoContratoDT').on('change', aplicarFiltrosContratosGarantias);
     $('#filtroFornecedorContratoDT').on('change', aplicarFiltrosContratosGarantias);
     $('#filtroEstadoContratoDT').on('change', aplicarFiltrosContratosGarantias);
+
+    adicionarBotaoGuardarDadosDataTable(tabelaGarantiasEl, tabelaGarantias, 'Garantias', [-1]);
+    adicionarBotaoGuardarDadosDataTable(tabelaContratosEl, tabelaContratos, 'Contratos', [-1]);
 }

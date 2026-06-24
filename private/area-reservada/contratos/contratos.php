@@ -69,7 +69,7 @@ include __DIR__ . '/../../includes/nav.php'; ?>
                     <p class="text-muted small mb-0">Gestão separada das garantias dos equipamentos e dos contratos associados.</p>
                 </div>
             </div>
-            <?php if (isset($_GET['cancelado']) && $_GET['cancelado'] == '1'): ?><div class="alert alert-success"><strong>Contrato cancelado</strong><br>O contrato foi atualizado com sucesso.</div><?php endif; ?><?php if ((isset($_GET['garantia_cancelada']) && $_GET['garantia_cancelada'] == '1') || (isset($_GET['garantia_expirada']) && $_GET['garantia_expirada'] == '1')): ?><div class="alert alert-success"><strong>Garantia cancelada</strong><br>A garantia foi atualizada com estado Cancelado.</div><?php endif; ?><?php if ($erroBD): ?><div class="alert alert-danger"><?php echo e($erroBD); ?></div><?php endif; ?>
+            <?php if (isset($_GET['cancelado']) && $_GET['cancelado'] == '1'): ?><div class="alert alert-success"><strong>Contrato cancelado</strong><br>O contrato foi atualizado com sucesso.</div><?php endif; ?><?php if ((isset($_GET['garantia_cancelada']) && $_GET['garantia_cancelada'] == '1') || (isset($_GET['garantia_expirada']) && $_GET['garantia_expirada'] == '1')): ?><div class="alert alert-success"><strong>Garantia cancelada</strong><br>A garantia foi atualizada com estado Cancelado.</div><?php endif; ?><?php if ($erroBD): ?><?php mostrar_alerta_erro_base_dados($erroBD); ?><?php endif; ?>
             <section class="mb-4">
                 <div class="row g-3">
                     <div class="col-6 col-md-3">
@@ -124,6 +124,18 @@ include __DIR__ . '/../../includes/nav.php'; ?>
                     <p class="text-muted small mb-0">Garantias associadas diretamente a equipamentos médicos.</p>
                 </div>
                 <div class="card p-3">
+                    <div class="d-flex justify-content-end mb-3 exportacoes-tabela" data-exportacao-tabela="tabelaGarantias">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-download me-1"></i> Guardar dados
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><button class="dropdown-item" type="button" data-exportacao="json"><i class="fa-solid fa-file-code me-2"></i> Guardar em JSON</button></li>
+                                <li><button class="dropdown-item" type="button" data-exportacao="csv"><i class="fa-solid fa-file-csv me-2"></i> Guardar em CSV/Excel</button></li>
+                                <li><button class="dropdown-item" type="button" data-exportacao="pdf"><i class="fa-solid fa-file-pdf me-2"></i> Guardar em PDF</button></li>
+                            </ul>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-dashboard table-hover align-middle mb-0 tabela-datatable" id="tabelaGarantias">
                             <thead>
@@ -163,6 +175,18 @@ include __DIR__ . '/../../includes/nav.php'; ?>
                     <p class="text-muted small mb-0">Contratos de manutenção, assistência, seguros ou aluguer associados aos equipamentos.</p>
                 </div>
                 <div class="card p-3">
+                    <div class="d-flex justify-content-end mb-3 exportacoes-tabela" data-exportacao-tabela="tabelaContratos">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-download me-1"></i> Guardar dados
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><button class="dropdown-item" type="button" data-exportacao="json"><i class="fa-solid fa-file-code me-2"></i> Guardar em JSON</button></li>
+                                <li><button class="dropdown-item" type="button" data-exportacao="csv"><i class="fa-solid fa-file-csv me-2"></i> Guardar em CSV/Excel</button></li>
+                                <li><button class="dropdown-item" type="button" data-exportacao="pdf"><i class="fa-solid fa-file-pdf me-2"></i> Guardar em PDF</button></li>
+                            </ul>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-dashboard table-hover align-middle mb-0 tabela-datatable" id="tabelaContratos">
                             <thead>

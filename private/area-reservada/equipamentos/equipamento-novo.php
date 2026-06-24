@@ -1603,6 +1603,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
             $ligacao->commit();
  
+            registar_evento_sistema('dados', 'equipamentos', 'criar', 'Equipamento criado: ' . ($valores['designacao_equipamento'] ?? ''), ['codigo' => $valores['codigo_equipamento'] ?? null, 'id' => $equipamentoId ?? null]);
             header('Location: equipamentos.php?sucesso=1');
             exit;
         } catch (Throwable $erro) {

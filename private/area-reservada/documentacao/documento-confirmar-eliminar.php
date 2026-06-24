@@ -23,6 +23,7 @@ try {
     }
     $stmt = $ligacao->prepare('UPDATE documentos SET estado_documento_id = :estado WHERE id = :id');
     $stmt->execute([':estado' => (int)$estado->id, ':id' => (int)$id]);
+    registar_evento_sistema('dados', 'documentacao', 'invalidar', 'Documento invalidado.', ['id' => (int) $id]);
     header('Location: documentacao.php?eliminado=1');
     exit;
 } catch (Throwable $e) {

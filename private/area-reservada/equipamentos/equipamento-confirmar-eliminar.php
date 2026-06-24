@@ -113,6 +113,7 @@ try {
 
     $ligacao->commit();
 
+    registar_evento_sistema('dados', 'equipamentos', 'abater', 'Equipamento abatido e estados associados atualizados.', ['id' => (int) $equipamentoId]);
     header('Location: equipamentos.php?abatido=1');
     exit;
 } catch (Throwable $erro) {

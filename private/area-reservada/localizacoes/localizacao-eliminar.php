@@ -57,7 +57,7 @@ include __DIR__ . '/../../includes/nav.php';
                     <p class="text-muted small mb-0">Confirmação antes de retirar a localização de uso.</p>
                 </div>
             </div>
-            <?php if ($erroBD !== ''): ?><div class="alert alert-danger"><?php echo e($erroBD); ?></div><?php elseif ($localizacao): ?>
+            <?php if ($erroBD !== ''): ?><?php mostrar_alerta_erro_base_dados($erroBD); ?><?php elseif ($localizacao): ?>
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
                         <div class="card p-4 border-danger">

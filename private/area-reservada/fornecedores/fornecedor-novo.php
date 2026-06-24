@@ -253,6 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':estado' => $valores['estadoFornecedor']
             ]);
 
+            registar_evento_sistema('dados', 'fornecedores', 'criar', 'Fornecedor criado: ' . ($valores['nomeFornecedor'] ?? ''));
             header('Location: fornecedores.php?sucesso=1');
             exit;
         } catch (PDOException $erro) {

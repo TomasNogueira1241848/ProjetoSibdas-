@@ -19,6 +19,7 @@ if ($ligacao === null) {
 try {
     $stmt = $ligacao->prepare("UPDATE fornecedores SET estado = 'Descontinuado', contrato_ativo = 0 WHERE id = :id");
     $stmt->execute([':id' => (int) $idFornecedor]);
+    registar_evento_sistema('dados', 'fornecedores', 'descontinuar', 'Fornecedor descontinuado.', ['id' => (int) $idFornecedor]);
     header('Location: fornecedores.php?descontinuado=1');
     exit;
 } catch (PDOException $erro) {

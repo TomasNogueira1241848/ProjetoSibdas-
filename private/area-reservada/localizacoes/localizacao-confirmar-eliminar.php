@@ -30,6 +30,7 @@ try {
     }
     $stmt = $ligacao->prepare('UPDATE localizacoes SET estado_localizacao_id = :estado WHERE id = :id');
     $stmt->execute([':estado' => (int) $estado->id, ':id' => (int) $idLocalizacao]);
+    registar_evento_sistema('dados', 'localizacoes', 'abater', 'Localização abatida.', ['id' => (int) $idLocalizacao]);
     header('Location: localizacoes.php?abatida=1');
     exit;
 } catch (Throwable $erro) {

@@ -101,7 +101,7 @@ include __DIR__ . '/../../includes/nav.php';
             <?php if (isset($_GET['eliminado']) && $_GET['eliminado'] == '1'): ?><div class="alert alert-success d-flex align-items-start gap-2"><i class="fa-solid fa-circle-check mt-1"></i>
                     <div><strong class="d-block">Documento invalidado</strong><span>O documento foi marcado como inválido, mantendo o histórico.</span></div>
                 </div><?php endif; ?>
-            <?php if ($erroBD !== ''): ?><div class="alert alert-danger"><strong>Erro na base de dados</strong><br><?php echo e($erroBD); ?></div><?php endif; ?>
+            <?php if ($erroBD !== ''): ?><?php mostrar_alerta_erro_base_dados($erroBD); ?><?php endif; ?>
 
             <section class="mb-4">
                 <div class="row g-3">
@@ -151,6 +151,18 @@ include __DIR__ . '/../../includes/nav.php';
 
             <section class="mb-4">
                 <div class="card p-3">
+                    <div class="d-flex justify-content-end mb-3 exportacoes-tabela" data-exportacao-tabela="tabelaDocumentacao">
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-download me-1"></i> Guardar dados
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><button class="dropdown-item" type="button" data-exportacao="json"><i class="fa-solid fa-file-code me-2"></i> Guardar em JSON</button></li>
+                                <li><button class="dropdown-item" type="button" data-exportacao="csv"><i class="fa-solid fa-file-csv me-2"></i> Guardar em CSV/Excel</button></li>
+                                <li><button class="dropdown-item" type="button" data-exportacao="pdf"><i class="fa-solid fa-file-pdf me-2"></i> Guardar em PDF</button></li>
+                            </ul>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-dashboard table-hover align-middle mb-0 tabela-datatable" id="tabelaDocumentacao">
                             <thead>
